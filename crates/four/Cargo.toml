@@ -7,3 +7,14 @@ license.workspace = true
 rust-version.workspace = true
 
 [dependencies]
+anyhow = "1.0.86"
+aws-config = { version = "1.5.0", features = ["behavior-version-latest", "sso"] }
+aws-sdk-cloudformation = "1.33.0"
+lazy_static = "1.4.0"
+nutype = { version = "0.4.2", features = ["regex", "serde"] }
+parse-display = "0.9.1"
+regex = "1.10.4"
+serde = { version = "1.0.203", features = ["derive"] }
+serde_json = "1.0.117"
+thiserror = "1.0.61"
+tokio = { version = "1.38.0", features = ["macros", "rt-multi-thread", "fs"] }
