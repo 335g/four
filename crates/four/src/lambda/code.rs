@@ -1,23 +1,28 @@
+use aws_config::SdkConfig;
 use aws_sdk_lambda::types::FunctionCode;
 use nutype::nutype;
 use serde::{Deserialize, Serialize};
 
-use crate::lambda::error::LambdaError;
+use crate::{
+    lambda::error::LambdaError,
+    s3::{
+        bucket::{ExistingBucket, UnconformedBucket},
+        error::S3Error,
+    },
+};
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 #[serde(rename_all = "PascalCase")]
 pub struct Code {
     image_uri: Option<String>,
-    s3_bucket: Option<S3BucketName>,
+    s3_bucket: Option<ExistingBucket>,
     s3_key: Option<S3Key>,
     s3_object_version: Option<String>,
     zip_file: Option<String>,
 }
 
-impl TryFrom<FunctionCode> for Code {
-    type Error = LambdaError;
-
-    fn try_from(value: FunctionCode) -> Result<Self, Self::Error> {
+impl Code {
+    async fn try_from(value: FunctionCode, sdk_config: &SdkConfig) -> Result<Self, LambdaError> {
         if value.zip_file().is_some() {
             return Err(LambdaError::UnsupportedZipFile);
         }
@@ -27,8 +32,15 @@ impl TryFrom<FunctionCode> for Code {
             .transpose()?;
         let s3_bucket = value
             .s3_bucket()
-            .map(|bucket| S3BucketName::new(bucket))
-            .transpose()?;
+            .map(|bucket| UnconformedBucket::new(bucket.to_string()))
+            .transpose()
+            .map_err(|e| S3Error::InvalidBucketName(e))?;
+        let s3_bucket = if let Some(s3_bucket) = s3_bucket {
+            let x = s3_bucket.check_exists(&sdk_config).await?;
+            Some(x)
+        } else {
+            None
+        };
 
         Ok(Code {
             image_uri: value.image_uri,
@@ -41,21 +53,7 @@ impl TryFrom<FunctionCode> for Code {
 }
 
 #[nutype(
-    validate(
-        len_char_min = 3,
-        len_char_max = 63,
-        regex = r#"^[0-9a-z][0-9A-Za-z\.\-]+[0-9a-z]$"#,
-        predicate = |s| {
-            // TODO: custsom validation (cf. https://docs.aws.amazon.com/ja_jp/AmazonS3/latest/userguide/bucketnamingrules.html)
-            true
-        }
-    ),
-    derive(Debug, Clone, Deserialize, Serialize)
-)]
-pub struct S3BucketName(String);
-
-#[nutype(
     validate(len_char_min = 1,),
-    derive(Debug, Clone, Deserialize, Serialize)
+    derive(Debug, Clone, Deserialize, Serialize, Deref)
 )]
 pub struct S3Key(String);

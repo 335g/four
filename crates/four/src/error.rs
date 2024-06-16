@@ -1,12 +1,13 @@
-use thiserror::Error;
+use crate::{lambda::error::LambdaError, s3::error::S3Error};
 
-use crate::lambda::error::LambdaError;
-
-#[derive(Debug, Error)]
+#[derive(Debug, thiserror::Error)]
 pub enum Error {
     #[error("Invalid resource")]
     InvalidResource,
 
     #[error(transparent)]
     Lambda(#[from] LambdaError),
+
+    #[error(transparent)]
+    S3(#[from] S3Error),
 }

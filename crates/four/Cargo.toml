@@ -15,7 +15,7 @@ aws-sdk-s3 = { workspace = true }
 cargo-lambda-build = { workspace = true }
 cargo-lambda-metadata = { workspace = true }
 cargo-lambda-remote = { workspace = true }
-cargo-options = "0.7.4"
+cargo-options = { workspace = true }
 cargo_metadata = { workspace = true }
 lazy_static = { workspace = true }
 miette = { workspace = true }

@@ -21,7 +21,6 @@ impl IntoResource for Function {
 }
 
 pub struct SimpleFunction {
-    s3_bucket: String,
     manifest_path: PathBuf,
 }
 
