@@ -7,14 +7,23 @@ license.workspace = true
 rust-version.workspace = true
 
 [dependencies]
-anyhow = "1.0.86"
-aws-config = { version = "1.5.0", features = ["behavior-version-latest", "sso"] }
-aws-sdk-cloudformation = "1.33.0"
-lazy_static = "1.4.0"
-nutype = { version = "0.4.2", features = ["regex", "serde"] }
-parse-display = "0.9.1"
-regex = "1.10.4"
-serde = { version = "1.0.203", features = ["derive"] }
-serde_json = "1.0.117"
-thiserror = "1.0.61"
-tokio = { version = "1.38.0", features = ["macros", "rt-multi-thread", "fs"] }
+anyhow.workspace = true
+aws-config = { workspace = true, features = ["sso"] }
+aws-sdk-cloudformation = { workspace = true }
+aws-sdk-lambda = { workspace = true }
+aws-sdk-s3 = { workspace = true }
+cargo-lambda-build = { workspace = true }
+cargo-lambda-metadata = { workspace = true }
+cargo-lambda-remote = { workspace = true }
+cargo-options = "0.7.4"
+cargo_metadata = { workspace = true }
+lazy_static = { workspace = true }
+miette = { workspace = true }
+nutype = { workspace = true, features = ["regex", "serde"] }
+parse-display = { workspace = true }
+regex = { workspace = true }
+serde = { workspace = true, features = ["derive"] }
+serde_json = { workspace = true }
+thiserror.workspace = true
+tokio = { workspace = true, features = ["macros", "rt-multi-thread", "fs"] }
+uuid = { workspace = true, features = ["serde", "v4"] }

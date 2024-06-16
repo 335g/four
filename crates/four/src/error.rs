@@ -1,13 +1,12 @@
-use crate::{lambda::error::LambdaError, template::InnerLogicalIdError};
+use thiserror::Error;
 
-#[derive(Debug, thiserror::Error)]
+use crate::lambda::error::LambdaError;
+
+#[derive(Debug, Error)]
 pub enum Error {
-    #[error("invalid logical id: {0:?}")]
-    InvalidLogicalId(#[from] InnerLogicalIdError),
+    #[error("Invalid resource")]
+    InvalidResource,
 
-    #[error("duplicated logical id{0:?}")]
-    DuplicatedLogicalId(String),
-
-    #[error("Error (Lambda): {0:?}")]
+    #[error(transparent)]
     Lambda(#[from] LambdaError),
 }
