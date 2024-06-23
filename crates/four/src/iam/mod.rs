@@ -1,2 +1,5 @@
-pub mod action;
-pub mod role;
+mod error;
+mod property;
+mod resource;
+
+pub use error::IamError as Error;

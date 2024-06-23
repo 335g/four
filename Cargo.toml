@@ -1,5 +1,5 @@
 [workspace]
-members = ["crates/four"]
+members = ["crates/four", "crates/four-macros"]
 resolver = "2"
 
 [workspace.package]
@@ -31,3 +31,9 @@ cargo_metadata = "0.18.1"
 miette = "7.2.0"
 aws-smithy-types = "1.2.0"
 cargo-options = "0.7.4"
+async-trait = "0.1.80"
+erased-serde = "0.4.5"
+proc-macro2 = "1.0.86"
+quote = "1.0.36"
+serde_with = "3.8.1"
+syn = "2.0.67"

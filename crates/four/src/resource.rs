@@ -1,43 +1,21 @@
 use std::collections::HashMap;
 
+use proc_macro::TokenStream;
 use serde::Serialize;
-use serde_json::{Map, Value};
-
-use crate::error::Error;
+use syn::parse_macro_input;
 
 #[derive(Serialize)]
 pub struct Template {
-    #[serde(rename(serialize = "AWSTemplateFormatVersion"))]
+    // #[serde(rename(serialize = "AWSTemplateFormatVersion"))]
     format_version: String,
-
-    #[serde(rename(serialize = "Description"))]
+    // #[serde(rename(serialize = "Description"))]
     description: String,
-
-    #[serde(rename(serialize = "Resources"))]
-    resources: HashMap<String, Resource>,
+    // #[serde(rename(serialize = "Resources"))]
+    resources: HashMap<String, Box<dyn Resource>>,
 }
 
-#[derive(Serialize)]
-pub struct Resource {
-    #[serde(rename(serialize = "Type"))]
-    r#type: String,
-
-    #[serde(rename(serialize = "Properties"))]
-    properties: Map<String, Value>,
+pub trait Resource: erased_serde::Serialize {
+    fn resource_type(&self) -> &'static str;
 }
 
-pub trait IntoResource: Serialize + Sized {
-    fn resource_type() -> &'static str;
-
-    fn resource(self) -> Result<Resource, Error> {
-        let properties = serde_json::to_value(&self).map_err(|e| Error::InvalidResource)?;
-        let ty = Self::resource_type();
-        match properties {
-            Value::Object(x) => Ok(Resource {
-                r#type: ty.to_string(),
-                properties: x,
-            }),
-            _ => return Err(Error::InvalidResource),
-        }
-    }
-}
+erased_serde::serialize_trait_object!(Resource);

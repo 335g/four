@@ -1,9 +1,7 @@
 use std::path::{Path, PathBuf};
 
-use cargo_lambda_build::{zip_binary, BinaryArchive, BinaryData, Build};
-use cargo_lambda_metadata::cargo::{
-    binary_targets, function_build_metadata, load_metadata, main_binary,
-};
+use cargo_lambda_build::{zip_binary, BinaryArchive, BinaryData};
+use cargo_lambda_metadata::cargo::main_binary;
 
 use crate::lambda::error::LambdaError;
 

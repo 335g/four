@@ -1,4 +1,4 @@
-use crate::{lambda::error::LambdaError, s3::error::S3Error};
+use crate::{iam, lambda, s3};
 
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
@@ -6,8 +6,11 @@ pub enum Error {
     InvalidResource,
 
     #[error(transparent)]
-    Lambda(#[from] LambdaError),
+    Lambda(#[from] lambda::Error),
 
     #[error(transparent)]
-    S3(#[from] S3Error),
+    S3(#[from] s3::Error),
+
+    #[error(transparent)]
+    Iam(#[from] iam::Error),
 }

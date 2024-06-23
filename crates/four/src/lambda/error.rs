@@ -2,21 +2,18 @@ use std::path::PathBuf;
 
 use cargo_lambda_metadata::error::MetadataError;
 
-use crate::{lambda::code::S3KeyError, s3::error::S3Error};
+use crate::s3;
 
 #[derive(Debug, thiserror::Error)]
 pub enum LambdaError {
     #[error("Unexpected Error: {0:?}")]
     Unexpected(#[from] anyhow::Error),
 
+    #[error(transparent)]
+    S3(#[from] s3::Error),
+
     #[error("Unsupported zip file archive")]
     UnsupportedZipFile,
-
-    #[error("Invalid S3 key: {0:?}")]
-    InvalidS3Key(#[from] S3KeyError),
-
-    #[error("Invalid S3 bucket: {0:?}")]
-    InvalidS3Bucket(#[from] S3Error),
 
     #[error("binary_path must be path for binary: {0:?}")]
     InvalidBinaryPath(PathBuf),
