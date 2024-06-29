@@ -1,5 +1,11 @@
 [workspace]
-members = ["crates/four", "crates/four-macros"]
+members = [
+    "crates/four-core",
+    "crates/four-iam",
+    "crates/four-lambda",
+    "crates/four-macros",
+    "crates/four-s3",
+]
 resolver = "2"
 
 [workspace.package]
@@ -13,6 +19,11 @@ rust-version = "1.78.0"
 anyhow = "1.0.86"
 aws-config = "1.5.0"
 aws-sdk-cloudformation = "1.33.0"
+four-core = { path = "crates/four-core" }
+four-iam = { path = "crates/four-iam" }
+four-lambda = { path = "crates/four-lambda" }
+four-macros = { path = "crates/four-macros" }
+four-s3 = { path = "crates/four-s3" }
 lazy_static = "1.4.0"
 nutype = "0.4.2"
 parse-display = "0.9.1"
