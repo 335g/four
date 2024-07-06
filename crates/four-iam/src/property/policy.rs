@@ -1,8 +1,6 @@
 use serde::Serialize;
 
-use crate::property::version::Version;
-
-use crate::property::statement::Statement;
+use crate::property::{statement::Statement, version::Version};
 
 #[derive(Serialize)]
 #[serde(rename_all = "PascalCase")]

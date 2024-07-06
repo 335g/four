@@ -25,12 +25,16 @@
 ///
 mod error;
 mod function;
+mod logical_id;
 mod macros;
+mod parameter;
 mod pseudo_param;
 mod region;
 mod resource;
 mod resource_name;
 
 pub use error::Error;
-pub use resource::Construct;
-pub use resource_name::{Account, AccountError, Partition};
+pub use logical_id::LogicalId;
+pub use parameter::StringParameter;
+pub use resource::ManagedResource;
+pub use resource_name::{Account, Partition, ARN};

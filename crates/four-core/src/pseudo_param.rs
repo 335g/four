@@ -1,7 +1,9 @@
+use crate::function::reference::Referenced;
 use serde::Serialize;
 
 macro_rules! pseudo_param {
     ($name:ident) => {
+        #[derive(Debug, Clone, Copy)]
         pub struct $name;
 
         impl Serialize for $name {
@@ -10,6 +12,14 @@ macro_rules! pseudo_param {
                 S: serde::Serializer,
             {
                 serializer.serialize_str(&format!("AWS::{}", stringify!($name)))
+            }
+        }
+
+        impl Referenced for $name {
+            type To = Self;
+
+            fn r#ref(&self) -> Self {
+                self.clone()
             }
         }
     };

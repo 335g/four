@@ -1,28 +1,6 @@
-use serde::{ser::SerializeMap, Serialize};
+use serde::{ser::SerializeMap as _, Serialize};
 
-pub struct Ref<T>(T);
-
-impl<T> Ref<T> {
-    pub fn new(x: T) -> Ref<T> {
-        Ref(x)
-    }
-}
-
-impl<T> Serialize for Ref<T>
-where
-    T: Serialize,
-{
-    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        let mut map = serializer.serialize_map(Some(1))?;
-        map.serialize_entry("Ref", &self.0)?;
-        map.end()
-    }
-}
-
-pub struct Join(Vec<Box<dyn erased_serde::Serialize>>);
+pub struct Join(pub(crate) Vec<Box<dyn erased_serde::Serialize>>);
 
 impl Join {
     pub(crate) fn new(xs: Vec<Box<dyn erased_serde::Serialize>>) -> Self {
@@ -32,6 +10,15 @@ impl Join {
 
 #[macro_export]
 macro_rules! fn_join {
+    ($join:expr, [$($elem:expr),+]) => {
+        {
+            let mut all_elements = $join.0;
+            let mut new_elements: Vec<Box<dyn erased_serde::Serialize>> = vec![$(Box::new($elem)),*];
+            all_elements.append(&mut new_elements);
+            Join(all_elements)
+        }
+    };
+
     ($($elem:expr),+) => {
         Join::new(vec![$(Box::new($elem)),*])
     };

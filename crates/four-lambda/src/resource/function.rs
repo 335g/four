@@ -1,18 +1,19 @@
-use four_core::Resource;
+use four_core::Construct;
+use four_iam::Role;
 use serde::{Deserialize, Serialize};
 
 use crate::property::code::Code;
 
-#[derive(Debug, Clone, Deserialize, Serialize)]
+#[derive(Debug, Serialize)]
+#[serde(rename_all = "PascalCase")]
 pub struct Function {
-    #[serde(rename(serialize = "Role"))]
-    role_arn: String,
+    role: Role,
 
     #[serde(rename(serialize = "Code"))]
     code: Code,
 }
 
-impl Resource for Function {
+impl Construct for Function {
     fn resource_type(&self) -> &'static str {
         "AWS::Lambda::Function"
     }

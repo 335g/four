@@ -2,6 +2,8 @@ use std::collections::HashMap;
 
 use serde::Serialize;
 
+use crate::{function::reference::Referenced, logical_id::LogicalIdentified, LogicalId};
+
 #[derive(Serialize)]
 pub struct Template {
     #[serde(rename(serialize = "AWSTemplateFormatVersion"))]
@@ -9,11 +11,14 @@ pub struct Template {
     #[serde(rename(serialize = "Description"))]
     description: String,
     #[serde(rename(serialize = "Resources"))]
-    resources: HashMap<String, Box<dyn Construct>>,
+    resources: HashMap<String, Box<dyn ManagedResource>>,
 }
 
-pub trait Construct: erased_serde::Serialize {
+// TODO: impl
+pub trait ReferencedResource: LogicalIdentified {}
+
+pub trait ManagedResource: erased_serde::Serialize + LogicalIdentified {
     fn resource_type(&self) -> &'static str;
 }
 
-erased_serde::serialize_trait_object!(Construct);
+erased_serde::serialize_trait_object!(ManagedResource);
