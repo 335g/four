@@ -8,7 +8,7 @@ use crate::{
     region::Region,
 };
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct ARN {
     partition: Partition,
     service: String,
@@ -33,26 +33,58 @@ impl Serialize for ARN {
         S: Serializer,
     {
         let service = self.service.clone();
-        let join = if let Some(partition) = self.partition.to_str() {
-            fn_join!(format!("arn:{partition}:{service}"))
+        let (head, tail) = if let Some(partition) = self.partition.to_str() {
+            (None, Some(format!("arn:{partition}:{service}")))
         } else {
-            fn_join!("arn:", self.partition, service)
+            (
+                Some(fn_join!("arn:", self.partition)),
+                Some(format!(":{service}")),
+            )
         };
 
-        let join = if let Some(region) = self.region.to_str() {
-            fn_join!(join, [format!(":{region}")])
+        let (head, tail) = if let Some(region) = self.region.to_str() {
+            let tail = tail.expect("tail is some string");
+            (head, Some(format!("{tail}:{region}")))
         } else {
-            fn_join!(join, [":", self.region])
+            match (head, tail) {
+                (Some(head), Some(tail)) => {
+                    (Some(fn_join!(head, [tail, self.region.clone()])), None)
+                }
+                (None, Some(tail)) => (Some(fn_join!(tail, self.region.clone())), None),
+                (_, None) => unreachable!("tail is some string"),
+            }
         };
 
-        let join = if let Some(account) = self.account.to_str() {
-            fn_join!(join, [format!(":{account}")])
+        let (head, tail) = if let Some(account) = self.account.to_str() {
+            if let Some(tail) = tail {
+                (head, Some(format!("{tail}:{account}")))
+            } else {
+                (head, Some(format!(":{account}")))
+            }
         } else {
-            fn_join!(join, [":", self.account.clone()])
+            match (head, tail) {
+                (Some(head), Some(tail)) => {
+                    (Some(fn_join!(head, [tail, self.account.clone()])), None)
+                }
+                (Some(head), None) => (Some(fn_join!(head, [self.account.clone()])), None),
+                (None, Some(tail)) => (Some(fn_join!(tail, self.account.clone())), None),
+                (None, None) => unreachable!(""),
+            }
         };
 
         let resource = self.resource.clone();
-        let join = fn_join!(join, [format!(":{resource}")]);
+        let (head, tail) = if let Some(tail) = tail {
+            (head, Some(format!("{tail}:{resource}")))
+        } else {
+            (head, Some(resource))
+        };
+
+        let join = match (head, tail) {
+            (Some(head), Some(tail)) => fn_join!(head, [tail]),
+            (Some(head), None) => head,
+            (None, Some(tail)) => fn_join!(tail),
+            (None, None) => unreachable!(""),
+        };
 
         join.serialize(serializer)
     }

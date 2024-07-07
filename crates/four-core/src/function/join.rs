@@ -30,7 +30,7 @@ impl Serialize for Join {
         S: serde::Serializer,
     {
         let mut map = serializer.serialize_map(Some(2))?;
-        map.serialize_entry("Fn:Join", &self.0)?;
+        map.serialize_entry("Fn::Join", &self.0)?;
         map.end()
     }
 }

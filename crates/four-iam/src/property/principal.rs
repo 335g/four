@@ -7,7 +7,7 @@ pub enum Principal {
 }
 
 impl Principal {
-    pub fn service(name: String) -> Self {
+    pub fn service(name: &str) -> Self {
         Principal::Service(format!("{name}.amazonaws.com"))
     }
 }

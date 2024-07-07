@@ -1,1 +1,1 @@
-mod role;
+pub mod role;

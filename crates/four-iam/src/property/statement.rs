@@ -15,6 +15,16 @@ pub struct Statement {
     principal: Option<PrincipalList>,
 }
 
+impl Statement {
+    pub fn new(effect: Effect, action: ActionList, principal: Option<PrincipalList>) -> Self {
+        Statement {
+            effect,
+            action,
+            principal,
+        }
+    }
+}
+
 #[derive(Serialize)]
 pub enum ActionList {
     #[serde(rename(serialize = "Action"))]
