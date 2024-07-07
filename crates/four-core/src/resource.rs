@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use serde::Serialize;
 
-use crate::{function::reference::Referenced, logical_id::LogicalIdentified, LogicalId};
+use crate::logical_id::{LogicalId, LogicalIdentified};
 
 #[derive(Serialize)]
 pub struct Template {
@@ -15,10 +15,31 @@ pub struct Template {
 }
 
 // TODO: impl
-pub trait ReferencedResource: LogicalIdentified {}
+pub trait ReferencedResource {}
 
-pub trait ManagedResource: erased_serde::Serialize + LogicalIdentified {
+pub trait ManagedResource: erased_serde::Serialize {
     fn resource_type(&self) -> &'static str;
 }
 
 erased_serde::serialize_trait_object!(ManagedResource);
+
+pub struct IdentifiedResource {
+    logical_id: LogicalId,
+    resource: Box<dyn ManagedResource>,
+}
+
+impl IdentifiedResource {
+    pub fn new<R: ManagedResource + 'static>(logical_id: LogicalId, resource: R) -> Self {
+        let resource: Box<dyn ManagedResource> = Box::new(resource);
+        Self {
+            logical_id,
+            resource,
+        }
+    }
+}
+
+impl LogicalIdentified for IdentifiedResource {
+    fn logical_id(&self) -> LogicalId {
+        self.logical_id.clone()
+    }
+}

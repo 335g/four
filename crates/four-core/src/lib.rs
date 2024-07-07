@@ -35,6 +35,5 @@ mod resource_name;
 
 pub use error::Error;
 pub use logical_id::LogicalId;
-pub use parameter::StringParameter;
 pub use resource::ManagedResource;
 pub use resource_name::{Account, Partition, ARN};
