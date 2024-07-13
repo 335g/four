@@ -8,6 +8,8 @@ use crate::{
     region::Region,
 };
 
+/// Amazon Resource Name (ARN)
+///
 #[derive(Debug, Clone)]
 pub struct ARN {
     partition: Partition,

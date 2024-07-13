@@ -1,3 +1,4 @@
+mod convert;
 ///
 /// ```rust
 /// use four::{
@@ -33,7 +34,10 @@ mod region;
 mod resource;
 mod resource_name;
 
+pub use convert::{WillBe, WillBeString};
 pub use error::Error;
-pub use logical_id::LogicalId;
+pub use function::{r#ref, reference::Ref};
+pub use logical_id::{LogicalId, LogicalIdentified};
+pub use parameter::Parameter;
 pub use resource::ManagedResource;
 pub use resource_name::{Account, Partition, ARN};

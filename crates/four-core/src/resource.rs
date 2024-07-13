@@ -2,8 +2,9 @@ use std::collections::HashMap;
 
 use serde::Serialize;
 
-use crate::logical_id::{LogicalId, LogicalIdentified};
+use crate::logical_id::LogicalIdentified;
 
+/// Serialized to become CloudFormation Template
 #[derive(Serialize)]
 pub struct Template {
     #[serde(rename(serialize = "AWSTemplateFormatVersion"))]
@@ -17,29 +18,10 @@ pub struct Template {
 // TODO: impl
 pub trait ReferencedResource {}
 
-pub trait ManagedResource: erased_serde::Serialize {
+/// [Resource] section
+/// cf. https://docs.aws.amazon.com/ja_jp/AWSCloudFormation/latest/UserGuide/resources-section-structure.html
+pub trait ManagedResource: erased_serde::Serialize + LogicalIdentified {
     fn resource_type(&self) -> &'static str;
 }
 
 erased_serde::serialize_trait_object!(ManagedResource);
-
-pub struct IdentifiedResource {
-    logical_id: LogicalId,
-    resource: Box<dyn ManagedResource>,
-}
-
-impl IdentifiedResource {
-    pub fn new<R: ManagedResource + 'static>(logical_id: LogicalId, resource: R) -> Self {
-        let resource: Box<dyn ManagedResource> = Box::new(resource);
-        Self {
-            logical_id,
-            resource,
-        }
-    }
-}
-
-impl LogicalIdentified for IdentifiedResource {
-    fn logical_id(&self) -> LogicalId {
-        self.logical_id.clone()
-    }
-}

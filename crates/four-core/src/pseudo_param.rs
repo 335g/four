@@ -16,10 +16,10 @@ macro_rules! pseudo_param {
         }
 
         impl Referenced for $name {
-            type To = Self;
+            type Ref = Self;
 
-            fn r#ref(&self) -> Self {
-                self.clone()
+            fn referenced(&self) -> &Self {
+                self
             }
         }
     };

@@ -1,21 +1,24 @@
 use serde::{ser::SerializeMap, Serialize};
 
-use crate::logical_id::{LogicalId, LogicalIdentified};
+use crate::{
+    logical_id::{LogicalId, LogicalIdentified},
+    Parameter, WillBe,
+};
 
-pub(crate) trait Referenced {
-    type To: Serialize;
+pub trait Referenced {
+    type Ref: Serialize;
 
-    fn r#ref(&self) -> Self::To;
+    fn referenced(&self) -> &Self::Ref;
 }
 
 impl<T> Referenced for T
 where
     T: LogicalIdentified,
 {
-    type To = LogicalId;
+    type Ref = LogicalId;
 
-    fn r#ref(&self) -> <Self as Referenced>::To {
-        self.logical_id().clone()
+    fn referenced(&self) -> &<Self as Referenced>::Ref {
+        self.logical_id()
     }
 }
 
@@ -24,6 +27,10 @@ pub struct Ref<T>(T);
 impl<T> Ref<T> {
     pub fn new(x: T) -> Ref<T> {
         Ref(x)
+    }
+
+    pub fn boxed(self) -> Box<Ref<T>> {
+        Box::new(self)
     }
 }
 
@@ -36,7 +43,11 @@ where
         S: serde::Serializer,
     {
         let mut map = serializer.serialize_map(Some(1))?;
-        map.serialize_entry("Ref", &self.0.r#ref())?;
+        map.serialize_entry("Ref", self.0.referenced())?;
         map.end()
     }
+}
+
+impl<T> WillBe for Ref<Parameter<T>> {
+    type Figure = T;
 }

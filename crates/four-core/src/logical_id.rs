@@ -35,5 +35,5 @@ impl Serialize for LogicalId {
 }
 
 pub trait LogicalIdentified {
-    fn logical_id(&self) -> LogicalId;
+    fn logical_id(&self) -> &LogicalId;
 }
