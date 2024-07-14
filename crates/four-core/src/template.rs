@@ -1,9 +1,6 @@
-use serde::{
-    ser::{SerializeMap, SerializeSeq as _},
-    Serialize,
-};
+use serde::{ser::SerializeMap, Serialize};
 
-use crate::{parameter::Parameter, resource::ManagedResource, LogicalIdentified};
+use crate::{logical_id::LogicalIdentified, parameter::Parameter, resource::ManagedResource};
 
 #[derive(Debug, Serialize)]
 pub enum TemplateVersion {

@@ -1,8 +1,9 @@
 use serde::{ser::SerializeMap, Serialize};
 
 use crate::{
+    convert::WillBe,
     logical_id::{LogicalId, LogicalIdentified},
-    Parameter, WillBe,
+    parameter::Parameter,
 };
 
 pub trait Referenced {

@@ -2,7 +2,7 @@ use regex::Regex;
 use serde::Serialize;
 use std::sync::LazyLock;
 
-use crate::Error;
+use crate::error::Error;
 
 static LOGICAL_NAME_REGEX: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"[[:alnum:]]+"#).unwrap());
@@ -13,7 +13,7 @@ pub struct LogicalId {
 }
 
 impl TryFrom<&str> for LogicalId {
-    type Error = crate::Error;
+    type Error = Error;
 
     fn try_from(s: &str) -> Result<Self, Self::Error> {
         let s = s.to_string();

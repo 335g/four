@@ -1,9 +1,4 @@
-use serde::{
-    ser::{SerializeMap, SerializeSeq},
-    Serialize,
-};
-
-use crate::{logical_id::LogicalIdentified, Parameter};
+use crate::logical_id::LogicalIdentified;
 
 // TODO: impl
 pub trait ReferencedResource {}

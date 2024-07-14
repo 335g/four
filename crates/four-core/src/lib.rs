@@ -1,45 +1,11 @@
-mod convert;
-///
-/// ```rust
-/// use four::{
-///     Result,
-///     iam::resource::Role,
-///     lambda::resource::Function,
-/// };
-///
-/// #[four::stack(
-///     description = "",
-/// )]
-/// async fn stack() -> Result<()> {
-///     let mut role = Role::lambda_basic_execution();
-///     role.name = "role1";
-///
-///     let function = Function::builder(roke, code).build()?;
-///     
-///     Ok(())
-/// }
-/// ```
-///
-///
-///
-///
-///
-mod error;
-mod function;
-mod logical_id;
-mod macros;
-mod parameter;
-mod pseudo_param;
-mod region;
-mod resource;
-mod resource_name;
-mod template;
-
-pub use convert::{WillBe, WillBeNumber, WillBeString};
-pub use error::Error;
-pub use function::{r#ref, reference::Ref};
-pub use logical_id::{LogicalId, LogicalIdentified};
-pub use parameter::{NumberParameterBuilder, Parameter, StringParameterBuilder};
-pub use resource::ManagedResource;
-pub use resource_name::{Account, Partition, ARN};
-pub use template::Template;
+pub mod convert;
+pub mod error;
+pub mod function;
+pub mod logical_id;
+pub mod macros;
+pub mod parameter;
+pub mod pseudo_param;
+pub mod region;
+pub mod resource;
+pub mod resource_name;
+pub mod template;
