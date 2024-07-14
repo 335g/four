@@ -33,11 +33,13 @@ mod pseudo_param;
 mod region;
 mod resource;
 mod resource_name;
+mod template;
 
-pub use convert::{WillBe, WillBeString};
+pub use convert::{WillBe, WillBeNumber, WillBeString};
 pub use error::Error;
 pub use function::{r#ref, reference::Ref};
 pub use logical_id::{LogicalId, LogicalIdentified};
-pub use parameter::Parameter;
+pub use parameter::{NumberParameterBuilder, Parameter, StringParameterBuilder};
 pub use resource::ManagedResource;
 pub use resource_name::{Account, Partition, ARN};
+pub use template::Template;

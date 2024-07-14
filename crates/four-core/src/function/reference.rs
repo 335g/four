@@ -28,10 +28,6 @@ impl<T> Ref<T> {
     pub fn new(x: T) -> Ref<T> {
         Ref(x)
     }
-
-    pub fn boxed(self) -> Box<Ref<T>> {
-        Box::new(self)
-    }
 }
 
 impl<T> Serialize for Ref<T>

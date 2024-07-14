@@ -6,7 +6,7 @@ use thiserror::Error;
 use crate::{logical_id::LogicalIdentified, LogicalId};
 
 #[non_exhaustive]
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, Serialize)]
 pub enum ParameterType {
     String,
     Number,
@@ -22,7 +22,7 @@ pub struct Parameter<T> {
     max_length: Option<usize>,
     min_length: Option<usize>,
     max_value: Option<f64>,
-    min_value: Option<i64>,
+    min_value: Option<f64>,
     no_echo: Option<bool>,
     r#type: ParameterType,
     logical_id: LogicalId,
@@ -42,7 +42,7 @@ where
     where
         S: serde::Serializer,
     {
-        let count = self.allowed_pattern.as_ref().map(|_| 1).unwrap_or_default()
+        let len = self.allowed_pattern.as_ref().map(|_| 1).unwrap_or_default()
             + self.allowed_values.as_ref().map(|_| 1).unwrap_or_default()
             + self
                 .constraint_description
@@ -51,12 +51,13 @@ where
                 .unwrap_or_default()
             + self.default.as_ref().map(|_| 1).unwrap_or_default()
             + self.description.as_ref().map(|_| 1).unwrap_or_default()
-            + self.max_length.map(|_| 1).unwrap_or_default()
-            + self.min_length.map(|_| 1).unwrap_or_default()
-            + self.max_value.map(|_| 1).unwrap_or_default()
-            + self.min_value.map(|_| 1).unwrap_or_default()
-            + self.no_echo.map(|_| 1).unwrap_or_default();
-        let mut map = serializer.serialize_map(Some(count))?;
+            + self.max_length.as_ref().map(|_| 1).unwrap_or_default()
+            + self.min_length.as_ref().map(|_| 1).unwrap_or_default()
+            + self.max_value.as_ref().map(|_| 1).unwrap_or_default()
+            + self.min_value.as_ref().map(|_| 1).unwrap_or_default()
+            + self.no_echo.as_ref().map(|_| 1).unwrap_or_default()
+            + 1;
+        let mut map = serializer.serialize_map(Some(len))?;
 
         if let Some(allowed_pattern) = self.allowed_pattern.as_ref() {
             map.serialize_entry("AllowedPattern", allowed_pattern)?;
@@ -88,6 +89,8 @@ where
         if let Some(no_echo) = self.no_echo {
             map.serialize_entry("NoEcho", &no_echo)?;
         }
+
+        map.serialize_entry("Type", &self.r#type)?;
 
         map.end()
     }
@@ -143,7 +146,7 @@ impl<T> StringParameterBuilder<T> {
     }
 
     pub fn default(mut self, x: String) -> Self {
-        self.description = Some(x);
+        self.default = Some(x);
         self
     }
 
@@ -197,8 +200,106 @@ impl StringParameterBuilder<String> {
     }
 }
 
+pub struct NumberParameterBuilder<T> {
+    allowed_pattern: Option<String>,
+    allowed_values: Option<Vec<f64>>,
+    constraint_description: Option<String>,
+    default: Option<f64>,
+    description: Option<String>,
+    max_value: Option<f64>,
+    min_value: Option<f64>,
+    no_echo: Option<bool>,
+    r#type: ParameterType,
+    _ghost: PhantomData<T>,
+}
+
+impl<T> NumberParameterBuilder<T> {
+    fn new() -> Self {
+        Self {
+            allowed_pattern: None,
+            allowed_values: None,
+            constraint_description: None,
+            default: None,
+            description: None,
+            max_value: None,
+            min_value: None,
+            no_echo: None,
+            r#type: ParameterType::String,
+            _ghost: PhantomData,
+        }
+    }
+    pub fn allowed_pattern(mut self, x: String) -> Self {
+        self.allowed_pattern = Some(x);
+        self
+    }
+
+    pub fn allowed_values(mut self, x: impl Iterator<Item = f64>) -> Self {
+        self.allowed_values = Some(x.into_iter().collect());
+        self
+    }
+
+    pub fn constraint_description(mut self, x: String) -> Self {
+        self.constraint_description = Some(x);
+        self
+    }
+
+    pub fn default(mut self, x: f64) -> Self {
+        self.default = Some(x);
+        self
+    }
+
+    pub fn description(mut self, x: String) -> Self {
+        self.description = Some(x);
+        self
+    }
+
+    pub fn max_value(mut self, x: f64) -> Self {
+        self.max_value = Some(x);
+        self
+    }
+
+    pub fn min_value(mut self, x: f64) -> Self {
+        self.min_value = Some(x);
+        self
+    }
+
+    pub fn no_echo(mut self, x: bool) -> Self {
+        self.no_echo = Some(x);
+        self
+    }
+}
+
+impl NumberParameterBuilder<f64> {
+    pub fn build(self, logical_id: LogicalId) -> Result<Parameter<f64>, ParameterError> {
+        match (&self.min_value, &self.max_value) {
+            (Some(min_value), Some(max_value)) if min_value > max_value => {
+                return Err(ParameterError::MinMaxValueInversed(*min_value, *max_value))
+            }
+            _ => {}
+        };
+
+        Ok(Parameter {
+            allowed_pattern: self.allowed_pattern,
+            allowed_values: self.allowed_values,
+            constraint_description: self.constraint_description,
+            default: self.default,
+            description: self.description,
+            max_length: None,
+            min_length: None,
+            max_value: self.max_value,
+            min_value: self.min_value,
+            no_echo: self.no_echo,
+            logical_id,
+            r#type: self.r#type,
+        })
+    }
+}
+
 #[derive(Debug, Error)]
 pub enum ParameterError {
     #[error("min_length({0}) is bigger than max_length({1})")]
     MinMaxLengthInverersed(usize, usize),
+
+    #[error("min_value({0}) is bigger than max_value({1})")]
+    MinMaxValueInversed(f64, f64),
 }

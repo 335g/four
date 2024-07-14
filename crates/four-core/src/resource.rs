@@ -1,19 +1,9 @@
-use std::collections::HashMap;
+use serde::{
+    ser::{SerializeMap, SerializeSeq},
+    Serialize,
+};
 
-use serde::Serialize;
-
-use crate::logical_id::LogicalIdentified;
-
-/// Serialized to become CloudFormation Template
-#[derive(Serialize)]
-pub struct Template {
-    #[serde(rename(serialize = "AWSTemplateFormatVersion"))]
-    format_version: String,
-    #[serde(rename(serialize = "Description"))]
-    description: String,
-    #[serde(rename(serialize = "Resources"))]
-    resources: HashMap<String, Box<dyn ManagedResource>>,
-}
+use crate::{logical_id::LogicalIdentified, Parameter};
 
 // TODO: impl
 pub trait ReferencedResource {}
