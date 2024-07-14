@@ -1,30 +1,30 @@
 use four_core::{
-    convert::WillBeString,
     function::getatt::{Attribute, HaveAtt},
     logical_id::{LogicalId, LogicalIdentified},
     resource::ManagedResource,
     resource_name::Arn,
+    WillBe,
 };
-use serde::ser::{Serialize, SerializeMap};
+use serde::{ser::SerializeMap as _, Serialize};
 
 use crate::property::{
-    action,
-    effect::Effect,
+    //     action,
+    //     effect::Effect,
     managed_policy::ManagedPolicy,
     policy::Policy,
-    principal::Principal,
-    statement::{ActionList, PrincipalList, Statement},
-    version::Version,
+    //     principal::Principal,
+    //     statement::{ActionList, PrincipalList, Statement},
+    //     version::Version,
 };
 
-pub struct Role {
+pub struct Role<'a> {
     assume_role_policy_document: Policy,
-    role_name: Option<WillBeString>,
+    role_name: Option<WillBe<'a, String>>,
     managed_policy_arns: Option<Vec<ManagedPolicy>>,
     logical_id: LogicalId,
 }
 
-impl Role {
+impl<'a> Role<'a> {
     pub fn new(assume_role_policy_document: Policy, logical_id: LogicalId) -> Self {
         Self {
             assume_role_policy_document,
@@ -50,7 +50,7 @@ impl Role {
     //     }
     // }
 
-    pub fn name(mut self, name: WillBeString) -> Self {
+    pub fn name(mut self, name: WillBe<'a, String>) -> Role<'a> {
         self.role_name = Some(name);
         self
     }
@@ -61,7 +61,7 @@ impl Role {
     }
 }
 
-impl Serialize for Role {
+impl Serialize for Role<'_> {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
         S: serde::Serializer,
@@ -79,23 +79,26 @@ impl Serialize for Role {
     }
 }
 
-impl LogicalIdentified for Role {
+impl LogicalIdentified for Role<'_> {
     fn logical_id(&self) -> &LogicalId {
         &self.logical_id
     }
 }
 
-impl ManagedResource for Role {
+impl ManagedResource for Role<'_> {
     fn resource_type(&self) -> &'static str {
         "AWS::IAM::Role"
     }
 }
 
+#[derive(Debug, Serialize)]
 pub struct RoleArn(Arn);
 
-impl HaveAtt<RoleArn> for Role {
-    type Value = String;
-}
+#[derive(Debug, Serialize)]
+pub struct RoleId(String);
+
+impl HaveAtt<RoleArn> for Role<'_> {}
+impl HaveAtt<RoleId> for Role<'_> {}
 
 impl Attribute for RoleArn {
     fn name() -> &'static str {
@@ -103,16 +106,22 @@ impl Attribute for RoleArn {
     }
 }
 
+impl Attribute for RoleId {
+    fn name() -> &'static str {
+        "RoleId"
+    }
+}
+
 struct RoleInner<'a> {
     assume_role_policy_document: &'a Policy,
-    role_name: &'a Option<WillBeString>,
+    role_name: &'a Option<WillBe<'a, String>>,
     managed_policy_arns: &'a Option<Vec<ManagedPolicy>>,
 }
 
 impl<'a> RoleInner<'a> {
     fn new(
         assume_role_policy_document: &'a Policy,
-        role_name: &'a Option<WillBeString>,
+        role_name: &'a Option<WillBe<'a, String>>,
         managed_policy_arns: &'a Option<Vec<ManagedPolicy>>,
     ) -> RoleInner<'a> {
         Self {

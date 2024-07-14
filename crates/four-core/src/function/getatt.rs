@@ -1,33 +1,26 @@
-use std::marker::PhantomData;
-
 use serde::{
     ser::{SerializeMap, SerializeSeq},
     Serialize,
 };
 
-use crate::{
-    convert::WillBe,
-    logical_id::{LogicalId, LogicalIdentified},
-};
+use crate::logical_id::{LogicalId, LogicalIdentified};
 
-pub trait HaveAtt<A>: LogicalIdentified {
-    type Value;
+pub trait HaveAtt<A>: LogicalIdentified {}
+
+pub struct GetAtt<'a, A> {
+    resource: &'a dyn HaveAtt<A>,
 }
 
-pub struct GetAtt<'a, A, T> {
-    resource: &'a dyn HaveAtt<A, Value = T>,
-}
-
-impl<'a, A, T> GetAtt<'a, A, T>
+impl<'a, A> GetAtt<'a, A>
 where
     A: Attribute,
 {
-    pub(crate) fn new(resource: &'a dyn HaveAtt<A, Value = T>) -> GetAtt<'a, A, T> {
+    pub(crate) fn new(resource: &'a dyn HaveAtt<A>) -> GetAtt<'a, A> {
         GetAtt { resource }
     }
 }
 
-impl<A, T> Serialize for GetAtt<'_, A, T>
+impl<A> Serialize for GetAtt<'_, A>
 where
     A: Attribute,
 {

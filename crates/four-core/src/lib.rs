@@ -9,3 +9,5 @@ pub mod region;
 pub mod resource;
 pub mod resource_name;
 pub mod template;
+
+pub use convert::WillBe;

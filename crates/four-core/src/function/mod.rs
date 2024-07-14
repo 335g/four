@@ -5,12 +5,12 @@ pub mod reference;
 use getatt::{Attribute, GetAtt, HaveAtt};
 use reference::Ref;
 
-pub fn r#ref<T>(wrapped: T) -> Box<Ref<T>> {
-    Box::new(Ref::new(wrapped))
+use crate::{logical_id::LogicalIdentified, WillBe};
+
+pub fn r#ref<T: LogicalIdentified + 'static, U>(wrapped: T) -> WillBe<'static, U> {
+    WillBe::new(Box::new(Ref::new(wrapped)))
 }
 
-pub fn get_att<A: Attribute, H: HaveAtt<A>>(
-    resource: &H,
-) -> GetAtt<'_, A, <H as HaveAtt<A>>::Value> {
-    GetAtt::new(resource)
+pub fn get_att<'a, A: Attribute + 'a, H: HaveAtt<A>, U>(resource: &'a H) -> WillBe<U> {
+    WillBe::new(Box::new(GetAtt::new(resource)))
 }

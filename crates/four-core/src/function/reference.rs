@@ -1,10 +1,6 @@
 use serde::{ser::SerializeMap, Serialize};
 
-use crate::{
-    convert::WillBe,
-    logical_id::{LogicalId, LogicalIdentified},
-    parameter::Parameter,
-};
+use crate::logical_id::{LogicalId, LogicalIdentified};
 
 pub trait Referenced {
     type Ref: Serialize;
@@ -43,8 +39,4 @@ where
         map.serialize_entry("Ref", self.0.referenced())?;
         map.end()
     }
-}
-
-impl<T> WillBe for Ref<Parameter<T>> {
-    type Value = T;
 }

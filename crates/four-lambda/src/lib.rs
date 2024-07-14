@@ -1,6 +1,3 @@
-mod error;
-mod property;
-mod resource;
-
-pub use error::Error;
-pub use property::code::Code;
+pub mod error;
+pub mod property;
+pub mod resource;
