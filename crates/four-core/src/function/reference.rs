@@ -46,5 +46,5 @@ where
 }
 
 impl<T> WillBe for Ref<Parameter<T>> {
-    type Figure = T;
+    type Value = T;
 }

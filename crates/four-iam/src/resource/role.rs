@@ -1,7 +1,9 @@
 use four_core::{
     convert::WillBeString,
+    function::getatt::{Attribute, HaveAtt},
     logical_id::{LogicalId, LogicalIdentified},
     resource::ManagedResource,
+    resource_name::Arn,
 };
 use serde::ser::{Serialize, SerializeMap};
 
@@ -86,6 +88,18 @@ impl LogicalIdentified for Role {
 impl ManagedResource for Role {
     fn resource_type(&self) -> &'static str {
         "AWS::IAM::Role"
+    }
+}
+
+pub struct RoleArn(Arn);
+
+impl HaveAtt<RoleArn> for Role {
+    type Value = String;
+}
+
+impl Attribute for RoleArn {
+    fn name() -> &'static str {
+        "Arn"
     }
 }
 

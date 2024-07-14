@@ -11,7 +11,7 @@ use crate::{
 /// Amazon Resource Name (ARN)
 ///
 #[derive(Debug, Clone)]
-pub struct ARN {
+pub struct Arn {
     partition: Partition,
     service: String,
     region: Region,
@@ -19,7 +19,7 @@ pub struct ARN {
     resource: String,
 }
 
-impl ARN {
+impl Arn {
     pub fn builder(service: &str, resource: &str, account: Account) -> RefNameAccount {
         RefNameAccount {
             service: service.to_string(),
@@ -29,7 +29,7 @@ impl ARN {
     }
 }
 
-impl Serialize for ARN {
+impl Serialize for Arn {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
         S: Serializer,
@@ -117,8 +117,8 @@ impl RefNameAccount {
         }
     }
 
-    pub fn build(self) -> ARN {
-        ARN {
+    pub fn build(self) -> Arn {
+        Arn {
             partition: Partition::Ref,
             service: self.service,
             region: Region::Null,
@@ -146,8 +146,8 @@ impl RefNameRegion {
         }
     }
 
-    pub fn build(self) -> ARN {
-        ARN {
+    pub fn build(self) -> Arn {
+        Arn {
             partition: Partition::Ref,
             service: self.service,
             region: self.region,
@@ -175,8 +175,8 @@ impl RefNamePartition {
         }
     }
 
-    pub fn build(self) -> ARN {
-        ARN {
+    pub fn build(self) -> Arn {
+        Arn {
             partition: self.partition,
             service: self.service,
             region: Region::Null,
@@ -195,8 +195,8 @@ pub struct RefNameRegionPartition {
 }
 
 impl RefNameRegionPartition {
-    pub fn build(self) -> ARN {
-        ARN {
+    pub fn build(self) -> Arn {
+        Arn {
             partition: self.partition,
             service: self.service,
             region: self.region,
