@@ -51,3 +51,56 @@ pseudo_param!(
     StackName,
     URLSuffix
 );
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_account_id() {
+        let s = serde_json::to_string(&AccountId).unwrap();
+        assert_eq!(s, "\"AWS::AccountId\"");
+    }
+
+    #[test]
+    fn test_notification_arns() {
+        let s = serde_json::to_string(&NotificationARNs).unwrap();
+        assert_eq!(s, "\"AWS::NotificationARNs\"");
+    }
+
+    #[test]
+    fn test_no_value() {
+        let s = serde_json::to_string(&NoValue).unwrap();
+        assert_eq!(s, "\"AWS::NoValue\"");
+    }
+
+    #[test]
+    fn test_partition() {
+        let s = serde_json::to_string(&Partition).unwrap();
+        assert_eq!(s, "\"AWS::Partition\"");
+    }
+
+    #[test]
+    fn test_region() {
+        let s = serde_json::to_string(&Region).unwrap();
+        assert_eq!(s, "\"AWS::Region\"");
+    }
+
+    #[test]
+    fn test_stack_id() {
+        let s = serde_json::to_string(&StackId).unwrap();
+        assert_eq!(s, "\"AWS::StackId\"");
+    }
+
+    #[test]
+    fn test_stack_name() {
+        let s = serde_json::to_string(&StackName).unwrap();
+        assert_eq!(s, "\"AWS::StackName\"");
+    }
+
+    #[test]
+    fn test_url_suffix() {
+        let s = serde_json::to_string(&URLSuffix).unwrap();
+        assert_eq!(s, "\"AWS::URLSuffix\"");
+    }
+}
