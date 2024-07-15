@@ -1,35 +1,53 @@
-use crate::function::reference::Referenced;
+use crate::function::reference::{RefInner, Referenced};
 use serde::Serialize;
 
 macro_rules! pseudo_param {
-    ($name:ident) => {
+    ($($name:ident),*) => {
         #[derive(Debug, Clone, Copy)]
-        pub struct $name;
+        pub enum PseudoParam {
+            $($name($name)),*
+        }
 
-        impl Serialize for $name {
+        impl Serialize for PseudoParam {
             fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
             where
                 S: serde::Serializer,
             {
-                serializer.serialize_str(&format!("AWS::{}", stringify!($name)))
+                match self {
+                    $(PseudoParam::$name(x) => x.serialize(serializer)),*
+                }
             }
         }
 
-        impl Referenced for $name {
-            type Ref = Self;
+        $(
+            #[derive(Debug, Clone, Copy)]
+            pub struct $name;
 
-            fn referenced(&self) -> &Self {
-                self
+            impl Serialize for $name {
+                fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+                where
+                    S: serde::Serializer,
+                {
+                    serializer.serialize_str(&format!("AWS::{}", stringify!($name)))
+                }
             }
-        }
+
+            impl Referenced for $name {
+                fn referenced(self) -> RefInner {
+                    RefInner::PseudoParam(PseudoParam::$name($name))
+                }
+            }
+        )*
     };
 }
 
-pseudo_param!(AccountId);
-pseudo_param!(NotificationARNs);
-pseudo_param!(NoValue);
-pseudo_param!(Partition);
-pseudo_param!(Region);
-pseudo_param!(StackId);
-pseudo_param!(StackName);
-pseudo_param!(URLSuffix);
+pseudo_param!(
+    AccountId,
+    NotificationARNs,
+    NoValue,
+    Partition,
+    Region,
+    StackId,
+    StackName,
+    URLSuffix
+);

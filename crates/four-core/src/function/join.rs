@@ -1,10 +1,18 @@
 use serde::{ser::SerializeMap as _, Serialize};
 
+use crate::function::reference::{RefInner, Referenced};
+
 pub struct Join(pub(crate) Vec<Box<dyn erased_serde::Serialize>>);
 
 impl Join {
     pub(crate) fn new(xs: Vec<Box<dyn erased_serde::Serialize>>) -> Self {
         Self(xs)
+    }
+}
+
+impl Referenced for Join {
+    fn referenced(self) -> RefInner {
+        RefInner::Join(self)
     }
 }
 

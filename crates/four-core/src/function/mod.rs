@@ -3,14 +3,14 @@ pub mod join;
 pub mod reference;
 
 use getatt::{Attribute, GetAtt, HaveAtt};
-use reference::Ref;
+use reference::{Ref, Referenced};
 
-use crate::{logical_id::LogicalIdentified, WillBe};
+use crate::WillBe;
 
-pub fn r#ref<T: LogicalIdentified + 'static, U>(wrapped: T) -> WillBe<'static, U> {
+pub fn r#ref<R: Referenced, U>(wrapped: R) -> WillBe<U> {
     WillBe::new(Box::new(Ref::new(wrapped)))
 }
 
-pub fn get_att<'a, A: Attribute + 'a, H: HaveAtt<A>, U>(resource: &'a H) -> WillBe<U> {
+pub fn get_att<A: Attribute, H: HaveAtt<A>>(resource: &H) -> WillBe<A> {
     WillBe::new(Box::new(GetAtt::new(resource)))
 }

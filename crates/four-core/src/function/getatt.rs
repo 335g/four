@@ -7,30 +7,28 @@ use crate::logical_id::{LogicalId, LogicalIdentified};
 
 pub trait HaveAtt<A>: LogicalIdentified {}
 
-pub struct GetAtt<'a, A> {
-    resource: &'a dyn HaveAtt<A>,
+pub struct GetAtt {
+    logical_id: LogicalId,
+    name: &'static str,
 }
 
-impl<'a, A> GetAtt<'a, A>
-where
-    A: Attribute,
-{
-    pub(crate) fn new(resource: &'a dyn HaveAtt<A>) -> GetAtt<'a, A> {
-        GetAtt { resource }
+impl GetAtt {
+    pub(crate) fn new<A: Attribute>(resource: &dyn HaveAtt<A>) -> GetAtt {
+        GetAtt {
+            logical_id: resource.logical_id().clone(),
+            name: A::name(),
+        }
     }
 }
 
-impl<A> Serialize for GetAtt<'_, A>
-where
-    A: Attribute,
-{
+impl Serialize for GetAtt {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
         S: serde::Serializer,
     {
         let inner = GetAttInner {
-            logical_id: self.resource.logical_id(),
-            name: A::name(),
+            logical_id: &self.logical_id,
+            name: self.name,
         };
         let mut map = serializer.serialize_map(Some(1))?;
         map.serialize_entry("Fn::GetAtt", &inner)?;

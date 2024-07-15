@@ -1,4 +1,5 @@
 use four_core::{
+    convert::WillMappable,
     function::getatt::{Attribute, HaveAtt},
     logical_id::{LogicalId, LogicalIdentified},
     resource::ManagedResource,
@@ -8,23 +9,22 @@ use four_core::{
 use serde::{ser::SerializeMap as _, Serialize};
 
 use crate::property::{
-    //     action,
-    //     effect::Effect,
+    action::{self, Action},
+    effect::Effect,
     managed_policy::ManagedPolicy,
     policy::Policy,
-    //     principal::Principal,
-    //     statement::{ActionList, PrincipalList, Statement},
-    //     version::Version,
+    principal::Principal,
+    statement::{ActionList, PrincipalList, Statement},
 };
 
-pub struct Role<'a> {
+pub struct Role {
     assume_role_policy_document: Policy,
-    role_name: Option<WillBe<'a, String>>,
+    role_name: Option<WillBe<RoleName>>,
     managed_policy_arns: Option<Vec<ManagedPolicy>>,
     logical_id: LogicalId,
 }
 
-impl<'a> Role<'a> {
+impl Role {
     pub fn new(assume_role_policy_document: Policy, logical_id: LogicalId) -> Self {
         Self {
             assume_role_policy_document,
@@ -34,24 +34,23 @@ impl<'a> Role<'a> {
         }
     }
 
-    // pub fn lambda_execution() -> Self {
-    //     let version = Version::latest();
-    //     let effect = Effect::Allow;
-    //     let principals = PrincipalList::Applicable(Principal::service("lambda"));
-    //     let actions = ActionList::Applicable(vec![Box::new(action::sts::AssumeRole)]);
-    //     let statement = Statement::new(effect, actions, Some(principals));
-    //     let assume_role_policy_document = Policy::latest(vec![statement]);
-    //     let managed_policy = ManagedPolicy::lambda_basic_execution_role();
+    pub fn lambda_execution(id: LogicalId) -> Self {
+        let actions: Vec<Box<dyn Action>> = vec![Box::new(action::sts::AssumeRole)];
+        let statement = Statement::builder()
+            .effect(Effect::Allow)
+            .principal(PrincipalList::Applicable(Principal::service("lambda")))
+            .action(ActionList::Applicable(actions))
+            .build();
+        let statements = vec![statement];
+        let assume_role_policy_document = Policy::latest(statements);
+        let role = Role::new(assume_role_policy_document, id)
+            .managed_policy_arns(vec![ManagedPolicy::lambda_basic_execution_role()]);
 
-    //     Role {
-    //         assume_role_policy_document,
-    //         managed_policies: vec![managed_policy],
-    //         role_name: None,
-    //     }
-    // }
+        role
+    }
 
-    pub fn name(mut self, name: WillBe<'a, String>) -> Role<'a> {
-        self.role_name = Some(name);
+    pub fn name(mut self, name: WillBe<String>) -> Self {
+        self.role_name = Some(name.map());
         self
     }
 
@@ -61,7 +60,7 @@ impl<'a> Role<'a> {
     }
 }
 
-impl Serialize for Role<'_> {
+impl Serialize for Role {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
         S: serde::Serializer,
@@ -79,17 +78,32 @@ impl Serialize for Role<'_> {
     }
 }
 
-impl LogicalIdentified for Role<'_> {
+impl LogicalIdentified for Role {
     fn logical_id(&self) -> &LogicalId {
         &self.logical_id
     }
 }
 
-impl ManagedResource for Role<'_> {
+impl ManagedResource for Role {
     fn resource_type(&self) -> &'static str {
         "AWS::IAM::Role"
     }
 }
+
+#[derive(Debug, Serialize)]
+pub struct RoleName(String);
+
+impl RoleName {
+    pub fn new(name: String) -> Self {
+        Self(name)
+    }
+
+    pub fn will(self) -> WillBe<RoleName> {
+        WillBe::new(Box::new(self))
+    }
+}
+
+impl WillMappable<String> for RoleName {}
 
 #[derive(Debug, Serialize)]
 pub struct RoleArn(Arn);
@@ -97,8 +111,8 @@ pub struct RoleArn(Arn);
 #[derive(Debug, Serialize)]
 pub struct RoleId(String);
 
-impl HaveAtt<RoleArn> for Role<'_> {}
-impl HaveAtt<RoleId> for Role<'_> {}
+impl HaveAtt<RoleArn> for Role {}
+impl HaveAtt<RoleId> for Role {}
 
 impl Attribute for RoleArn {
     fn name() -> &'static str {
@@ -114,14 +128,14 @@ impl Attribute for RoleId {
 
 struct RoleInner<'a> {
     assume_role_policy_document: &'a Policy,
-    role_name: &'a Option<WillBe<'a, String>>,
+    role_name: &'a Option<WillBe<RoleName>>,
     managed_policy_arns: &'a Option<Vec<ManagedPolicy>>,
 }
 
 impl<'a> RoleInner<'a> {
     fn new(
         assume_role_policy_document: &'a Policy,
-        role_name: &'a Option<WillBe<'a, String>>,
+        role_name: &'a Option<WillBe<RoleName>>,
         managed_policy_arns: &'a Option<Vec<ManagedPolicy>>,
     ) -> RoleInner<'a> {
         Self {

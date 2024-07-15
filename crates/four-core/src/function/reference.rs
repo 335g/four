@@ -1,42 +1,61 @@
 use serde::{ser::SerializeMap, Serialize};
 
-use crate::logical_id::{LogicalId, LogicalIdentified};
-
+use crate::{
+    function::join::Join,
+    logical_id::{LogicalId, LogicalIdentified},
+    pseudo_param::PseudoParam,
+};
 pub trait Referenced {
-    type Ref: Serialize;
-
-    fn referenced(&self) -> &Self::Ref;
+    fn referenced(self) -> RefInner;
 }
 
-impl<T> Referenced for T
+impl<T> Referenced for &T
 where
     T: LogicalIdentified,
 {
-    type Ref = LogicalId;
-
-    fn referenced(&self) -> &<Self as Referenced>::Ref {
-        self.logical_id()
+    fn referenced(self) -> RefInner {
+        RefInner::Id(self.logical_id().clone())
     }
 }
 
-pub struct Ref<T>(T);
+pub enum RefInner {
+    Id(LogicalId),
+    PseudoParam(PseudoParam),
+    Join(Join),
+}
 
-impl<T> Ref<T> {
-    pub fn new(x: T) -> Ref<T> {
-        Ref(x)
+impl Serialize for RefInner {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        match self {
+            RefInner::Id(id) => id.serialize(serializer),
+            RefInner::PseudoParam(param) => param.serialize(serializer),
+            RefInner::Join(join) => join.serialize(serializer),
+        }
     }
 }
 
-impl<T> Serialize for Ref<T>
-where
-    T: Referenced,
-{
+pub struct Ref {
+    inner: RefInner,
+}
+
+impl Ref {
+    pub fn new<R: Referenced>(r: R) -> Ref {
+        Ref {
+            inner: r.referenced(),
+        }
+    }
+}
+
+impl Serialize for Ref {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
         S: serde::Serializer,
     {
         let mut map = serializer.serialize_map(Some(1))?;
-        map.serialize_entry("Ref", self.0.referenced())?;
+        map.serialize_entry("Ref", &self.inner)?;
         map.end()
     }
 }
