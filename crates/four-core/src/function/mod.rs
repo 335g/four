@@ -22,7 +22,8 @@ mod tests {
     use super::*;
     use crate::{
         logical_id::{LogicalId, LogicalIdentified},
-        pseudo_param::AccountId,
+        parameter::Parameter,
+        pseudo::AccountId,
         resource::ManagedResource,
     };
 
@@ -30,7 +31,16 @@ mod tests {
     fn test_ref_pseudo_param() {
         let param = r#ref::<_, String>(AccountId);
         let s = serde_json::to_string(&param).unwrap();
-        assert_eq!(s, "{\"Ref\":\"AWS::AccountId\"}");
+        assert_eq!(s, r#"{"Ref":"AWS::AccountId"}"#);
+    }
+
+    #[test]
+    fn test_ref_param() {
+        let param_id = LogicalId::try_from("id-of-param").unwrap();
+        let param = Parameter::string().build(param_id).unwrap();
+        let param = r#ref::<_, String>(&param);
+        let s = serde_json::to_string(&param).unwrap();
+        assert_eq!(s, r#"{"Ref":"id-of-param"}"#);
     }
 
     #[test]
@@ -63,10 +73,10 @@ mod tests {
         }
 
         let a = A {
-            id: LogicalId::try_from("id of A").unwrap(),
+            id: LogicalId::try_from("id-of-A").unwrap(),
         };
         let s = get_att(&a);
         let s = serde_json::to_string(&s).unwrap();
-        assert_eq!(s, "{\"Fn::GetAtt\":[\"id of A\",\"name of B\"]}");
+        assert_eq!(s, r#"{"Fn::GetAtt":["id-of-A","name of B"]}"#);
     }
 }

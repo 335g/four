@@ -2,9 +2,10 @@ use nutype::nutype;
 use serde::{Serialize, Serializer};
 
 use crate::{
+    account::Account,
     fn_join,
     function::{join::Join, reference::Ref},
-    pseudo_param,
+    pseudo,
     region::Region,
 };
 
@@ -34,61 +35,88 @@ impl Serialize for Arn {
     where
         S: Serializer,
     {
+        enum StringOr {
+            String(String),
+            Or(Box<dyn erased_serde::Serialize>),
+        }
+
+        let mut contents: Vec<StringOr> = vec![];
         let service = self.service.clone();
-        let (head, tail) = if let Some(partition) = self.partition.to_str() {
-            (None, Some(format!("arn:{partition}:{service}")))
+        if let Some(partition) = self.partition.to_str() {
+            contents.push(StringOr::String("arn".to_string()));
+            contents.push(StringOr::String(partition.to_string()));
+            contents.push(StringOr::String(service));
         } else {
-            (
-                Some(fn_join!("arn:", self.partition)),
-                Some(format!(":{service}")),
-            )
-        };
+            contents.push(StringOr::String("arn".to_string()));
+            contents.push(StringOr::Or(Box::new(self.partition)));
+            contents.push(StringOr::String(service));
+        }
 
-        let (head, tail) = if let Some(region) = self.region.to_str() {
-            let tail = tail.expect("tail is some string");
-            (head, Some(format!("{tail}:{region}")))
+        if let Some(region) = self.region.to_str() {
+            contents.push(StringOr::String(region.to_string()));
         } else {
-            match (head, tail) {
-                (Some(head), Some(tail)) => {
-                    (Some(fn_join!(head, [tail, self.region.clone()])), None)
+            contents.push(StringOr::Or(Box::new(self.region)));
+        }
+
+        if let Some(account) = self.account.to_str() {
+            contents.push(StringOr::String(account.to_string()));
+        } else {
+            contents.push(StringOr::Or(Box::new(self.account.clone())));
+        }
+
+        contents.push(StringOr::String(self.resource.clone()));
+
+        let contents = contents
+            .into_iter()
+            .enumerate()
+            .fold(vec![], |mut acc, (i, x)| {
+                if i != 0 {
+                    let tail = acc.pop().expect("at least 1 value");
+                    match (tail, x) {
+                        (StringOr::String(tail), StringOr::String(x)) => {
+                            acc.push(StringOr::String(format!("{tail}:{x}")));
+                        }
+                        (StringOr::String(tail), StringOr::Or(x)) => {
+                            acc.push(StringOr::String(format!("{tail}:")));
+                            acc.push(StringOr::Or(x));
+                        }
+                        (StringOr::Or(tail), StringOr::String(x)) => {
+                            acc.push(StringOr::Or(tail));
+                            acc.push(StringOr::String(format!(":{x}")));
+                        }
+                        (StringOr::Or(tail), StringOr::Or(x)) => {
+                            acc.push(StringOr::Or(tail));
+                            acc.push(StringOr::String(":".to_string()));
+                            acc.push(StringOr::Or(x));
+                        }
+                    }
+                } else {
+                    acc.push(x);
                 }
-                (None, Some(tail)) => (Some(fn_join!(tail, self.region.clone())), None),
-                (_, None) => unreachable!("tail is some string"),
-            }
-        };
 
-        let (head, tail) = if let Some(account) = self.account.to_str() {
-            if let Some(tail) = tail {
-                (head, Some(format!("{tail}:{account}")))
-            } else {
-                (head, Some(format!(":{account}")))
-            }
+                acc
+            });
+
+        if contents.len() == 1 {
+            let elem = &contents[0];
+            let StringOr::String(elem) = elem else {
+                unreachable!("first element is string")
+            };
+
+            elem.serialize(serializer)
         } else {
-            match (head, tail) {
-                (Some(head), Some(tail)) => {
-                    (Some(fn_join!(head, [tail, self.account.clone()])), None)
-                }
-                (Some(head), None) => (Some(fn_join!(head, [self.account.clone()])), None),
-                (None, Some(tail)) => (Some(fn_join!(tail, self.account.clone())), None),
-                (None, None) => unreachable!(""),
-            }
-        };
+            let contents = contents
+                .into_iter()
+                .map(|x| -> Box<dyn erased_serde::Serialize> {
+                    match x {
+                        StringOr::String(x) => Box::new(x),
+                        StringOr::Or(x) => Box::new(x),
+                    }
+                })
+                .collect::<Vec<_>>();
 
-        let resource = self.resource.clone();
-        let (head, tail) = if let Some(tail) = tail {
-            (head, Some(format!("{tail}:{resource}")))
-        } else {
-            (head, Some(resource))
-        };
-
-        let join = match (head, tail) {
-            (Some(head), Some(tail)) => fn_join!(head, [tail]),
-            (Some(head), None) => head,
-            (None, Some(tail)) => fn_join!(tail),
-            (None, None) => unreachable!(""),
-        };
-
-        join.serialize(serializer)
+            Join(contents).serialize(serializer)
+        }
     }
 }
 
@@ -231,7 +259,7 @@ impl Serialize for Partition {
         S: Serializer,
     {
         match self {
-            Partition::Ref => Ref::new(pseudo_param::Partition).serialize(serializer),
+            Partition::Ref => Ref::new(pseudo::Partition).serialize(serializer),
             Partition::Aws => "aws".serialize(serializer),
             Partition::China => "aws-cn".serialize(serializer),
             Partition::GovCloudUS => "aws-us-gov".serialize(serializer),
@@ -239,38 +267,42 @@ impl Serialize for Partition {
     }
 }
 
-#[derive(Debug, Clone)]
-pub enum Account {
-    Ref,
-    Null,
-    Aws,
-    Detail(AccountDetail),
-}
+#[cfg(test)]
+mod tests {
+    use super::*;
 
-impl Account {
-    pub fn to_str(&self) -> Option<&str> {
-        match self {
-            Account::Ref => None,
-            Account::Null => Some(""),
-            Account::Aws => Some("aws"),
-            Account::Detail(s) => Some(s.as_str()),
-        }
+    #[test]
+    fn test_arn1() {
+        let arn = Arn::builder("s", "r", Account::Aws)
+            .partition(Partition::Aws)
+            .region(Region::Ref)
+            .build();
+        let s = serde_json::to_string(&arn).unwrap();
+
+        let rhs = r#"{"Fn::Join":["arn:aws:s:",{"Ref":"AWS::Region"},":aws:r"]}"#;
+        assert_eq!(s, rhs);
+    }
+
+    #[test]
+    fn test_arn2() {
+        let arn = Arn::builder("s", "r", Account::Aws)
+            .partition(Partition::Aws)
+            .build();
+        let s = serde_json::to_string(&arn).unwrap();
+
+        let rhs = r#""arn:aws:s::aws:r""#;
+        assert_eq!(s, rhs);
+    }
+
+    #[test]
+    fn test_arn3() {
+        // minimum settings
+        //  partition => pseudo::Partition
+        //  region => no region
+        let arn = Arn::builder("s", "r", Account::Aws).build();
+        let s = serde_json::to_string(&arn).unwrap();
+
+        let rhs = r#"{"Fn::Join":["arn:",{"Ref":"AWS::Partition"},":s::aws:r"]}"#;
+        assert_eq!(s, rhs);
     }
 }
-
-impl Serialize for Account {
-    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-    where
-        S: Serializer,
-    {
-        match self {
-            Account::Ref => Ref::new(pseudo_param::AccountId).serialize(serializer),
-            Account::Null => "".serialize(serializer),
-            Account::Aws => "aws".serialize(serializer),
-            Account::Detail(x) => x.serialize(serializer),
-        }
-    }
-}
-
-#[nutype(validate(regex = r#"\d{8}"#), derive(Debug, Clone, Serialize, Deref))]
-pub struct AccountDetail(String);

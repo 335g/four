@@ -2,7 +2,7 @@
 
 use serde::{Serialize, Serializer};
 
-use crate::{function::reference::Ref, pseudo_param};
+use crate::{function::reference::Ref, pseudo};
 
 #[non_exhaustive]
 #[derive(Debug, Clone, Copy)]
@@ -28,7 +28,7 @@ impl Serialize for Region {
         S: Serializer,
     {
         match self {
-            Region::Ref => Ref::new(pseudo_param::Region).serialize(serializer),
+            Region::Ref => Ref::new(pseudo::Region).serialize(serializer),
             Region::Null => "".serialize(serializer),
             Region::Detail(x) => x.serialize(serializer),
         }
@@ -57,5 +57,28 @@ impl Serialize for RegionDetail {
         S: Serializer,
     {
         self.to_str().serialize(serializer)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_region_ref() {
+        let s = serde_json::to_string(&Region::Ref).unwrap();
+        assert_eq!(s, r#"{"Ref":"AWS::Region"}"#);
+    }
+
+    #[test]
+    fn test_region_null() {
+        let s = serde_json::to_string(&Region::Null).unwrap();
+        assert_eq!(s, r#""""#);
+    }
+
+    #[test]
+    fn test_region_detail1() {
+        let s = serde_json::to_string(&Region::Detail(RegionDetail::ApNortheast1)).unwrap();
+        assert_eq!(s, r#""ap-northeast-1""#);
     }
 }

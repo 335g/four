@@ -59,48 +59,48 @@ mod tests {
     #[test]
     fn test_account_id() {
         let s = serde_json::to_string(&AccountId).unwrap();
-        assert_eq!(s, "\"AWS::AccountId\"");
+        assert_eq!(s, r#""AWS::AccountId""#);
     }
 
     #[test]
     fn test_notification_arns() {
         let s = serde_json::to_string(&NotificationARNs).unwrap();
-        assert_eq!(s, "\"AWS::NotificationARNs\"");
+        assert_eq!(s, r#""AWS::NotificationARNs""#);
     }
 
     #[test]
     fn test_no_value() {
         let s = serde_json::to_string(&NoValue).unwrap();
-        assert_eq!(s, "\"AWS::NoValue\"");
+        assert_eq!(s, r#""AWS::NoValue""#);
     }
 
     #[test]
     fn test_partition() {
         let s = serde_json::to_string(&Partition).unwrap();
-        assert_eq!(s, "\"AWS::Partition\"");
+        assert_eq!(s, r#""AWS::Partition""#);
     }
 
     #[test]
     fn test_region() {
         let s = serde_json::to_string(&Region).unwrap();
-        assert_eq!(s, "\"AWS::Region\"");
+        assert_eq!(s, r#""AWS::Region""#);
     }
 
     #[test]
     fn test_stack_id() {
         let s = serde_json::to_string(&StackId).unwrap();
-        assert_eq!(s, "\"AWS::StackId\"");
+        assert_eq!(s, r#""AWS::StackId""#);
     }
 
     #[test]
     fn test_stack_name() {
         let s = serde_json::to_string(&StackName).unwrap();
-        assert_eq!(s, "\"AWS::StackName\"");
+        assert_eq!(s, r#""AWS::StackName""#);
     }
 
     #[test]
     fn test_url_suffix() {
         let s = serde_json::to_string(&URLSuffix).unwrap();
-        assert_eq!(s, "\"AWS::URLSuffix\"");
+        assert_eq!(s, r#""AWS::URLSuffix""#);
     }
 }

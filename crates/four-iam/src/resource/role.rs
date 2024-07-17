@@ -1,9 +1,9 @@
 use four_core::{
+    arn::Arn,
     convert::WillMappable,
     function::getatt::{Attribute, HaveAtt},
     logical_id::{LogicalId, LogicalIdentified},
     resource::ManagedResource,
-    resource_name::Arn,
     WillBe,
 };
 use serde::{ser::SerializeMap as _, Serialize};

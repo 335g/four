@@ -1,4 +1,4 @@
-use four_core::resource_name::{Account, Arn, Partition};
+use four_core::arn::{Account, Arn, Partition};
 use serde::Serialize;
 
 #[derive(Debug, Clone, Serialize)]

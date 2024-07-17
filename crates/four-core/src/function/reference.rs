@@ -3,7 +3,7 @@ use serde::{ser::SerializeMap, Serialize};
 use crate::{
     function::join::Join,
     logical_id::{LogicalId, LogicalIdentified},
-    pseudo_param::PseudoParam,
+    pseudo::PseudoParam,
 };
 pub trait Referenced {
     fn referenced(self) -> RefInner;
