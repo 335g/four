@@ -39,3 +39,15 @@ impl<T> WillBe<T> {
         }
     }
 }
+
+impl<T> From<T> for WillBe<T>
+where
+    T: WillFrom + 'static,
+{
+    fn from(value: T) -> Self {
+        WillBe {
+            from: Box::new(value),
+            to: PhantomData,
+        }
+    }
+}

@@ -135,8 +135,8 @@ impl<T> StringParameterBuilder<T> {
         self
     }
 
-    pub fn allowed_values(mut self, x: impl Iterator<Item = String>) -> Self {
-        self.allowed_values = Some(x.into_iter().collect());
+    pub fn allowed_values(mut self, x: Vec<String>) -> Self {
+        self.allowed_values = Some(x);
         self
     }
 
@@ -233,8 +233,8 @@ impl<T> NumberParameterBuilder<T> {
         self
     }
 
-    pub fn allowed_values(mut self, x: impl Iterator<Item = f64>) -> Self {
-        self.allowed_values = Some(x.into_iter().collect());
+    pub fn allowed_values(mut self, x: Vec<f64>) -> Self {
+        self.allowed_values = Some(x);
         self
     }
 
@@ -302,4 +302,115 @@ pub enum ParameterError {
 
     #[error("min_value({0}) is bigger than max_value({1})")]
     MinMaxValueInversed(f64, f64),
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_string_param1() {
+        let param_id = LogicalId::try_from("param-id").unwrap();
+        let param = Parameter::string().build(param_id);
+        match param {
+            Ok(x) => {
+                let s = serde_json::to_string(&x).unwrap();
+                let rhs = r#"{"Type":"String"}"#;
+                assert_eq!(s, rhs);
+            }
+            Err(_) => assert!(false),
+        }
+    }
+
+    #[test]
+    fn test_string_param2() {
+        let param_id = LogicalId::try_from("param-id").unwrap();
+        let param = Parameter::string()
+            .default("default-value".to_string())
+            .build(param_id);
+        match param {
+            Ok(x) => {
+                let s = serde_json::to_string(&x).unwrap();
+                let rhs = r#"{"Default":"default-value","Type":"String"}"#;
+                assert_eq!(s, rhs);
+            }
+            Err(_) => assert!(false),
+        }
+    }
+
+    #[test]
+    fn test_string_param3() {
+        let param_id = LogicalId::try_from("param-id").unwrap();
+        let param = Parameter::string()
+            .allowed_pattern("allowed".to_string())
+            .build(param_id);
+        match param {
+            Ok(x) => {
+                let s = serde_json::to_string(&x).unwrap();
+                let rhs = r#"{"AllowedPattern":"allowed","Type":"String"}"#;
+                assert_eq!(s, rhs);
+            }
+            Err(_) => assert!(false),
+        }
+    }
+
+    #[test]
+    fn test_string_param4() {
+        let param_id = LogicalId::try_from("param-id").unwrap();
+        let param = Parameter::string()
+            .allowed_values(vec!["abc".to_string()])
+            .build(param_id);
+        match param {
+            Ok(x) => {
+                let s = serde_json::to_string(&x).unwrap();
+                let rhs = r#"{"AllowedValues":["abc"],"Type":"String"}"#;
+                assert_eq!(s, rhs);
+            }
+            Err(_) => assert!(false),
+        }
+    }
+
+    #[test]
+    fn test_string_param5() {
+        let param_id = LogicalId::try_from("param-id").unwrap();
+        let param = Parameter::string()
+            .constraint_description("description1".to_string())
+            .build(param_id);
+        match param {
+            Ok(x) => {
+                let s = serde_json::to_string(&x).unwrap();
+                let rhs = r#"{"ConstraintDescription":"description1","Type":"String"}"#;
+                assert_eq!(s, rhs);
+            }
+            Err(_) => assert!(false),
+        }
+    }
+
+    #[test]
+    fn test_string_param6() {
+        let param_id = LogicalId::try_from("param-id").unwrap();
+        let param = Parameter::string().max_length(10).build(param_id);
+        match param {
+            Ok(x) => {
+                let s = serde_json::to_string(&x).unwrap();
+                let rhs = r#"{"MaxLength":10,"Type":"String"}"#;
+                assert_eq!(s, rhs);
+            }
+            Err(_) => assert!(false),
+        }
+    }
+
+    #[test]
+    fn test_string_param7() {
+        let param_id = LogicalId::try_from("param-id").unwrap();
+        let param = Parameter::string().min_length(10).build(param_id);
+        match param {
+            Ok(x) => {
+                let s = serde_json::to_string(&x).unwrap();
+                let rhs = r#"{"MinLength":10,"Type":"String"}"#;
+                assert_eq!(s, rhs);
+            }
+            Err(_) => assert!(false),
+        }
+    }
 }

@@ -1,6 +1,7 @@
 pub mod getatt;
 pub mod join;
 pub mod reference;
+pub mod sub;
 
 use getatt::{Attribute, GetAtt, HaveAtt};
 use reference::{Ref, Referenced};

@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use four_core::{
     arn::Arn,
     convert::WillMappable,
@@ -18,19 +20,19 @@ use crate::property::{
 };
 
 pub struct Role {
+    logical_id: LogicalId,
     assume_role_policy_document: Policy,
     role_name: Option<WillBe<RoleName>>,
     managed_policy_arns: Option<Vec<ManagedPolicy>>,
-    logical_id: LogicalId,
 }
 
 impl Role {
     pub fn new(assume_role_policy_document: Policy, logical_id: LogicalId) -> Self {
         Self {
+            logical_id,
             assume_role_policy_document,
             role_name: None,
             managed_policy_arns: None,
-            logical_id,
         }
     }
 
@@ -65,12 +67,56 @@ impl Serialize for Role {
     where
         S: serde::Serializer,
     {
-        let logical_id = self.logical_id.clone();
-        let inner = RoleInner::new(
-            &self.assume_role_policy_document,
-            &self.role_name,
-            &self.managed_policy_arns,
+        #[derive(Serialize)]
+        #[serde(rename_all = "PascalCase")]
+        struct RoleInner {
+            r#type: &'static str,
+            properties: HashMap<&'static str, Box<dyn erased_serde::Serialize>>,
+        }
+
+        let r#type = self.resource_type();
+        let mut properties: HashMap<&'static str, Box<dyn erased_serde::Serialize>> =
+            HashMap::new();
+        properties.insert(
+            "AssumeRolePolicyDocument",
+            Box::new(&self.assume_role_policy_document),
         );
+
+        let inner = RoleInner { r#type, properties };
+
+        // struct RoleInner<'a> {
+        //     assume_role_policy_document: &'a Policy,
+        //     role_name: &'a Option<WillBe<RoleName>>,
+        //     managed_policy_arns: &'a Option<Vec<ManagedPolicy>>,
+        // }
+
+        // impl Serialize for RoleInner<'_> {
+        //     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+        //     where
+        //         S: serde::Serializer,
+        //     {
+        //         let mut map = serializer.serialize_map(None)?;
+        //         map.serialize_entry(
+        //             "AssumeRolePolicyDocument",
+        //             &self.assume_role_policy_document,
+        //         )?;
+
+        //         if let Some(role_name) = self.role_name {
+        //             map.serialize_entry("RoleName", role_name)?;
+        //         }
+        //         if let Some(managed_policy_arns) = self.managed_policy_arns {
+        //             map.serialize_entry("ManagedPolicyArns", managed_policy_arns)?;
+        //         }
+
+        //         map.end()
+        //     }
+        // }
+
+        // let inner = RoleInner {
+        //     assume_role_policy_document: &self.assume_role_policy_document,
+        //     role_name: &self.role_name,
+        //     managed_policy_arns: &self.managed_policy_arns,
+        // };
 
         let mut map = serializer.serialize_map(Some(1))?;
         map.serialize_entry(&self.logical_id, &inner)?;
@@ -123,47 +169,5 @@ impl Attribute for RoleArn {
 impl Attribute for RoleId {
     fn name() -> &'static str {
         "RoleId"
-    }
-}
-
-struct RoleInner<'a> {
-    assume_role_policy_document: &'a Policy,
-    role_name: &'a Option<WillBe<RoleName>>,
-    managed_policy_arns: &'a Option<Vec<ManagedPolicy>>,
-}
-
-impl<'a> RoleInner<'a> {
-    fn new(
-        assume_role_policy_document: &'a Policy,
-        role_name: &'a Option<WillBe<RoleName>>,
-        managed_policy_arns: &'a Option<Vec<ManagedPolicy>>,
-    ) -> RoleInner<'a> {
-        Self {
-            assume_role_policy_document,
-            role_name,
-            managed_policy_arns,
-        }
-    }
-}
-
-impl Serialize for RoleInner<'_> {
-    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        let mut map = serializer.serialize_map(None)?;
-        map.serialize_entry(
-            "AssumeRolePolicyDocument",
-            &self.assume_role_policy_document,
-        )?;
-
-        if let Some(role_name) = self.role_name {
-            map.serialize_entry("RoleName", role_name)?;
-        }
-        if let Some(managed_policy_arns) = self.managed_policy_arns {
-            map.serialize_entry("ManagedPolicyArns", managed_policy_arns)?;
-        }
-
-        map.end()
     }
 }

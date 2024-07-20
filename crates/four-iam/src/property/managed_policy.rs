@@ -1,4 +1,7 @@
-use four_core::arn::{Account, Arn, Partition};
+use four_core::{
+    account::Account,
+    arn::{Arn, Partition},
+};
 use serde::Serialize;
 
 #[derive(Debug, Clone, Serialize)]

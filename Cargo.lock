@@ -665,6 +665,7 @@ dependencies = [
 name = "four-s3"
 version = "0.0.1"
 dependencies = [
+ "four-core",
  "lazy_static",
  "nutype",
  "regex",
