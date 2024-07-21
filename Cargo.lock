@@ -606,6 +606,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "four"
+version = "0.0.1"
+dependencies = [
+ "four-core",
+ "four-macros",
+]
+
+[[package]]
 name = "four-core"
 version = "0.0.1"
 dependencies = [

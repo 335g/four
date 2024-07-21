@@ -1,5 +1,6 @@
 [workspace]
 members = [
+    "crates/four",
     "crates/four-core",
     "crates/four-iam",
     "crates/four-lambda",
