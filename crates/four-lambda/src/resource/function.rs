@@ -1,7 +1,7 @@
-use four_core::{
+use four::{
     convert::WillBe,
     logical_id::{LogicalId, LogicalIdentified},
-    resource::ManagedResource,
+    ManagedResource,
 };
 use four_iam::resource::role::RoleArn;
 use serde::{self, ser::SerializeMap, Serialize};
@@ -13,6 +13,8 @@ use crate::property::{
     runtime::Runtime,
 };
 
+#[derive(ManagedResource)]
+#[resource_type = "AWS::Lambda::Function"]
 pub struct Function {
     logical_id: LogicalId,
     architectures: Architectures,
@@ -64,63 +66,5 @@ impl Function {
     pub fn runtime(mut self, runtime: Runtime) -> Self {
         self.runtime = Some(runtime);
         self
-    }
-}
-
-impl Serialize for Function {
-    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        struct FunctionInner<'a> {
-            architectures: &'a Architectures,
-            code: &'a Code,
-            handler: &'a Option<Handler>,
-            role: &'a WillBe<RoleArn>,
-            runtime: &'a Option<Runtime>,
-        }
-
-        impl Serialize for FunctionInner<'_> {
-            fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-            where
-                S: serde::Serializer,
-            {
-                let mut map = serializer.serialize_map(None)?;
-                map.serialize_entry("Architectures", self.architectures)?;
-                map.serialize_entry("Code", self.code)?;
-                if let Some(handler) = self.handler {
-                    map.serialize_entry("Handler", handler)?;
-                }
-                map.serialize_entry("Role", self.role)?;
-                if let Some(runtime) = self.runtime {
-                    map.serialize_entry("Runtime", runtime)?;
-                }
-                map.end()
-            }
-        }
-
-        let inner = FunctionInner {
-            architectures: &self.architectures,
-            code: &self.code,
-            handler: &self.handler,
-            role: &self.role,
-            runtime: &self.runtime,
-        };
-
-        let mut map = serializer.serialize_map(Some(1))?;
-        map.serialize_entry(self.logical_id(), &inner)?;
-        map.end()
-    }
-}
-
-impl ManagedResource for Function {
-    fn resource_type(&self) -> &'static str {
-        "AWS::Lambda::Function"
-    }
-}
-
-impl LogicalIdentified for Function {
-    fn logical_id(&self) -> &LogicalId {
-        &self.logical_id
     }
 }

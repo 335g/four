@@ -4,7 +4,7 @@ use syn::spanned::Spanned;
 #[proc_macro_derive(ManagedResource, attributes(resource_type))]
 pub fn managed_resource(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
     let input = syn::parse_macro_input!(input as syn::DeriveInput);
-    eprintln!("INPUT: {:#?}", input);
+    // eprintln!("INPUT: {:#?}", input);
     let resource_type = match get_resource_type(&input) {
         Ok(s) => s,
         Err(e) => return e.to_compile_error().into(),
@@ -38,7 +38,8 @@ pub fn managed_resource(input: proc_macro::TokenStream) -> proc_macro::TokenStre
                 S: serde::Serializer,
             {
                 use serde::ser::SerializeMap as _;
-                use four_core::resource::ManagedResource;
+                use four::logical_id::LogicalIdentified as _;
+                use four::resource::ManagedResource as _;
 
                 struct Inner1<'a> {
                     #(#inner_fields),*
@@ -83,13 +84,13 @@ pub fn managed_resource(input: proc_macro::TokenStream) -> proc_macro::TokenStre
             }
         }
 
-        impl four_core::logical_id::LogicalIdentified for #struct_name {
-            fn logical_id(&self) -> &four_core::logical_id::LogicalId {
+        impl four::logical_id::LogicalIdentified for #struct_name {
+            fn logical_id(&self) -> &four::logical_id::LogicalId {
                 &self.logical_id
             }
         }
 
-        impl four_core::resource::ManagedResource for #struct_name {
+        impl four::resource::ManagedResource for #struct_name {
             fn resource_type(&self) -> &'static str {
                 #resource_type
             }

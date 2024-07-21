@@ -8,7 +8,7 @@ rust-version.workspace = true
 
 [dependencies]
 aws-sdk-lambda.workspace = true
-four-core.workspace = true
+four.workspace = true
 four-iam.workspace = true
 four-s3.workspace = true
 lazy_static.workspace = true

@@ -609,17 +609,10 @@ dependencies = [
 name = "four"
 version = "0.0.1"
 dependencies = [
- "four-core",
- "four-macros",
-]
-
-[[package]]
-name = "four-core"
-version = "0.0.1"
-dependencies = [
  "aws-config",
  "aws-sdk-cloudformation",
  "erased-serde",
+ "four-macros",
  "lazy_static",
  "nutype",
  "regex",
@@ -634,8 +627,7 @@ version = "0.0.1"
 dependencies = [
  "aws-sdk-iam",
  "erased-serde",
- "four-core",
- "four-macros",
+ "four",
  "lazy_static",
  "nutype",
  "regex",
@@ -649,7 +641,7 @@ name = "four-lambda"
 version = "0.0.1"
 dependencies = [
  "aws-sdk-lambda",
- "four-core",
+ "four",
  "four-iam",
  "four-s3",
  "lazy_static",
@@ -664,7 +656,6 @@ name = "four-macros"
 version = "0.0.1"
 dependencies = [
  "convert_case",
- "four-core",
  "proc-macro2",
  "quote",
  "syn",
@@ -675,7 +666,7 @@ dependencies = [
 name = "four-s3"
 version = "0.0.1"
 dependencies = [
- "four-core",
+ "four",
  "lazy_static",
  "nutype",
  "regex",

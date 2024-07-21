@@ -1,15 +1,11 @@
-use std::collections::HashMap;
-
-use four_core::{
+use four::{
     arn::Arn,
-    convert::WillMappable,
+    convert::{WillBe, WillMappable},
     function::getatt::{Attribute, HaveAtt},
-    logical_id::{LogicalId, LogicalIdentified},
-    // resource::ManagedResource,
-    WillBe,
+    logical_id::LogicalId,
+    ManagedResource,
 };
-use four_macros::ManagedResource;
-use serde::{ser::SerializeMap as _, Serialize};
+use serde::Serialize;
 
 use crate::property::{
     action::{self, Action},

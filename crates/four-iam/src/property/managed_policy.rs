@@ -1,4 +1,4 @@
-use four_core::{
+use four::{
     account::Account,
     arn::{Arn, Partition},
 };

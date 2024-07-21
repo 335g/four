@@ -1,7 +1,6 @@
 [workspace]
 members = [
     "crates/four",
-    "crates/four-core",
     "crates/four-iam",
     "crates/four-lambda",
     "crates/four-macros",
@@ -20,7 +19,7 @@ rust-version = "1.78.0"
 anyhow = "1.0.86"
 aws-config = "1.5.0"
 aws-sdk-cloudformation = "1.33.0"
-four-core = { path = "crates/four-core" }
+four = { path = "crates/four" }
 four-iam = { path = "crates/four-iam" }
 four-lambda = { path = "crates/four-lambda" }
 four-macros = { path = "crates/four-macros" }
