@@ -5,9 +5,10 @@ use four_core::{
     convert::WillMappable,
     function::getatt::{Attribute, HaveAtt},
     logical_id::{LogicalId, LogicalIdentified},
-    resource::ManagedResource,
+    // resource::ManagedResource,
     WillBe,
 };
+use four_macros::ManagedResource;
 use serde::{ser::SerializeMap as _, Serialize};
 
 use crate::property::{
@@ -19,10 +20,12 @@ use crate::property::{
     statement::{ActionList, PrincipalList, Statement},
 };
 
+#[derive(ManagedResource)]
+#[resource_type = "AWS::IAM::Role"]
 pub struct Role {
     logical_id: LogicalId,
     assume_role_policy_document: Policy,
-    role_name: Option<WillBe<RoleName>>,
+    role_name: std::option::Option<WillBe<RoleName>>,
     managed_policy_arns: Option<Vec<ManagedPolicy>>,
 }
 
@@ -59,80 +62,6 @@ impl Role {
     pub fn managed_policy_arns(mut self, arns: Vec<ManagedPolicy>) -> Self {
         self.managed_policy_arns = Some(arns);
         self
-    }
-}
-
-impl Serialize for Role {
-    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        #[derive(Serialize)]
-        #[serde(rename_all = "PascalCase")]
-        struct RoleInner {
-            r#type: &'static str,
-            properties: HashMap<&'static str, Box<dyn erased_serde::Serialize>>,
-        }
-
-        let r#type = self.resource_type();
-        let mut properties: HashMap<&'static str, Box<dyn erased_serde::Serialize>> =
-            HashMap::new();
-        properties.insert(
-            "AssumeRolePolicyDocument",
-            Box::new(&self.assume_role_policy_document),
-        );
-
-        let inner = RoleInner { r#type, properties };
-
-        // struct RoleInner<'a> {
-        //     assume_role_policy_document: &'a Policy,
-        //     role_name: &'a Option<WillBe<RoleName>>,
-        //     managed_policy_arns: &'a Option<Vec<ManagedPolicy>>,
-        // }
-
-        // impl Serialize for RoleInner<'_> {
-        //     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-        //     where
-        //         S: serde::Serializer,
-        //     {
-        //         let mut map = serializer.serialize_map(None)?;
-        //         map.serialize_entry(
-        //             "AssumeRolePolicyDocument",
-        //             &self.assume_role_policy_document,
-        //         )?;
-
-        //         if let Some(role_name) = self.role_name {
-        //             map.serialize_entry("RoleName", role_name)?;
-        //         }
-        //         if let Some(managed_policy_arns) = self.managed_policy_arns {
-        //             map.serialize_entry("ManagedPolicyArns", managed_policy_arns)?;
-        //         }
-
-        //         map.end()
-        //     }
-        // }
-
-        // let inner = RoleInner {
-        //     assume_role_policy_document: &self.assume_role_policy_document,
-        //     role_name: &self.role_name,
-        //     managed_policy_arns: &self.managed_policy_arns,
-        // };
-
-        let mut map = serializer.serialize_map(Some(1))?;
-        map.serialize_entry(&self.logical_id, &inner)?;
-        map.end()
-    }
-}
-
-impl LogicalIdentified for Role {
-    fn logical_id(&self) -> &LogicalId {
-        &self.logical_id
-    }
-}
-
-impl ManagedResource for Role {
-    fn resource_type(&self) -> &'static str {
-        "AWS::IAM::Role"
     }
 }
 

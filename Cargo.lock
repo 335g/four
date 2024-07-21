@@ -627,6 +627,7 @@ dependencies = [
  "aws-sdk-iam",
  "erased-serde",
  "four-core",
+ "four-macros",
  "lazy_static",
  "nutype",
  "regex",
@@ -654,6 +655,7 @@ dependencies = [
 name = "four-macros"
 version = "0.0.1"
 dependencies = [
+ "convert_case",
  "four-core",
  "proc-macro2",
  "quote",
