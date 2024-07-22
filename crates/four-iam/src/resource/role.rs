@@ -21,7 +21,7 @@ use crate::property::{
 pub struct Role {
     logical_id: LogicalId,
     assume_role_policy_document: Policy,
-    role_name: std::option::Option<WillBe<RoleName>>,
+    role_name: Option<WillBe<RoleName>>,
     managed_policy_arns: Option<Vec<ManagedPolicy>>,
 }
 
@@ -67,10 +67,6 @@ pub struct RoleName(String);
 impl RoleName {
     pub fn new(name: String) -> Self {
         Self(name)
-    }
-
-    pub fn will(self) -> WillBe<RoleName> {
-        WillBe::new(Box::new(self))
     }
 }
 

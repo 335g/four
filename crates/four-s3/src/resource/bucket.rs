@@ -31,12 +31,6 @@ impl Bucket {
 #[derive(Debug, Serialize)]
 pub struct BucketName(String);
 
-impl BucketName {
-    pub fn will(self) -> WillBe<BucketName> {
-        WillBe::new(Box::new(self))
-    }
-}
-
 impl WillMappable<String> for BucketName {}
 
 #[derive(Debug, Serialize)]

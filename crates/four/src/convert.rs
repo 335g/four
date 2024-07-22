@@ -22,7 +22,7 @@ pub struct WillBe<T> {
 }
 
 impl<T> WillBe<T> {
-    pub fn new(from: Box<dyn WillFrom>) -> Self {
+    pub(crate) fn new(from: Box<dyn WillFrom>) -> Self {
         Self {
             from,
             to: PhantomData,
