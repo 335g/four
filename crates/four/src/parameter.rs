@@ -32,6 +32,10 @@ impl<T> Parameter<T> {
     pub fn string() -> StringParameterBuilder<T> {
         StringParameterBuilder::new()
     }
+
+    pub fn number() -> NumberParameterBuilder<T> {
+        NumberParameterBuilder::new()
+    }
 }
 
 impl<T> Serialize for Parameter<T>

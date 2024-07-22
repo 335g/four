@@ -10,7 +10,6 @@ pub fn managed_resource(input: proc_macro::TokenStream) -> proc_macro::TokenStre
         Err(e) => return e.to_compile_error().into(),
     };
     let struct_name = &input.ident;
-    let attributes = &input.attrs;
 
     let syn::Data::Struct(syn::DataStruct {
         struct_token: _,
@@ -41,11 +40,11 @@ pub fn managed_resource(input: proc_macro::TokenStream) -> proc_macro::TokenStre
                 use four::logical_id::LogicalIdentified as _;
                 use four::resource::ManagedResource as _;
 
-                struct Inner1<'a> {
+                struct Inner<'a> {
                     #(#inner_fields),*
                 }
 
-                impl serde::Serialize for Inner1<'_> {
+                impl serde::Serialize for Inner<'_> {
                     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
                     where
                         S: serde::Serializer,
@@ -56,30 +55,13 @@ pub fn managed_resource(input: proc_macro::TokenStream) -> proc_macro::TokenStre
                     }
                 }
 
-                struct Inner2<'a> {
-                    r#type: &'static str,
-                    properties: Inner1<'a>,
-                }
-
-                impl serde::Serialize for Inner2<'_> {
-                    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-                    where
-                        S: serde::Serializer,
-                    {
-                        let mut map = serializer.serialize_map(Some(2))?;
-                        map.serialize_entry("Type", &self.r#type)?;
-                        map.serialize_entry("Properties", &self.properties)?;
-                        map.end()
-                    }
-                }
-
-                let properties = Inner1 {
+                let properties = Inner {
                     #(#inner_fields_init),*
                 };
-                let inner = Inner2 { r#type: self.resource_type(), properties };
 
-                let mut map = serializer.serialize_map(Some(1))?;
-                map.serialize_entry(self.logical_id(), &inner)?;
+                let mut map = serializer.serialize_map(Some(2))?;
+                map.serialize_entry("Type", &self.resource_type())?;
+                map.serialize_entry("Properties", &properties)?;
                 map.end()
             }
         }

@@ -5,6 +5,7 @@ use crate::function::reference::{RefInner, Referenced};
 pub struct Join(pub(crate) Vec<Box<dyn erased_serde::Serialize>>);
 
 impl Join {
+    #[allow(dead_code)]
     pub(crate) fn new(xs: Vec<Box<dyn erased_serde::Serialize>>) -> Self {
         Self(xs)
     }

@@ -1,6 +1,12 @@
+use std::collections::HashMap;
+
 use serde::{ser::SerializeMap, Serialize};
 
-use crate::{logical_id::LogicalIdentified, parameter::Parameter, resource::ManagedResource};
+use crate::{
+    logical_id::{LogicalId, LogicalIdentified},
+    parameter::Parameter,
+    resource::ManagedResource,
+};
 
 #[derive(Debug, Serialize)]
 pub enum TemplateVersion {
@@ -18,7 +24,7 @@ impl TemplateVersion {
 pub struct Template {
     format_version: TemplateVersion,
     description: Option<String>,
-    resources: Vec<Box<dyn ManagedResource>>,
+    resources: HashMap<LogicalId, Box<dyn ManagedResource>>,
     string_parameters: Vec<Parameter<String>>,
     number_parameters: Vec<Parameter<f64>>,
 }
@@ -27,15 +33,22 @@ impl Template {
     pub fn new(
         string_parameters: Vec<Parameter<String>>,
         number_parameters: Vec<Parameter<f64>>,
-        resources: Vec<Box<dyn ManagedResource>>,
     ) -> Self {
         Self {
             format_version: TemplateVersion::latest(),
             description: None,
-            resources,
+            resources: HashMap::new(),
             string_parameters,
             number_parameters,
         }
+    }
+
+    pub fn insert(
+        &mut self,
+        resource: Box<dyn ManagedResource>,
+    ) -> Option<Box<dyn ManagedResource>> {
+        self.resources
+            .insert(resource.logical_id().clone(), resource)
     }
 }
 

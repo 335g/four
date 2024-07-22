@@ -1,9 +1,7 @@
-use nutype::nutype;
 use serde::{Serialize, Serializer};
 
 use crate::{
     account::Account,
-    fn_join,
     function::{join::Join, reference::Ref},
     pseudo,
     region::Region,
