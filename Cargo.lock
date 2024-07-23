@@ -41,7 +41,7 @@ name = "four"
 version = "0.0.1"
 dependencies = [
  "erased-serde",
- "four-macros",
+ "four_derive",
  "regex",
  "serde",
  "serde_json",
@@ -49,7 +49,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "four-macros"
+name = "four_derive"
 version = "0.0.1"
 dependencies = [
  "convert_case",

@@ -1,5 +1,5 @@
 [package]
-name = "four-macros"
+name = "four_derive"
 version.workspace = true
 authors.workspace = true
 edition.workspace = true

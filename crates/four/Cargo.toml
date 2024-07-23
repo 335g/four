@@ -12,11 +12,11 @@ readme.workspace = true
 repository.workspace = true
 
 [features]
-derive = ["four-macros"]
+derive = ["four_derive"]
 
 [dependencies]
 erased-serde = { workspace = true }
-four-macros = { optional = true, path = "../four-macros" }
+four_derive = { optional = true, path = "../four_derive" }
 regex.workspace = true
 serde = { workspace = true }
 thiserror.workspace = true
