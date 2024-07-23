@@ -8,15 +8,26 @@ use crate::{
     resource::ManagedResource,
 };
 
-#[derive(Debug, Serialize)]
+#[non_exhaustive]
+#[derive(Debug, Clone, Copy)]
 pub enum TemplateVersion {
-    #[serde(rename(serialize = "2010-09-09"))]
     V20100909,
 }
 
 impl TemplateVersion {
     pub fn latest() -> TemplateVersion {
         TemplateVersion::V20100909
+    }
+}
+
+impl Serialize for TemplateVersion {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        match self {
+            TemplateVersion::V20100909 => "2010-09-09".serialize(serializer),
+        }
     }
 }
 

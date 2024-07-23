@@ -1,7 +1,6 @@
 pub mod account;
 pub mod arn;
 pub mod convert;
-pub mod error;
 pub mod function;
 pub mod logical_id;
 pub mod parameter;

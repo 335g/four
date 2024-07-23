@@ -12,12 +12,8 @@ pub trait WillMappable<F> {}
 
 impl<F> WillMappable<F> for F {}
 
-#[derive(Serialize)]
 pub struct WillBe<T> {
-    #[serde(flatten)]
     from: Box<dyn WillFrom>,
-
-    #[serde(skip)]
     to: PhantomData<T>,
 }
 
@@ -49,5 +45,14 @@ where
             from: Box::new(value),
             to: PhantomData,
         }
+    }
+}
+
+impl<T> Serialize for WillBe<T> {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        self.from.serialize(serializer)
     }
 }

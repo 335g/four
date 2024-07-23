@@ -2,8 +2,6 @@ use regex::Regex;
 use serde::Serialize;
 use std::sync::LazyLock;
 
-use crate::error::Error;
-
 static LOGICAL_NAME_REGEX: LazyLock<Regex> =
     LazyLock::new(|| Regex::new(r#"[[:alnum:]]+"#).unwrap());
 
@@ -13,14 +11,14 @@ pub struct LogicalId {
 }
 
 impl TryFrom<&str> for LogicalId {
-    type Error = Error;
+    type Error = LogicalIdError;
 
     fn try_from(s: &str) -> Result<Self, Self::Error> {
         let s = s.to_string();
         if LOGICAL_NAME_REGEX.is_match(&s) {
             Ok(LogicalId { inner: s })
         } else {
-            Err(Error::InvalidLogicalId(s))
+            Err(LogicalIdError::Invalid(s))
         }
     }
 }
@@ -32,6 +30,12 @@ impl Serialize for LogicalId {
     {
         self.inner.serialize(serializer)
     }
+}
+
+#[derive(Debug, thiserror::Error)]
+pub enum LogicalIdError {
+    #[error("Invalid logical ID: {0}")]
+    Invalid(String),
 }
 
 pub trait LogicalIdentified {

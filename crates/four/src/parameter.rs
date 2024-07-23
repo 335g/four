@@ -6,10 +6,22 @@ use thiserror::Error;
 use crate::logical_id::{LogicalId, LogicalIdentified};
 
 #[non_exhaustive]
-#[derive(Debug, Clone, Copy, Serialize)]
+#[derive(Debug, Clone, Copy)]
 pub enum ParameterType {
     String,
     Number,
+}
+
+impl Serialize for ParameterType {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        match self {
+            ParameterType::String => "String".serialize(serializer),
+            ParameterType::Number => "Number".serialize(serializer),
+        }
+    }
 }
 
 #[derive(Debug, Clone)]

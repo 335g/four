@@ -1,7 +1,10 @@
-use nutype::nutype;
-use serde::{Serialize, Serializer};
-
 use crate::{function::reference::Ref, pseudo};
+use regex::Regex;
+use serde::{Serialize, Serializer};
+use std::ops::Deref;
+use std::sync::LazyLock;
+
+static ACCOUNT_REGEX: LazyLock<Regex> = LazyLock::new(|| Regex::new(r#"\d{12}"#).unwrap());
 
 #[derive(Debug, Clone)]
 pub enum Account {
@@ -36,8 +39,44 @@ impl Serialize for Account {
     }
 }
 
-#[nutype(validate(regex = r#"\d{8}"#), derive(Debug, Clone, Serialize, Deref))]
+#[derive(Debug, Clone)]
 pub struct AccountDetail(String);
+
+impl Deref for AccountDetail {
+    type Target = String;
+
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
+}
+
+impl TryFrom<&str> for AccountDetail {
+    type Error = AccountDetailError;
+
+    fn try_from(s: &str) -> Result<Self, Self::Error> {
+        let s = s.to_string();
+        if ACCOUNT_REGEX.is_match(&s) {
+            Ok(AccountDetail(s))
+        } else {
+            Err(AccountDetailError::Invalid(s))
+        }
+    }
+}
+
+impl Serialize for AccountDetail {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        self.0.serialize(serializer)
+    }
+}
+
+#[derive(Debug, thiserror::Error)]
+pub enum AccountDetailError {
+    #[error("Invalid account: {0}")]
+    Invalid(String),
+}
 
 #[cfg(test)]
 mod tests {
