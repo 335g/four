@@ -16,7 +16,7 @@ derive = ["four_derive"]
 
 [dependencies]
 erased-serde = { workspace = true }
-four_derive = { optional = true, path = "../four_derive" }
+four_derive = { version = "0.0.1", optional = true }
 regex.workspace = true
 serde = { workspace = true }
 thiserror.workspace = true
