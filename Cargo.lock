@@ -38,7 +38,7 @@ dependencies = [
 
 [[package]]
 name = "four"
-version = "0.0.1-beta.0"
+version = "0.0.1"
 dependencies = [
  "erased-serde",
  "four_derive",
@@ -50,7 +50,7 @@ dependencies = [
 
 [[package]]
 name = "four_derive"
-version = "0.0.1-beta.0"
+version = "0.0.1"
 dependencies = [
  "convert_case",
  "proc-macro2",
