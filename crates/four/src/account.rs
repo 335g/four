@@ -25,6 +25,15 @@ impl Account {
     }
 }
 
+impl TryFrom<&str> for Account {
+    type Error = AccountDetailError;
+
+    fn try_from(value: &str) -> Result<Self, Self::Error> {
+        let account = AccountDetail::try_from(value)?;
+        Ok(Account::Detail(account))
+    }
+}
+
 impl Serialize for Account {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where

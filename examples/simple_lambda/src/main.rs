@@ -1,14 +1,5 @@
 use four::{function::get_att, logical_id::LogicalId, template::Template};
-use four_iam::{
-    property::{
-        action,
-        effect::Effect,
-        policy::Policy,
-        principal::{Principal, ServicePrincipal},
-        statement::{ActionOr, PrincipalOr, Statement},
-    },
-    resource::role::{Role, RoleArn},
-};
+use four_iam::resource::role::{Role, RoleArn};
 use four_lambda::{
     property::{handler::Handler, runtime::Runtime},
     resource::function::Function,
