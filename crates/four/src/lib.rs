@@ -10,4 +10,4 @@ pub mod resource;
 pub mod template;
 
 #[cfg(feature = "derive")]
-pub use four_macros::ManagedResource;
+pub use four_derive::ManagedResource;

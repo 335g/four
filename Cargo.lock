@@ -38,25 +38,14 @@ dependencies = [
 
 [[package]]
 name = "four"
-version = "0.0.1"
+version = "0.0.2"
 dependencies = [
  "erased-serde",
- "four_derive 0.0.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "four_derive 0.0.1",
  "regex",
  "serde",
  "serde_json",
  "thiserror",
-]
-
-[[package]]
-name = "four_derive"
-version = "0.0.1"
-dependencies = [
- "convert_case",
- "proc-macro2",
- "quote",
- "syn",
- "trybuild",
 ]
 
 [[package]]
@@ -69,6 +58,17 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn",
+]
+
+[[package]]
+name = "four_derive"
+version = "0.0.2"
+dependencies = [
+ "convert_case",
+ "proc-macro2",
+ "quote",
+ "syn",
+ "trybuild",
 ]
 
 [[package]]
