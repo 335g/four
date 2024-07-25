@@ -1,0 +1,20 @@
+[package]
+name = "simple_lambda"
+version.workspace = true
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+categories.workspace = true
+description.workspace = true
+keywords.workspace = true
+readme.workspace = true
+repository.workspace = true
+
+[dependencies]
+anyhow = "1.0.86"
+four = "0.0.2"
+four_iam = "0.0.1"
+four_lambda = "0.0.1"
+serde.workspace = true
+serde_json.workspace = true
