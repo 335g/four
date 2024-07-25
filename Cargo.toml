@@ -1,5 +1,5 @@
 [workspace]
-members = ["crates/four", "crates/four_derive"]
+members = ["crates/four", "crates/four_derive", "examples/simple_lambda"]
 resolver = "2"
 
 [workspace.package]
