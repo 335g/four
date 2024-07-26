@@ -15,8 +15,8 @@ repository.workspace = true
 derive = ["four_derive"]
 
 [dependencies]
+four_derive = { version = "0.0.3", optional = true }
 erased-serde = { workspace = true }
-four_derive = { version = "0.0.2", optional = true }
 regex.workspace = true
 serde = { workspace = true }
 thiserror.workspace = true

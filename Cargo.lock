@@ -51,37 +51,26 @@ dependencies = [
 [[package]]
 name = "four"
 version = "0.0.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f788eed2ccc401182abf4fbf1309155bee98bdd59a661a2905c1d7b52ba4d8c2"
 dependencies = [
  "erased-serde",
- "four_derive 0.0.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "four_derive 0.0.2",
  "regex",
  "serde",
- "serde_json",
  "thiserror",
 ]
 
 [[package]]
 name = "four"
-version = "0.0.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f788eed2ccc401182abf4fbf1309155bee98bdd59a661a2905c1d7b52ba4d8c2"
+version = "0.0.3"
 dependencies = [
  "erased-serde",
- "four_derive 0.0.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "four_derive 0.0.2",
  "regex",
  "serde",
+ "serde_json",
  "thiserror",
-]
-
-[[package]]
-name = "four_derive"
-version = "0.0.2"
-dependencies = [
- "convert_case",
- "proc-macro2",
- "quote",
- "syn",
- "trybuild",
 ]
 
 [[package]]
@@ -97,6 +86,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "four_derive"
+version = "0.0.3"
+dependencies = [
+ "convert_case",
+ "proc-macro2",
+ "quote",
+ "syn",
+ "trybuild",
+]
+
+[[package]]
 name = "four_iam"
 version = "0.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -104,7 +104,7 @@ checksum = "5d6376d5f438948cf7ddcb2a1df0ba77f9ca6d82a9ca8f071e1b08072eedfd3f"
 dependencies = [
  "dyn-clone",
  "erased-serde",
- "four 0.0.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "four 0.0.2",
  "serde",
  "thiserror",
 ]
@@ -117,7 +117,7 @@ checksum = "6e4316cad4552a17c1d47b127a65ec35e4216aae92e2a4a6d2f9424ec7b809de"
 dependencies = [
  "dyn-clone",
  "erased-serde",
- "four 0.0.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "four 0.0.2",
  "serde",
  "thiserror",
 ]
@@ -130,7 +130,7 @@ checksum = "0e8c071f79f5bf08f12478dd5811d707fe25ee361b4e58fc878dadcef41b1221"
 dependencies = [
  "dyn-clone",
  "erased-serde",
- "four 0.0.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "four 0.0.2",
  "four_iam 0.0.1",
  "regex",
  "serde",
@@ -266,10 +266,10 @@ dependencies = [
 
 [[package]]
 name = "simple_lambda"
-version = "0.0.2"
+version = "0.0.3"
 dependencies = [
  "anyhow",
- "four 0.0.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "four 0.0.2",
  "four_iam 0.0.2",
  "four_lambda",
  "serde",

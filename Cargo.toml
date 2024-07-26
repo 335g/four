@@ -3,7 +3,7 @@ members = ["crates/four", "crates/four_derive", "examples/simple_lambda"]
 resolver = "2"
 
 [workspace.package]
-version = "0.0.2"
+version = "0.0.3"
 authors = ["Yoshiki Kudo"]
 edition = "2021"
 license = "MIT"
