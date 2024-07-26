@@ -1,34 +1,37 @@
 use serde::{Serialize, Serializer};
 
 use crate::{
-    account::Account,
-    function::{join::Join, reference::Ref},
-    pseudo,
-    region::Region,
+    account::Account, function::join::Join, partition::Partition, region::Region, service::Service,
 };
 
 /// Amazon Resource Name (ARN)
 ///
 #[derive(Debug, Clone)]
-pub struct Arn {
+pub struct Arn<Se: Service> {
     partition: Partition,
-    service: String,
+    service: Se,
     region: Region,
     account: Account,
     resource: String,
 }
 
-impl Arn {
-    pub fn builder(service: &str, resource: &str, account: Account) -> RefNameAccount {
+impl<Se> Arn<Se>
+where
+    Se: Service,
+{
+    pub fn builder(service: Se, resource: &str, account: Account) -> RefNameAccount<Se> {
         RefNameAccount {
-            service: service.to_string(),
+            service,
             account,
             resource: resource.to_string(),
         }
     }
 }
 
-impl Serialize for Arn {
+impl<Se> Serialize for Arn<Se>
+where
+    Se: Service,
+{
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
         S: Serializer,
@@ -39,15 +42,14 @@ impl Serialize for Arn {
         }
 
         let mut contents: Vec<StringOr> = vec![];
-        let service = self.service.clone();
         if let Some(partition) = self.partition.to_str() {
             contents.push(StringOr::String("arn".to_string()));
             contents.push(StringOr::String(partition.to_string()));
-            contents.push(StringOr::String(service));
+            contents.push(StringOr::String(self.service.to_string()));
         } else {
             contents.push(StringOr::String("arn".to_string()));
             contents.push(StringOr::Or(Box::new(self.partition)));
-            contents.push(StringOr::String(service));
+            contents.push(StringOr::String(self.service.to_string()));
         }
 
         if let Some(region) = self.region.to_str() {
@@ -118,14 +120,17 @@ impl Serialize for Arn {
     }
 }
 
-pub struct RefNameAccount {
-    service: String,
+pub struct RefNameAccount<Se> {
+    service: Se,
     account: Account,
     resource: String,
 }
 
-impl RefNameAccount {
-    pub fn region(self, region: Region) -> RefNameRegion {
+impl<Se> RefNameAccount<Se>
+where
+    Se: Service,
+{
+    pub fn region(self, region: Region) -> RefNameRegion<Se> {
         RefNameRegion {
             service: self.service,
             region,
@@ -134,7 +139,7 @@ impl RefNameAccount {
         }
     }
 
-    pub fn partition(self, partition: Partition) -> RefNamePartition {
+    pub fn partition(self, partition: Partition) -> RefNamePartition<Se> {
         RefNamePartition {
             partition,
             service: self.service,
@@ -143,7 +148,7 @@ impl RefNameAccount {
         }
     }
 
-    pub fn build(self) -> Arn {
+    pub fn build(self) -> Arn<Se> {
         Arn {
             partition: Partition::Ref,
             service: self.service,
@@ -154,15 +159,18 @@ impl RefNameAccount {
     }
 }
 
-pub struct RefNameRegion {
-    service: String,
+pub struct RefNameRegion<Se> {
+    service: Se,
     region: Region,
     account: Account,
     resource: String,
 }
 
-impl RefNameRegion {
-    pub fn partition(self, partition: Partition) -> RefNameRegionPartition {
+impl<Se> RefNameRegion<Se>
+where
+    Se: Service,
+{
+    pub fn partition(self, partition: Partition) -> RefNameRegionPartition<Se> {
         RefNameRegionPartition {
             partition,
             service: self.service,
@@ -172,7 +180,7 @@ impl RefNameRegion {
         }
     }
 
-    pub fn build(self) -> Arn {
+    pub fn build(self) -> Arn<Se> {
         Arn {
             partition: Partition::Ref,
             service: self.service,
@@ -183,15 +191,18 @@ impl RefNameRegion {
     }
 }
 
-pub struct RefNamePartition {
+pub struct RefNamePartition<Se> {
     partition: Partition,
-    service: String,
+    service: Se,
     account: Account,
     resource: String,
 }
 
-impl RefNamePartition {
-    pub fn region(self, region: Region) -> RefNameRegionPartition {
+impl<Se> RefNamePartition<Se>
+where
+    Se: Service,
+{
+    pub fn region(self, region: Region) -> RefNameRegionPartition<Se> {
         RefNameRegionPartition {
             partition: self.partition,
             service: self.service,
@@ -201,7 +212,7 @@ impl RefNamePartition {
         }
     }
 
-    pub fn build(self) -> Arn {
+    pub fn build(self) -> Arn<Se> {
         Arn {
             partition: self.partition,
             service: self.service,
@@ -212,16 +223,19 @@ impl RefNamePartition {
     }
 }
 
-pub struct RefNameRegionPartition {
+pub struct RefNameRegionPartition<Se> {
     partition: Partition,
-    service: String,
+    service: Se,
     region: Region,
     account: Account,
     resource: String,
 }
 
-impl RefNameRegionPartition {
-    pub fn build(self) -> Arn {
+impl<Se> RefNameRegionPartition<Se>
+where
+    Se: Service,
+{
+    pub fn build(self) -> Arn<Se> {
         Arn {
             partition: self.partition,
             service: self.service,
@@ -232,63 +246,33 @@ impl RefNameRegionPartition {
     }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum Partition {
-    Ref,
-    Aws,
-    China,
-    GovCloudUS,
-}
-
-impl Partition {
-    pub fn to_str(&self) -> Option<&str> {
-        match self {
-            Partition::Ref => None,
-            Partition::Aws => Some("aws"),
-            Partition::China => Some("aws-cn"),
-            Partition::GovCloudUS => Some("aws-us-gov"),
-        }
-    }
-}
-
-impl Serialize for Partition {
-    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-    where
-        S: Serializer,
-    {
-        match self {
-            Partition::Ref => Ref::new(pseudo::Partition).serialize(serializer),
-            Partition::Aws => "aws".serialize(serializer),
-            Partition::China => "aws-cn".serialize(serializer),
-            Partition::GovCloudUS => "aws-us-gov".serialize(serializer),
-        }
-    }
-}
-
 #[cfg(test)]
 mod tests {
+    use crate::partition::Partition;
+    use crate::service;
+
     use super::*;
 
     #[test]
     fn test_arn1() {
-        let arn = Arn::builder("s", "r", Account::Aws)
+        let arn = Arn::builder(service::IAM, "r", Account::Aws)
             .partition(Partition::Aws)
             .region(Region::Ref)
             .build();
         let s = serde_json::to_string(&arn).unwrap();
 
-        let rhs = r#"{"Fn::Join":["arn:aws:s:",{"Ref":"AWS::Region"},":aws:r"]}"#;
+        let rhs = r#"{"Fn::Join":["arn:aws:iam:",{"Ref":"AWS::Region"},":aws:r"]}"#;
         assert_eq!(s, rhs);
     }
 
     #[test]
     fn test_arn2() {
-        let arn = Arn::builder("s", "r", Account::Aws)
+        let arn = Arn::builder(service::IAM, "r", Account::Aws)
             .partition(Partition::Aws)
             .build();
         let s = serde_json::to_string(&arn).unwrap();
 
-        let rhs = r#""arn:aws:s::aws:r""#;
+        let rhs = r#""arn:aws:iam::aws:r""#;
         assert_eq!(s, rhs);
     }
 
@@ -297,10 +281,10 @@ mod tests {
         // minimum settings
         //  partition => pseudo::Partition
         //  region => no region
-        let arn = Arn::builder("s", "r", Account::Aws).build();
+        let arn = Arn::builder(service::IAM, "r", Account::Aws).build();
         let s = serde_json::to_string(&arn).unwrap();
 
-        let rhs = r#"{"Fn::Join":["arn:",{"Ref":"AWS::Partition"},":s::aws:r"]}"#;
+        let rhs = r#"{"Fn::Join":["arn:",{"Ref":"AWS::Partition"},":iam::aws:r"]}"#;
         assert_eq!(s, rhs);
     }
 }

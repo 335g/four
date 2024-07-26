@@ -111,8 +111,8 @@ mod tests {
 
     #[test]
     fn test_account_detail() {
-        let account_id = "12345678";
-        let account = AccountDetail::new(account_id).unwrap();
+        let account_id = "123456789012";
+        let account = AccountDetail::try_from(account_id).unwrap();
         let s = serde_json::to_string(&Account::Detail(account)).unwrap();
         assert_eq!(s, format!("\"{account_id}\""));
     }
