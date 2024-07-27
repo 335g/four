@@ -1,24 +1,23 @@
 [package]
 name = "four_derive"
-version.workspace = true
-authors.workspace = true
-edition.workspace = true
-license.workspace = true
-rust-version.workspace = true
-categories.workspace = true
-description.workspace = true
-keywords.workspace = true
-readme.workspace = true
-repository.workspace = true
+version = "0.0.3"
+authors = ["Yoshiki Kudo"]
+edition = "2021"
+license = "MIT"
+rust-version = "1.80.0"
+categories = ["development-tools"]
+description = "framework for creating AWS CloudFormation template"
+keywords = ["four", "aws", "cloudformation", "iac"]
+readme = "README.md"
+repository = "https://github.com/335g/four"
 
 [lib]
 proc-macro = true
 
 [dependencies]
 convert_case = { workspace = true }
-proc-macro2 = { version = "1.0.86", features = ["proc-macro"] }
-quote = { version = "1.0.36", features = ["proc-macro"] }
-syn = { version = "2.0.67", features = ["full"] }
+proc-macro2 = { workspace = true, features = ["proc-macro"] }
+quote = { workspace = true, features = ["proc-macro"] }
+syn = { workspace = true, features = ["full"] }
 
 [dev-dependencies]
-trybuild = "1.0.96"

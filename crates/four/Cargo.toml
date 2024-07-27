@@ -1,21 +1,21 @@
 [package]
 name = "four"
-version.workspace = true
-authors.workspace = true
-edition.workspace = true
-license.workspace = true
-rust-version.workspace = true
-categories.workspace = true
-description.workspace = true
-keywords.workspace = true
-readme.workspace = true
-repository.workspace = true
+version = "0.0.3"
+authors = ["Yoshiki Kudo"]
+edition = "2021"
+license = "MIT"
+rust-version = "1.80.0"
+categories = ["development-tools"]
+description = "framework for creating AWS CloudFormation template"
+keywords = ["four", "aws", "cloudformation", "iac"]
+readme = "README.md"
+repository = "https://github.com/335g/four"
 
 [features]
 derive = ["four_derive"]
 
 [dependencies]
-four_derive = { version = "0.0.3", optional = true }
+four_derive = { workspace = true, optional = true }
 erased-serde = { workspace = true }
 regex.workspace = true
 serde = { workspace = true }

@@ -9,13 +9,13 @@ categories = ["development-tools"]
 description = "framework for creating AWS CloudFormation template"
 keywords = ["four", "aws", "cloudformation", "iac"]
 readme = "README.md"
-repository = "https://github.com/335g/four_lambda"
+repository = "https://github.com/335g/four"
 
 [dependencies]
-dyn-clone = "1.0.17"
-erased-serde = "0.4.5"
-four = { version = "0.0.3", features = ["derive"] }
-four_iam = "0.0.3"
-regex = "1.10.5"
-serde = { version = "1.0.204", features = ["derive"] }
-thiserror = "1.0.63"
+dyn-clone = { workspace = true }
+erased-serde = { workspace = true }
+four = { workspace = true, features = ["derive"] }
+four_iam = { workspace = true }
+regex = { workspace = true }
+serde = { workspace = true, features = ["derive"] }
+thiserror = { workspace = true }
