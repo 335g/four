@@ -1,0 +1,21 @@
+[package]
+name = "four_lambda"
+version = "0.0.3"
+authors = ["Yoshiki Kudo"]
+edition = "2021"
+license = "MIT"
+rust-version = "1.80.0"
+categories = ["development-tools"]
+description = "framework for creating AWS CloudFormation template"
+keywords = ["four", "aws", "cloudformation", "iac"]
+readme = "README.md"
+repository = "https://github.com/335g/four_lambda"
+
+[dependencies]
+dyn-clone = "1.0.17"
+erased-serde = "0.4.5"
+four = { version = "0.0.3", features = ["derive"] }
+four_iam = "0.0.3"
+regex = "1.10.5"
+serde = { version = "1.0.204", features = ["derive"] }
+thiserror = "1.0.63"

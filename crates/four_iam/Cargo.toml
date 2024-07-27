@@ -1,0 +1,22 @@
+[package]
+name = "four_iam"
+version = "0.0.3"
+authors = ["Yoshiki Kudo"]
+edition = "2021"
+license = "MIT"
+rust-version = "1.80.0"
+categories = ["development-tools"]
+description = "framework for creating AWS CloudFormation template"
+keywords = ["four", "aws", "cloudformation", "iac"]
+readme = "README.md"
+repository = "https://github.com/335g/four_iam"
+
+[dependencies]
+dyn-clone = "1"
+erased-serde = "0.4"
+four = { version = "0.0.3", features = ["derive"] }
+serde = { version = "1", features = ["derive"] }
+thiserror = "1"
+
+[dev-dependencies]
+serde_json = "1.0.120"
