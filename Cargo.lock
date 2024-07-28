@@ -12,6 +12,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "anyhow"
+version = "1.0.86"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b3d1d046238990b9cf5bcde22a3fb3584ee5cf65fb2765f454ed428c7a0063da"
+
+[[package]]
 name = "convert_case"
 version = "0.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -19,6 +25,12 @@ checksum = "ec182b0ca2f35d8fc196cf3404988fd8b8c739a4d270ff118a398feb0cbec1ca"
 dependencies = [
  "unicode-segmentation",
 ]
+
+[[package]]
+name = "dotenvy"
+version = "0.15.7"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1aaf95b3e5c8f23aa320147307562d361db0ae0d51242340f558153b4eb2439b"
 
 [[package]]
 name = "dyn-clone"
@@ -86,6 +98,21 @@ dependencies = [
 [[package]]
 name = "four_lambda"
 version = "0.0.3"
+dependencies = [
+ "dyn-clone",
+ "erased-serde",
+ "four",
+ "four_iam 0.0.3 (registry+https://github.com/rust-lang/crates.io-index)",
+ "regex",
+ "serde",
+ "thiserror",
+]
+
+[[package]]
+name = "four_lambda"
+version = "0.0.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2f3282aea61fc1ac9e25927208c8a5787c1068d9f907e4607f405fbe813c1355"
 dependencies = [
  "dyn-clone",
  "erased-serde",
@@ -190,6 +217,19 @@ dependencies = [
  "itoa",
  "ryu",
  "serde",
+]
+
+[[package]]
+name = "simple_lambda"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "dotenvy",
+ "four",
+ "four_iam 0.0.3 (registry+https://github.com/rust-lang/crates.io-index)",
+ "four_lambda 0.0.3 (registry+https://github.com/rust-lang/crates.io-index)",
+ "serde",
+ "serde_json",
 ]
 
 [[package]]

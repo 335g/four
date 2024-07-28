@@ -1,20 +1,15 @@
 [package]
 name = "simple_lambda"
-version.workspace = true
-authors.workspace = true
-edition.workspace = true
-license.workspace = true
-rust-version.workspace = true
-categories.workspace = true
-description.workspace = true
-keywords.workspace = true
-readme.workspace = true
-repository.workspace = true
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+rust-version = "1.80"
 
 [dependencies]
 anyhow = "1.0.86"
-four = "0.0.3"
-four_iam = "0.0.3"
-four_lambda = "0.0.3"
+dotenvy = "0.15.7"
+four.workspace = true
+four_iam.workspace = true
+four_lambda.workspace = true
 serde.workspace = true
 serde_json.workspace = true

@@ -2,9 +2,9 @@ use four::{account::Account, arn::Arn, partition::Partition, service::IAM};
 use serde::Serialize;
 
 #[derive(Debug, Clone, Serialize)]
-pub struct ManagedPolicy(Arn<IAM>);
+pub struct AWSManagedPolicy(Arn<IAM>);
 
-impl ManagedPolicy {
+impl AWSManagedPolicy {
     /// LambdaBasicExecutionRole
     /// cf. https://docs.aws.amazon.com/ja_jp/aws-managed-policy/latest/reference/AWSLambdaBasicExecutionRole.html
     pub fn lambda_basic_execution_role() -> Self {
@@ -16,6 +16,6 @@ impl ManagedPolicy {
         .partition(Partition::Ref)
         .build();
 
-        ManagedPolicy(arn)
+        AWSManagedPolicy(arn)
     }
 }
