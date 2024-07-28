@@ -52,6 +52,7 @@ dependencies = [
 name = "four"
 version = "0.0.3"
 dependencies = [
+ "dyn-clone",
  "erased-serde",
  "four_derive",
  "regex",
@@ -83,41 +84,13 @@ dependencies = [
 ]
 
 [[package]]
-name = "four_iam"
-version = "0.0.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9199d4c14742057cc4cd915062bbc38d430ad4a433427c2736dce89b6494cf5f"
-dependencies = [
- "dyn-clone",
- "erased-serde",
- "four",
- "serde",
- "thiserror",
-]
-
-[[package]]
 name = "four_lambda"
 version = "0.0.3"
 dependencies = [
  "dyn-clone",
  "erased-serde",
  "four",
- "four_iam 0.0.3 (registry+https://github.com/rust-lang/crates.io-index)",
- "regex",
- "serde",
- "thiserror",
-]
-
-[[package]]
-name = "four_lambda"
-version = "0.0.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2f3282aea61fc1ac9e25927208c8a5787c1068d9f907e4607f405fbe813c1355"
-dependencies = [
- "dyn-clone",
- "erased-serde",
- "four",
- "four_iam 0.0.3 (registry+https://github.com/rust-lang/crates.io-index)",
+ "four_iam",
  "regex",
  "serde",
  "thiserror",
@@ -226,8 +199,8 @@ dependencies = [
  "anyhow",
  "dotenvy",
  "four",
- "four_iam 0.0.3 (registry+https://github.com/rust-lang/crates.io-index)",
- "four_lambda 0.0.3 (registry+https://github.com/rust-lang/crates.io-index)",
+ "four_iam",
+ "four_lambda",
  "serde",
  "serde_json",
 ]

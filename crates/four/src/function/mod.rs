@@ -8,7 +8,7 @@ use reference::{Ref, Referenced};
 
 use crate::convert::WillBe;
 
-pub fn r#ref<R: Referenced, U>(wrapped: R) -> WillBe<U> {
+pub fn r#ref<R: Referenced>(wrapped: R) -> WillBe<R::To> {
     WillBe::new(Box::new(Ref::new(wrapped)))
 }
 

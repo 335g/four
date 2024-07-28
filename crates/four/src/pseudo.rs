@@ -1,8 +1,13 @@
-use crate::function::reference::{RefInner, Referenced};
+use crate::{
+    account::Account,
+    arn::Arn,
+    function::reference::{RefInner, Referenced},
+    service::{CloudFormation, SimpleNotification},
+};
 use serde::Serialize;
 
 macro_rules! pseudo_param {
-    ($($name:ident),*) => {
+    ($(($name:ident, $to:ty)),*) => {
         #[derive(Debug, Clone, Copy)]
         pub enum PseudoParam {
             $($name($name)),*
@@ -33,7 +38,8 @@ macro_rules! pseudo_param {
             }
 
             impl Referenced for $name {
-                fn referenced(self) -> RefInner {
+                type To = $to;
+                fn referenced(&self) -> RefInner {
                     RefInner::PseudoParam(PseudoParam::$name($name))
                 }
             }
@@ -42,14 +48,14 @@ macro_rules! pseudo_param {
 }
 
 pseudo_param!(
-    AccountId,
-    NotificationARNs,
-    NoValue,
-    Partition,
-    Region,
-    StackId,
-    StackName,
-    URLSuffix
+    (AccountId, Account),
+    (NotificationARNs, Vec<Arn<SimpleNotification>>),
+    (NoValue, ()),
+    (Partition, String),
+    (Region, String),
+    (StackId, Arn<CloudFormation>),
+    (StackName, String),
+    (URLSuffix, String)
 );
 
 #[cfg(test)]

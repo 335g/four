@@ -1,7 +1,11 @@
 use serde::{Serialize, Serializer};
 
 use crate::{
-    account::Account, function::join::Join, partition::Partition, region::Region, service::Service,
+    account::Account,
+    function::join::{Join, JoinElement},
+    partition::Partition,
+    region::Region,
+    service::Service,
 };
 
 /// Amazon Resource Name (ARN)
@@ -36,9 +40,10 @@ where
     where
         S: Serializer,
     {
+        #[derive(Clone)]
         enum StringOr {
             String(String),
-            Or(Box<dyn erased_serde::Serialize>),
+            Or(Box<dyn JoinElement>),
         }
 
         let mut contents: Vec<StringOr> = vec![];
@@ -107,7 +112,7 @@ where
         } else {
             let contents = contents
                 .into_iter()
-                .map(|x| -> Box<dyn erased_serde::Serialize> {
+                .map(|x| -> Box<dyn JoinElement> {
                     match x {
                         StringOr::String(x) => Box::new(x),
                         StringOr::Or(x) => Box::new(x),

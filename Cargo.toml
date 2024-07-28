@@ -11,6 +11,8 @@ resolver = "2"
 [patch.crates-io]
 four = { path = "crates/four" }
 four_derive = { path = "crates/four_derive" }
+four_iam = { path = "crates/four_iam" }
+four_lambda = { path = "crates/four_lambda" }
 
 [workspace.dependencies]
 convert_case = "0.6"

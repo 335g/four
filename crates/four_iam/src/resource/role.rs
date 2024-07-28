@@ -1,7 +1,10 @@
 use four::{
     arn::Arn,
     convert::{WillBe, WillMappable},
-    function::getatt::{Attribute, HaveAtt},
+    function::{
+        getatt::{Attribute, HaveAtt},
+        reference::{RefInner, Referenced},
+    },
     logical_id::LogicalId,
     service::IAM,
     ManagedResource,
@@ -10,27 +13,23 @@ use serde::Serialize;
 
 use crate::property::{
     action,
-    assume_role_policy_document::AssumeRolePolicyDocument,
-    managed_policy::ManagedPolicy,
+    policy_document::PolicyDocument,
     principal::{Principal, ServicePrincipal},
     statement::Statement,
 };
 
-#[derive(ManagedResource)]
+#[derive(ManagedResource, Clone)]
 #[resource_type = "AWS::IAM::Role"]
 pub struct Role {
     logical_id: LogicalId,
-    assume_role_policy_document: AssumeRolePolicyDocument,
+    assume_role_policy_document: PolicyDocument,
     description: Option<String>,
     role_name: Option<WillBe<RoleName>>,
-    managed_policy_arns: Option<Vec<ManagedPolicy>>,
+    managed_policy_arns: Option<Vec<WillBe<Arn<IAM>>>>,
 }
 
 impl Role {
-    pub fn new(
-        assume_role_policy_document: AssumeRolePolicyDocument,
-        logical_id: LogicalId,
-    ) -> Self {
+    pub fn new(assume_role_policy_document: PolicyDocument, logical_id: LogicalId) -> Self {
         Self {
             logical_id,
             assume_role_policy_document,
@@ -44,7 +43,7 @@ impl Role {
         let statement = Statement::allow()
             .action(vec![Box::new(action::sts::AssumeRole)])
             .principal(Principal::from(ServicePrincipal::Lambda));
-        let assume_role_policy_document = AssumeRolePolicyDocument::latest(vec![statement]);
+        let assume_role_policy_document = PolicyDocument::latest(vec![statement]);
         let role = Role::new(assume_role_policy_document, logical_id);
 
         role
@@ -60,9 +59,17 @@ impl Role {
         self
     }
 
-    pub fn managed_policy_arns(mut self, arns: Vec<ManagedPolicy>) -> Self {
+    pub fn managed_policy_arns(mut self, arns: Vec<WillBe<Arn<IAM>>>) -> Self {
         self.managed_policy_arns = Some(arns);
         self
+    }
+}
+
+impl Referenced for Role {
+    type To = Arn<IAM>;
+
+    fn referenced(&self) -> four::function::reference::RefInner {
+        RefInner::Id(self.logical_id.clone())
     }
 }
 

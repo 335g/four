@@ -1,19 +1,29 @@
+use dyn_clone::DynClone;
 use serde::{ser::SerializeMap as _, Serialize};
 
 use crate::function::reference::{RefInner, Referenced};
 
-pub struct Join(pub(crate) Vec<Box<dyn erased_serde::Serialize>>);
+pub trait JoinElement: erased_serde::Serialize + DynClone {}
+erased_serde::serialize_trait_object!(JoinElement);
+dyn_clone::clone_trait_object!(JoinElement);
+
+impl<T> JoinElement for T where T: erased_serde::Serialize + Clone {}
+
+#[derive(Clone)]
+pub struct Join(pub(crate) Vec<Box<dyn JoinElement>>);
 
 impl Join {
     #[allow(dead_code)]
-    pub(crate) fn new(xs: Vec<Box<dyn erased_serde::Serialize>>) -> Self {
+    pub(crate) fn new(xs: Vec<Box<dyn JoinElement>>) -> Self {
         Self(xs)
     }
 }
 
 impl Referenced for Join {
-    fn referenced(self) -> RefInner {
-        RefInner::Join(self)
+    type To = String;
+
+    fn referenced(&self) -> RefInner {
+        RefInner::Join(self.clone())
     }
 }
 

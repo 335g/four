@@ -1,7 +1,10 @@
 use four::{
     arn::Arn,
     convert::{WillBe, WillMappable},
-    function::getatt::{Attribute, HaveAtt},
+    function::{
+        getatt::{Attribute, HaveAtt},
+        reference::{RefInner, Referenced},
+    },
     logical_id::LogicalId,
     service::Lambda,
     ManagedResource,
@@ -17,7 +20,7 @@ use crate::property::{
     runtime::Runtime,
 };
 
-#[derive(ManagedResource)]
+#[derive(ManagedResource, Clone)]
 #[resource_type = "AWS::Lambda::Function"]
 pub struct Function {
     logical_id: LogicalId,
@@ -108,6 +111,14 @@ impl TryFrom<&str> for FunctionName {
         } else {
             Ok(FunctionName(value.to_string()))
         }
+    }
+}
+
+impl Referenced for Function {
+    type To = Arn<Lambda>;
+
+    fn referenced(&self) -> four::function::reference::RefInner {
+        RefInner::Id(self.logical_id.clone())
     }
 }
 

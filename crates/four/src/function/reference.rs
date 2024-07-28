@@ -1,23 +1,22 @@
 use serde::{ser::SerializeMap, Serialize};
 
-use crate::{
-    function::join::Join,
-    logical_id::{LogicalId, LogicalIdentified},
-    pseudo::PseudoParam,
-};
+use crate::{function::join::Join, logical_id::LogicalId, pseudo::PseudoParam};
 pub trait Referenced {
-    fn referenced(self) -> RefInner;
+    type To;
+
+    fn referenced(&self) -> RefInner;
 }
 
-impl<T> Referenced for &T
-where
-    T: LogicalIdentified,
-{
-    fn referenced(self) -> RefInner {
-        RefInner::Id(self.logical_id().clone())
-    }
-}
+// impl<T> Referenced for &T
+// where
+//     T: LogicalIdentified,
+// {
+//     fn referenced(self) -> RefInner {
+//         RefInner::Id(self.logical_id().clone())
+//     }
+// }
 
+#[derive(Clone)]
 pub enum RefInner {
     Id(LogicalId),
     PseudoParam(PseudoParam),
@@ -37,6 +36,7 @@ impl Serialize for RefInner {
     }
 }
 
+#[derive(Clone)]
 pub struct Ref {
     inner: RefInner,
 }

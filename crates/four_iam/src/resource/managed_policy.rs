@@ -1,5 +1,17 @@
-use four::{account::Account, arn::Arn, partition::Partition, service::IAM};
+use four::{
+    account::Account, arn::Arn, logical_id::LogicalId, partition::Partition, service::IAM,
+    ManagedResource,
+};
 use serde::Serialize;
+
+use crate::property::policy_document::PolicyDocument;
+
+#[derive(ManagedResource, Clone)]
+#[resource_type = "AWS::IAM::ManagedPolicy"]
+pub struct CustomerManagedPolicy {
+    logical_id: LogicalId,
+    policy_document: PolicyDocument,
+}
 
 #[derive(Debug, Clone, Serialize)]
 pub struct AWSManagedPolicy(Arn<IAM>);
