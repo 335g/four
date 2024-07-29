@@ -2,10 +2,7 @@ use dyn_clone::DynClone;
 
 use crate::logical_id::LogicalIdentified;
 
-// TODO: impl
-pub trait UnmanagedResource: erased_serde::Serialize {}
-
-erased_serde::serialize_trait_object!(UnmanagedResource);
+// TODO: impl unmanaged resource
 
 /// [Resource] section
 /// cf. https://docs.aws.amazon.com/ja_jp/AWSCloudFormation/latest/UserGuide/resources-section-structure.html

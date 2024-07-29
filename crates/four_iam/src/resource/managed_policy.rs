@@ -1,8 +1,14 @@
 use std::sync::LazyLock;
 
 use four::{
-    account::Account, arn::Arn, convert::WillBe, logical_id::LogicalId, partition::Partition,
-    service::IAM, ManagedResource,
+    account::Account,
+    arn::Arn,
+    convert::WillBe,
+    function::reference::{RefInner, Referenced},
+    logical_id::LogicalId,
+    partition::Partition,
+    service::IAM,
+    ManagedResource,
 };
 use regex::Regex;
 use serde::Serialize;
@@ -92,6 +98,14 @@ impl TryFrom<&str> for Path {
 pub enum PathError {
     #[error("invalid path pattern: {0}")]
     Invalid(String),
+}
+
+impl Referenced for CustomerManagedPolicy {
+    type To = Arn<IAM>;
+
+    fn referenced(&self) -> RefInner {
+        RefInner::Id(self.logical_id.clone())
+    }
 }
 
 #[derive(Debug, Clone, Serialize)]

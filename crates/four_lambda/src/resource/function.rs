@@ -117,7 +117,7 @@ impl TryFrom<&str> for FunctionName {
 impl Referenced for Function {
     type To = Arn<Lambda>;
 
-    fn referenced(&self) -> four::function::reference::RefInner {
+    fn referenced(&self) -> RefInner {
         RefInner::Id(self.logical_id.clone())
     }
 }

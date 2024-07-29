@@ -68,7 +68,7 @@ impl Role {
 impl Referenced for Role {
     type To = Arn<IAM>;
 
-    fn referenced(&self) -> four::function::reference::RefInner {
+    fn referenced(&self) -> RefInner {
         RefInner::Id(self.logical_id.clone())
     }
 }
