@@ -66,6 +66,7 @@ dependencies = [
  "dyn-clone",
  "erased-serde",
  "four",
+ "regex",
  "serde",
  "serde_json",
  "thiserror",

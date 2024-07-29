@@ -1,25 +1,10 @@
 use serde::{ser::SerializeMap, Serialize};
 
-use crate::{
-    function::join::Join,
-    logical_id::{LogicalId, LogicalIdentified},
-    pseudo::PseudoParam,
-};
+use crate::{function::join::Join, logical_id::LogicalId, pseudo::PseudoParam};
 pub trait Referenced {
     type To;
 
     fn referenced(&self) -> RefInner;
-}
-
-impl<T> Referenced for &T
-where
-    T: LogicalIdentified,
-{
-    type To = Self;
-
-    fn referenced(&self) -> RefInner {
-        RefInner::Id(self.logical_id().clone())
-    }
 }
 
 #[derive(Clone)]
