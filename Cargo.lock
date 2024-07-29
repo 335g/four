@@ -39,10 +39,24 @@ dependencies = [
 [[package]]
 name = "four"
 version = "0.0.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "cddb531f5c418d47356be038097507bde8fed3e41bf6d7fe5326b115153d1d44"
 dependencies = [
  "dyn-clone",
  "erased-serde",
- "four_derive",
+ "four_derive 0.0.3",
+ "regex",
+ "serde",
+ "thiserror",
+]
+
+[[package]]
+name = "four"
+version = "0.0.5"
+dependencies = [
+ "dyn-clone",
+ "erased-serde",
+ "four_derive 0.0.4",
  "regex",
  "serde",
  "serde_json",
@@ -51,7 +65,31 @@ dependencies = [
 
 [[package]]
 name = "four_derive"
+version = "0.0.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8949d2919422bd753329765aac18f85ec9c0b196008d0b69c33ab4f89c6c49d3"
+dependencies = [
+ "convert_case",
+ "proc-macro2",
+ "quote",
+ "syn",
+]
+
+[[package]]
+name = "four_derive"
 version = "0.0.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "bfd693332b6257c97c7dcee23a2a709a7eee04d3929a4cf4dd897339b8cec86d"
+dependencies = [
+ "convert_case",
+ "proc-macro2",
+ "quote",
+ "syn",
+]
+
+[[package]]
+name = "four_derive"
+version = "0.0.5"
 dependencies = [
  "convert_case",
  "proc-macro2",
@@ -62,10 +100,23 @@ dependencies = [
 [[package]]
 name = "four_iam"
 version = "0.0.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "222eb7e651a8318c1d4b1b16b63ef610a47143682e7876c9ccc5ee9c8f695099"
 dependencies = [
  "dyn-clone",
  "erased-serde",
- "four",
+ "four 0.0.4",
+ "serde",
+ "thiserror",
+]
+
+[[package]]
+name = "four_iam"
+version = "0.0.5"
+dependencies = [
+ "dyn-clone",
+ "erased-serde",
+ "four 0.0.4",
  "regex",
  "serde",
  "serde_json",
@@ -74,12 +125,12 @@ dependencies = [
 
 [[package]]
 name = "four_lambda"
-version = "0.0.4"
+version = "0.0.5"
 dependencies = [
  "dyn-clone",
  "erased-serde",
- "four",
- "four_iam",
+ "four 0.0.4",
+ "four_iam 0.0.4",
  "regex",
  "serde",
  "thiserror",
