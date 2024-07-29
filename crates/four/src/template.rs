@@ -41,20 +41,25 @@ pub struct Template {
 }
 
 impl Template {
-    pub fn new(
-        string_parameters: Vec<Parameter<String>>,
-        number_parameters: Vec<Parameter<f64>>,
-    ) -> Self {
+    pub fn new() -> Self {
         Self {
             format_version: TemplateVersion::latest(),
             description: None,
             resources: HashMap::new(),
-            string_parameters,
-            number_parameters,
+            string_parameters: vec![],
+            number_parameters: vec![],
         }
     }
 
-    pub fn insert(
+    pub fn insert_string_param(&mut self, param: Parameter<String>) {
+        self.string_parameters.push(param);
+    }
+
+    pub fn insert_number_param(&mut self, param: Parameter<f64>) {
+        self.number_parameters.push(param);
+    }
+
+    pub fn insert_resource(
         &mut self,
         resource: Box<dyn ManagedResource>,
     ) -> Option<Box<dyn ManagedResource>> {
