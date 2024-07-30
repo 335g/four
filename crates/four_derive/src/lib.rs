@@ -1,7 +1,7 @@
 use convert_case::Casing;
 use syn::spanned::Spanned;
 
-#[proc_macro_derive(ManagedResource, attributes(resource_type))]
+#[proc_macro_derive(ManagedResource, attributes(four, resource_type))]
 pub fn managed_resource(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
     let input = syn::parse_macro_input!(input as syn::DeriveInput);
     // eprintln!("INPUT: {:#?}", input);
@@ -130,6 +130,13 @@ fn get_inner_fields<'a>(
     fields
         .into_iter()
         .filter(|f| f.ident.as_ref().map(|i| i.to_string()) != Some("logical_id".to_string()))
+        .filter(|f| {
+            f.attrs
+                .iter()
+                .filter(|attr| is_skip_attribute(*attr))
+                .next()
+                .is_none()
+        })
         .map(|f| {
             let name = &f.ident;
             let ty = &f.ty;
@@ -148,6 +155,13 @@ fn get_inner_fields_init<'a>(
     fields
         .into_iter()
         .filter(|f| f.ident.as_ref().map(|i| i.to_string()) != Some("logical_id".to_string()))
+        .filter(|f| {
+            f.attrs
+                .iter()
+                .filter(|attr| is_skip_attribute(*attr))
+                .next()
+                .is_none()
+        })
         .map(|f| {
             let name = &f.ident;
 
@@ -165,6 +179,13 @@ fn get_inner_fields_impl_serialize<'a>(
     fields
         .into_iter()
         .filter(|f| f.ident.as_ref().map(|i| i.to_string()) != Some("logical_id".to_string()))
+        .filter(|f| {
+            f.attrs
+                .iter()
+                .filter(|attr| is_skip_attribute(*attr))
+                .next()
+                .is_none()
+        })
         .map(|f| {
             let name = &f.ident;
             let key = name
@@ -199,4 +220,17 @@ fn is_option(ty: &syn::Type) -> bool {
         .last()
         .map(|seg| seg.ident == "Option")
         .unwrap_or_default()
+}
+
+/// #[four(skip)]
+fn is_skip_attribute(attribute: &syn::Attribute) -> bool {
+    let syn::Meta::List(list) = &attribute.meta else {
+        return false;
+    };
+
+    if !list.path.is_ident("four") {
+        return false;
+    }
+
+    format!("{}", list.tokens) == "skip"
 }
