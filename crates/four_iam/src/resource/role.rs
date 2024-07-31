@@ -39,14 +39,13 @@ impl Role {
         }
     }
 
-    pub fn lambda_execution(logical_id: LogicalId) -> Self {
+    pub fn assume_role(id: LogicalId, principal: Principal) -> Self {
         let statement = Statement::allow()
             .action(vec![Box::new(action::sts::AssumeRole)])
-            .principal(Principal::from(ServicePrincipal::Lambda));
-        let assume_role_policy_document = PolicyDocument::latest(vec![statement]);
-        let role = Role::new(assume_role_policy_document, logical_id);
+            .principal(principal);
+        let policy_document = PolicyDocument::latest(vec![statement]);
 
-        role
+        Self::new(policy_document, id)
     }
 
     pub fn description(mut self, description: &str) -> Self {
