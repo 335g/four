@@ -17,7 +17,7 @@ use crate::property::policy_document::PolicyDocument;
 
 #[derive(ManagedResource, Clone)]
 #[resource_type = "AWS::IAM::ManagedPolicy"]
-pub struct CustomerManagedPolicy {
+pub struct ManagedPolicy {
     logical_id: LogicalId,
     description: Option<Description>,
     managed_policy_name: Option<WillBe<String>>,
@@ -25,7 +25,7 @@ pub struct CustomerManagedPolicy {
     policy_document: PolicyDocument,
 }
 
-impl CustomerManagedPolicy {
+impl ManagedPolicy {
     pub fn new(logical_id: LogicalId, policy_document: PolicyDocument) -> Self {
         Self {
             logical_id,
@@ -100,7 +100,7 @@ pub enum PathError {
     Invalid(String),
 }
 
-impl Referenced for CustomerManagedPolicy {
+impl Referenced for ManagedPolicy {
     type To = Arn<IAM>;
 
     fn referenced(&self) -> RefInner {
