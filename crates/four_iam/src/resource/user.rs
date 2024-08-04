@@ -1,6 +1,10 @@
 use four::{
     arn::Arn,
     convert::{WillBe, WillMappable},
+    function::{
+        getatt::{Attribute, HaveAtt},
+        reference::Referenced,
+    },
     logical_id::LogicalId,
     service::IAM,
     ManagedResource,
@@ -83,3 +87,28 @@ pub struct Policy {
 pub struct UserName(String);
 
 impl WillMappable<String> for UserName {}
+
+impl Referenced for User {
+    type To = UserName;
+
+    fn referenced(&self) -> four::function::reference::RefInner {
+        four::function::reference::RefInner::Id(self.logical_id.clone())
+    }
+}
+
+#[derive(Debug, Clone, Serialize)]
+pub struct UserArn(Arn<IAM>);
+
+impl From<Arn<IAM>> for UserArn {
+    fn from(value: Arn<IAM>) -> Self {
+        UserArn(value)
+    }
+}
+
+impl HaveAtt<UserArn> for User {}
+
+impl Attribute for UserArn {
+    fn name() -> &'static str {
+        "Arn"
+    }
+}
