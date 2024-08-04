@@ -24,6 +24,7 @@ impl From<Vec<ServicePrincipal>> for Principal {
 #[non_exhaustive]
 #[derive(Debug, Clone)]
 pub enum ServicePrincipal {
+    Ec2,
     Lambda,
 }
 
@@ -33,6 +34,7 @@ impl Serialize for ServicePrincipal {
         S: serde::Serializer,
     {
         let elem = match self {
+            ServicePrincipal::Ec2 => "ec2.amazonaws.com",
             ServicePrincipal::Lambda => "lambda.amazonaws.com",
         };
         elem.serialize(serializer)

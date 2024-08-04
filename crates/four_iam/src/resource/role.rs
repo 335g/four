@@ -12,10 +12,7 @@ use four::{
 use serde::Serialize;
 
 use crate::property::{
-    action,
-    policy_document::PolicyDocument,
-    principal::{Principal, ServicePrincipal},
-    statement::Statement,
+    action, policy_document::PolicyDocument, principal::Principal, statement::Statement,
 };
 
 #[derive(ManagedResource, Clone)]
@@ -65,7 +62,7 @@ impl Role {
 }
 
 impl Referenced for Role {
-    type To = Arn<IAM>;
+    type To = WillBe<RoleName>;
 
     fn referenced(&self) -> RefInner {
         RefInner::Id(self.logical_id.clone())
