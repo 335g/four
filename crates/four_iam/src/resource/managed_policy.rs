@@ -100,8 +100,11 @@ pub enum PathError {
     Invalid(String),
 }
 
+#[derive(Debug, Clone, Serialize)]
+pub struct ManagedPolicyArn(Arn<IAM>);
+
 impl Referenced for ManagedPolicy {
-    type To = Arn<IAM>;
+    type To = ManagedPolicyArn;
 
     fn referenced(&self) -> RefInner {
         RefInner::Id(self.logical_id.clone())

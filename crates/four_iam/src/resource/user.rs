@@ -99,12 +99,6 @@ impl Referenced for User {
 #[derive(Debug, Clone, Serialize)]
 pub struct UserArn(Arn<IAM>);
 
-impl From<Arn<IAM>> for UserArn {
-    fn from(value: Arn<IAM>) -> Self {
-        UserArn(value)
-    }
-}
-
 impl HaveAtt<UserArn> for User {}
 
 impl Attribute for UserArn {
