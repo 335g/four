@@ -4,7 +4,6 @@ members = [
     "crates/four_derive",
     "crates/four_iam",
     "crates/four_lambda",
-    "examples/simple_lambda",
 ]
 resolver = "2"
 
