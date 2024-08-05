@@ -2,7 +2,10 @@ use std::io::Write;
 
 use dotenvy::dotenv;
 use four::{function::get_att, logical_id::LogicalId, template::Template};
-use four_iam::resource::role::{Role, RoleArn};
+use four_iam::{
+    property::principal::{Principal, ServicePrincipal},
+    resource::role::{Role, RoleArn},
+};
 use four_lambda::{
     property::{handler::Handler, runtime::Runtime},
     resource::function::Function,
@@ -12,7 +15,7 @@ fn main() -> anyhow::Result<()> {
     dotenv()?;
 
     let role_id = LogicalId::try_from("roleid").unwrap();
-    let role = Role::lambda_execution(role_id);
+    let role = Role::assume_role(role_id, Principal::from(ServicePrincipal::Lambda));
     let role_arn = get_att::<RoleArn, _>(&role);
 
     let function_id = LogicalId::try_from("functionid").unwrap();
@@ -23,9 +26,9 @@ fn main() -> anyhow::Result<()> {
 
     let function = Function::zip(function_id, &bucket_name, &key, role_arn, handler, runtime);
 
-    let mut template = Template::new(vec![], vec![]);
-    template.insert(Box::new(role));
-    template.insert(Box::new(function));
+    let mut template = Template::new();
+    template.insert_resource(Box::new(role));
+    template.insert_resource(Box::new(function));
 
     let template_json = serde_json::to_string_pretty(&template).expect("is valid template");
     println!("{}", template_json,);
