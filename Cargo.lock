@@ -38,11 +38,39 @@ dependencies = [
 
 [[package]]
 name = "four"
-version = "0.0.5"
+version = "0.0.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "cddb531f5c418d47356be038097507bde8fed3e41bf6d7fe5326b115153d1d44"
 dependencies = [
  "dyn-clone",
  "erased-serde",
- "four_derive",
+ "four_derive 0.0.3",
+ "regex",
+ "serde",
+ "thiserror",
+]
+
+[[package]]
+name = "four"
+version = "0.0.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a993639152fd465bdab3687dbc5b22e942c2e83a58851d355f2e361516367bd9"
+dependencies = [
+ "dyn-clone",
+ "erased-serde",
+ "four_derive 0.0.4",
+ "regex",
+ "serde",
+ "thiserror",
+]
+
+[[package]]
+name = "four"
+version = "0.0.6"
+dependencies = [
+ "dyn-clone",
+ "erased-serde",
+ "four_derive 0.0.5",
  "regex",
  "serde",
  "serde_json",
@@ -51,7 +79,43 @@ dependencies = [
 
 [[package]]
 name = "four_derive"
+version = "0.0.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8949d2919422bd753329765aac18f85ec9c0b196008d0b69c33ab4f89c6c49d3"
+dependencies = [
+ "convert_case",
+ "proc-macro2",
+ "quote",
+ "syn",
+]
+
+[[package]]
+name = "four_derive"
+version = "0.0.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "bfd693332b6257c97c7dcee23a2a709a7eee04d3929a4cf4dd897339b8cec86d"
+dependencies = [
+ "convert_case",
+ "proc-macro2",
+ "quote",
+ "syn",
+]
+
+[[package]]
+name = "four_derive"
 version = "0.0.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "114fe2efc09cdd9e5be07ce1e153602b78530f50ac4c2348cbd1aaa321f620c7"
+dependencies = [
+ "convert_case",
+ "proc-macro2",
+ "quote",
+ "syn",
+]
+
+[[package]]
+name = "four_derive"
+version = "0.0.6"
 dependencies = [
  "convert_case",
  "proc-macro2",
@@ -62,10 +126,24 @@ dependencies = [
 [[package]]
 name = "four_iam"
 version = "0.0.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "aedca7e7b1a8871faa2d81e346e05e033c9e4d56d2f853fb0527c7229c233d1c"
 dependencies = [
  "dyn-clone",
  "erased-serde",
- "four",
+ "four 0.0.4",
+ "regex",
+ "serde",
+ "thiserror",
+]
+
+[[package]]
+name = "four_iam"
+version = "0.0.6"
+dependencies = [
+ "dyn-clone",
+ "erased-serde",
+ "four 0.0.5",
  "regex",
  "serde",
  "serde_json",
@@ -74,12 +152,12 @@ dependencies = [
 
 [[package]]
 name = "four_lambda"
-version = "0.0.5"
+version = "0.0.6"
 dependencies = [
  "dyn-clone",
  "erased-serde",
- "four",
- "four_iam",
+ "four 0.0.5",
+ "four_iam 0.0.5",
  "regex",
  "serde",
  "thiserror",
