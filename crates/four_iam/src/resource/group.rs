@@ -5,7 +5,7 @@ use four::{
         getatt::{Attribute, HaveAtt},
         reference::Referenced,
     },
-    logical_id::{self, LogicalId},
+    logical_id::LogicalId,
     service::IAM,
     ManagedResource,
 };
