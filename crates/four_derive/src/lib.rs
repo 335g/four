@@ -1,10 +1,11 @@
 use convert_case::Casing;
+use quote::quote;
 use syn::spanned::Spanned;
 
-#[proc_macro_derive(ManagedResource, attributes(four, resource_type))]
+#[proc_macro_derive(ManagedResource, attributes(four, resource_type, referenced))]
 pub fn managed_resource(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
     let input = syn::parse_macro_input!(input as syn::DeriveInput);
-    // eprintln!("INPUT: {:#?}", input);
+    eprintln!("INPUT: {:#?}", input);
     let resource_type = match get_resource_type(&input) {
         Ok(s) => s,
         Err(e) => return e.to_compile_error().into(),
@@ -29,8 +30,18 @@ pub fn managed_resource(input: proc_macro::TokenStream) -> proc_macro::TokenStre
     let inner_fields = get_inner_fields(named);
     let inner_fields_init = get_inner_fields_init(named);
     let inner_fields_impl_serialize = get_inner_fields_impl_serialize(named);
+    let initializer_props = get_initializer_props(named);
+    let initializer_values = get_initializer_values(fields);
 
     let expnaded = quote::quote! {
+        impl #struct_name {
+            pub fn new(#(#initializer_props),*) -> #struct_name {
+                #struct_name {
+                    #(#initializer_values),*
+                }
+            }
+        }
+
         impl serde::Serialize for #struct_name {
             fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
             where
@@ -233,4 +244,38 @@ fn is_skip_attribute(attribute: &syn::Attribute) -> bool {
     }
 
     format!("{}", list.tokens) == "skip"
+}
+
+fn get_initializer_props<'a>(
+    fields: impl IntoIterator<Item = &'a syn::Field>,
+) -> Vec<proc_macro2::TokenStream> {
+    fields
+        .into_iter()
+        .filter(|f| !is_option(&f.ty))
+        .map(|f| {
+            let name = &f.ident;
+            let ty = &f.ty;
+
+            quote! {
+                #name: #ty
+            }
+        })
+        .collect()
+}
+
+fn get_initializer_values<'a>(
+    fields: impl IntoIterator<Item = &'a syn::Field>,
+) -> Vec<proc_macro2::TokenStream> {
+    fields
+        .into_iter()
+        .map(|f| {
+            let name = &f.ident;
+
+            if is_option(&f.ty) {
+                quote! { #name: None }
+            } else {
+                quote! { #name }
+            }
+        })
+        .collect()
 }
