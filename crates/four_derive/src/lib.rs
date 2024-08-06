@@ -1,6 +1,6 @@
 use convert_case::Casing;
 use quote::quote;
-use syn::spanned::Spanned;
+use syn::{spanned::Spanned, PathArguments};
 
 #[proc_macro_derive(ManagedResource, attributes(four, resource_type, referenced))]
 pub fn managed_resource(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
@@ -31,7 +31,8 @@ pub fn managed_resource(input: proc_macro::TokenStream) -> proc_macro::TokenStre
     let inner_fields_init = get_inner_fields_init(named);
     let inner_fields_impl_serialize = get_inner_fields_impl_serialize(named);
     let initializer_props = get_initializer_props(named);
-    let initializer_values = get_initializer_values(fields);
+    let initializer_values = get_initializer_values(named);
+    let setter = get_setter(named);
 
     let expnaded = quote::quote! {
         impl #struct_name {
@@ -40,6 +41,8 @@ pub fn managed_resource(input: proc_macro::TokenStream) -> proc_macro::TokenStre
                     #(#initializer_values),*
                 }
             }
+
+            #(#setter)*
         }
 
         impl serde::Serialize for #struct_name {
@@ -275,6 +278,39 @@ fn get_initializer_values<'a>(
                 quote! { #name: None }
             } else {
                 quote! { #name }
+            }
+        })
+        .collect()
+}
+
+fn get_setter<'a>(
+    fields: impl IntoIterator<Item = &'a syn::Field>,
+) -> Vec<proc_macro2::TokenStream> {
+    fields
+        .into_iter()
+        .filter(|f| f.ident.as_ref().map(|i| i.to_string()) != Some("logical_id".to_string()))
+        .filter(|f| is_option(&f.ty))
+        .map(|f| {
+            let name = &f.ident;
+            let ty = &f.ty;
+            let syn::Type::Path(path) = &f.ty else {
+                return quote! {};
+            };
+            let Some(seg) = path.path.segments.first() else {
+                return quote! {};
+            };
+            let PathArguments::AngleBracketed(bra) = &seg.arguments else {
+                return quote! {};
+            };
+            let Some(syn::GenericArgument::Type(ty)) = bra.args.first() else {
+                return quote! {};
+            };
+
+            quote! {
+                fn #name(mut self, #name: #ty) -> Self {
+                    self.#name = Some(#name);
+                    self
+                }
             }
         })
         .collect()
