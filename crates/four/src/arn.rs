@@ -251,6 +251,35 @@ where
     }
 }
 
+#[derive(Debug, Clone)]
+pub struct PartialArn {
+    account: Account,
+    resource: String,
+}
+
+impl PartialArn {
+    pub fn new(account: Account, resource: String) -> Self {
+        Self { account, resource }
+    }
+}
+
+impl Serialize for PartialArn {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        let mut contents: Vec<Box<dyn JoinElement>> = vec![];
+        if let Some(account) = self.account.to_str() {
+            contents.push(Box::new(format!("{account}:{}", self.resource)));
+        } else {
+            contents.push(Box::new(self.account.clone()));
+            contents.push(Box::new(self.resource.clone()));
+        }
+
+        Join(contents).serialize(serializer)
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use crate::partition::Partition;
