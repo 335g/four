@@ -25,35 +25,6 @@ pub struct ManagedPolicy {
     policy_document: PolicyDocument,
 }
 
-impl ManagedPolicy {
-    pub fn new(logical_id: LogicalId, policy_document: PolicyDocument) -> Self {
-        Self {
-            logical_id,
-            description: None,
-            managed_policy_name: None,
-            path: Path::try_from("/").unwrap(),
-            policy_document,
-        }
-    }
-
-    pub fn description(mut self, x: &str) -> Result<Self, DescriptionError> {
-        let description = Description::try_from(x)?;
-        self.description = Some(description);
-        Ok(self)
-    }
-
-    pub fn managed_policy_name(mut self, name: WillBe<String>) -> Self {
-        self.managed_policy_name = Some(name);
-        self
-    }
-
-    pub fn path(mut self, path: &str) -> Result<Self, PathError> {
-        let path = Path::try_from(path)?;
-        self.path = path;
-        Ok(self)
-    }
-}
-
 #[derive(Debug, Clone, Serialize)]
 pub struct Description(String);
 

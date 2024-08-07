@@ -26,38 +26,13 @@ pub struct Role {
 }
 
 impl Role {
-    pub fn new(assume_role_policy_document: PolicyDocument, logical_id: LogicalId) -> Self {
-        Self {
-            logical_id,
-            assume_role_policy_document,
-            description: None,
-            role_name: None,
-            managed_policy_arns: None,
-        }
-    }
-
     pub fn assume_role(id: LogicalId, principal: Principal) -> Self {
         let statement = Statement::allow()
             .action(vec![Box::new(action::sts::AssumeRole)])
             .principal(principal);
         let policy_document = PolicyDocument::latest(vec![statement]);
 
-        Self::new(policy_document, id)
-    }
-
-    pub fn description(mut self, description: &str) -> Self {
-        self.description = Some(description.to_string());
-        self
-    }
-
-    pub fn name(mut self, name: WillBe<String>) -> Self {
-        self.role_name = Some(name.map());
-        self
-    }
-
-    pub fn managed_policy_arns(mut self, arns: Vec<WillBe<Arn<IAM>>>) -> Self {
-        self.managed_policy_arns = Some(arns);
-        self
+        Self::new(id, policy_document)
     }
 }
 
@@ -84,7 +59,7 @@ impl WillMappable<String> for RoleName {}
 pub struct RoleArn(Arn<IAM>);
 
 impl From<Arn<IAM>> for RoleArn {
-    fn from(value: Arn<IAM>) -> Self {
+    fn from(value: Arn<IAM>) -> RoleArn {
         RoleArn(value)
     }
 }
@@ -110,7 +85,7 @@ impl Attribute for RoleId {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::property::action;
+    use crate::property::{action, principal::ServicePrincipal};
 
     #[test]
     fn test_role1() {
@@ -118,8 +93,8 @@ mod tests {
         let statement = Statement::allow()
             .action(vec![Box::new(action::sts::AssumeRole)])
             .principal(Principal::from(ServicePrincipal::Lambda));
-        let assume_role_policy_document = AssumeRolePolicyDocument::latest(vec![statement]);
-        let role = Role::new(assume_role_policy_document, role_id);
+        let assume_role_policy_document = PolicyDocument::latest(vec![statement]);
+        let role = Role::new(role_id, assume_role_policy_document);
         let mut rhs = r#"{
             "Type": "AWS::IAM::Role",
             "Properties": {

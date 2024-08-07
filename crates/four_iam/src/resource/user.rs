@@ -27,50 +27,6 @@ pub struct User {
     user_name: Option<WillBe<UserName>>,
 }
 
-impl User {
-    pub fn new(logical_id: LogicalId) -> User {
-        User {
-            logical_id,
-            groups: None,
-            login_profile: None,
-            managed_policy_arns: None,
-            path: None,
-            policies: None,
-            user_name: None,
-        }
-    }
-
-    pub fn groups(mut self, groups: Vec<WillBe<GroupName>>) -> User {
-        self.groups = Some(groups);
-        self
-    }
-
-    pub fn login_profile(mut self, profile: LoginProfile) -> User {
-        self.login_profile = Some(profile);
-        self
-    }
-
-    pub fn managed_policy_arns(mut self, arns: Vec<WillBe<Arn<IAM>>>) -> User {
-        self.managed_policy_arns = Some(arns);
-        self
-    }
-
-    pub fn path(mut self, path: String) -> User {
-        self.path = Some(path);
-        self
-    }
-
-    pub fn policies(mut self, policies: Vec<Policy>) -> User {
-        self.policies = Some(policies);
-        self
-    }
-
-    pub fn user_name(mut self, user_name: WillBe<UserName>) -> User {
-        self.user_name = Some(user_name);
-        self
-    }
-}
-
 #[derive(Debug, Clone, Serialize)]
 pub struct LoginProfile {
     password: String,

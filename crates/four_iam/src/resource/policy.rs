@@ -21,34 +21,6 @@ pub struct Policy {
     users: Option<Vec<WillBe<UserName>>>,
 }
 
-impl Policy {
-    pub fn new(logical_id: LogicalId, name: WillBe<String>, document: PolicyDocument) -> Policy {
-        Policy {
-            logical_id,
-            groups: None,
-            policy_document: document,
-            policy_name: name.map(),
-            roles: None,
-            users: None,
-        }
-    }
-
-    pub fn groups(mut self, groups: Vec<WillBe<GroupName>>) -> Policy {
-        self.groups = Some(groups);
-        self
-    }
-
-    pub fn roles(mut self, roles: Vec<WillBe<RoleName>>) -> Policy {
-        self.roles = Some(roles);
-        self
-    }
-
-    pub fn users(mut self, users: Vec<WillBe<UserName>>) -> Policy {
-        self.users = Some(users);
-        self
-    }
-}
-
 #[derive(Debug, Clone, Serialize)]
 pub struct PolicyName(String);
 

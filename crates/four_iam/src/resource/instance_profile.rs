@@ -22,27 +22,6 @@ pub struct InstanceProfile {
     roles: Vec<WillBe<RoleName>>,
 }
 
-impl InstanceProfile {
-    pub fn new(logical_id: LogicalId, roles: Vec<WillBe<RoleName>>) -> InstanceProfile {
-        InstanceProfile {
-            logical_id,
-            instance_profile_name: None,
-            path: None,
-            roles,
-        }
-    }
-
-    pub fn instance_profile_name(mut self, name: WillBe<InstanceProfileName>) -> InstanceProfile {
-        self.instance_profile_name = Some(name);
-        self
-    }
-
-    pub fn path(mut self, path: String) -> InstanceProfile {
-        self.path = Some(path);
-        self
-    }
-}
-
 #[derive(Debug, Clone, Serialize)]
 pub struct InstanceProfileName(String);
 

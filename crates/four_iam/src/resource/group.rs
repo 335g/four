@@ -23,38 +23,6 @@ pub struct Group {
     policies: Option<Vec<Policy>>,
 }
 
-impl Group {
-    pub fn new(logical_id: LogicalId) -> Group {
-        Group {
-            logical_id,
-            group_name: None,
-            managed_policy_arns: None,
-            path: None,
-            policies: None,
-        }
-    }
-
-    pub fn group_name(mut self, name: WillBe<GroupName>) -> Group {
-        self.group_name = Some(name);
-        self
-    }
-
-    pub fn managed_policy_arns(mut self, arns: Vec<WillBe<ManagedPolicyArn>>) -> Group {
-        self.managed_policy_arns = Some(arns);
-        self
-    }
-
-    pub fn path(mut self, path: String) -> Group {
-        self.path = Some(path);
-        self
-    }
-
-    pub fn policies(mut self, policies: Vec<Policy>) -> Group {
-        self.policies = Some(policies);
-        self
-    }
-}
-
 #[derive(Debug, Clone, Serialize)]
 pub struct GroupName(String);
 

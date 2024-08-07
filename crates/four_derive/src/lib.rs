@@ -5,7 +5,7 @@ use syn::{spanned::Spanned, PathArguments};
 #[proc_macro_derive(ManagedResource, attributes(four, resource_type, referenced))]
 pub fn managed_resource(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
     let input = syn::parse_macro_input!(input as syn::DeriveInput);
-    eprintln!("INPUT: {:#?}", input);
+    // eprintln!("INPUT: {:#?}", input);
     let resource_type = match get_resource_type(&input) {
         Ok(s) => s,
         Err(e) => return e.to_compile_error().into(),
@@ -292,7 +292,6 @@ fn get_setter<'a>(
         .filter(|f| is_option(&f.ty))
         .map(|f| {
             let name = &f.ident;
-            let ty = &f.ty;
             let syn::Type::Path(path) = &f.ty else {
                 return quote! {};
             };
