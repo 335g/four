@@ -1,15 +1,17 @@
+use std::fmt::Debug;
+
 use dyn_clone::DynClone;
 use serde::{ser::SerializeMap as _, Serialize};
 
 use crate::function::reference::{RefInner, Referenced};
 
-pub trait JoinElement: erased_serde::Serialize + DynClone {}
+pub trait JoinElement: erased_serde::Serialize + DynClone + Debug {}
 erased_serde::serialize_trait_object!(JoinElement);
 dyn_clone::clone_trait_object!(JoinElement);
 
-impl<T> JoinElement for T where T: erased_serde::Serialize + Clone {}
+impl<T> JoinElement for T where T: erased_serde::Serialize + Clone + Debug {}
 
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 pub struct Join(pub(crate) Vec<Box<dyn JoinElement>>);
 
 impl Join {

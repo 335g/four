@@ -7,7 +7,7 @@ use crate::logical_id::{LogicalId, LogicalIdentified};
 
 pub trait HaveAtt<A>: LogicalIdentified {}
 
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 pub struct GetAtt {
     logical_id: LogicalId,
     name: &'static str,

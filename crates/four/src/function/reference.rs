@@ -7,7 +7,7 @@ pub trait Referenced {
     fn referenced(&self) -> RefInner;
 }
 
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 pub enum RefInner {
     Id(LogicalId),
     PseudoParam(PseudoParam),
@@ -27,7 +27,7 @@ impl Serialize for RefInner {
     }
 }
 
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 pub struct Ref {
     inner: RefInner,
 }

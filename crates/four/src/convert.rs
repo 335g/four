@@ -1,11 +1,11 @@
-use std::marker::PhantomData;
+use std::{fmt::Debug, marker::PhantomData};
 
 use dyn_clone::DynClone;
 use serde::Serialize;
 
-pub trait WillFrom: erased_serde::Serialize + DynClone {}
+pub trait WillFrom: erased_serde::Serialize + DynClone + Debug {}
 
-impl<T> WillFrom for T where T: Serialize + Clone {}
+impl<T> WillFrom for T where T: Serialize + Clone + Debug {}
 
 erased_serde::serialize_trait_object!(WillFrom);
 dyn_clone::clone_trait_object!(WillFrom);
@@ -14,7 +14,7 @@ pub trait WillMappable<F> {}
 
 impl<F> WillMappable<F> for F {}
 
-#[derive(Clone)]
+#[derive(Debug, Clone)]
 pub struct WillBe<T> {
     from: Box<dyn WillFrom>,
     to: PhantomData<T>,
