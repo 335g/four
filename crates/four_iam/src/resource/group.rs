@@ -11,7 +11,10 @@ use four::{
 };
 use serde::Serialize;
 
-use crate::resource::{managed_policy::ManagedPolicyArn, policy::Policy};
+use crate::{
+    resource::{managed_policy::ManagedPolicyArn, policy::Policy},
+    util::Path,
+};
 
 #[derive(ManagedResource, Clone)]
 #[resource_type = "AWS::IAM::Group"]
@@ -19,7 +22,7 @@ pub struct Group {
     logical_id: LogicalId,
     group_name: Option<WillBe<GroupName>>,
     managed_policy_arns: Option<Vec<WillBe<ManagedPolicyArn>>>,
-    path: Option<String>,
+    path: Option<Path>,
     policies: Option<Vec<Policy>>,
 }
 

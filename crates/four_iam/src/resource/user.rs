@@ -11,9 +11,7 @@ use four::{
 };
 use serde::Serialize;
 
-use crate::property::policy_document::PolicyDocument;
-
-use super::group::GroupName;
+use crate::{property::policy_document::PolicyDocument, resource::group::GroupName, util::Path};
 
 #[derive(ManagedResource, Clone)]
 #[resource_type = "AWS::IAM::User"]
@@ -22,7 +20,7 @@ pub struct User {
     groups: Option<Vec<WillBe<GroupName>>>,
     login_profile: Option<LoginProfile>,
     managed_policy_arns: Option<Vec<WillBe<Arn<IAM>>>>,
-    path: Option<String>,
+    path: Option<Path>,
     policies: Option<Vec<Policy>>,
     user_name: Option<WillBe<UserName>>,
 }

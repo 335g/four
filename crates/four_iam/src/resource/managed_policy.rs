@@ -1,5 +1,3 @@
-use std::sync::LazyLock;
-
 use four::{
     account::Account,
     arn::Arn,
@@ -10,10 +8,9 @@ use four::{
     service::IAM,
     ManagedResource,
 };
-use regex::Regex;
 use serde::Serialize;
 
-use crate::property::policy_document::PolicyDocument;
+use crate::{property::policy_document::PolicyDocument, util::Path};
 
 #[derive(ManagedResource, Clone)]
 #[resource_type = "AWS::IAM::ManagedPolicy"]
@@ -21,7 +18,7 @@ pub struct ManagedPolicy {
     logical_id: LogicalId,
     description: Option<Description>,
     managed_policy_name: Option<WillBe<String>>,
-    path: Path,
+    path: Option<Path>,
     policy_document: PolicyDocument,
 }
 
@@ -45,30 +42,6 @@ impl TryFrom<&str> for Description {
 pub enum DescriptionError {
     #[error("character count exceeds the specified value(1000): {0}")]
     Over(usize),
-}
-
-static PATH_REGEX: LazyLock<Regex> =
-    LazyLock::new(|| Regex::new(r#"((/[A-Za-z0-9\.,\+@=_-]+)*)/"#).unwrap());
-
-#[derive(Debug, Clone, Serialize)]
-pub struct Path(String);
-
-impl TryFrom<&str> for Path {
-    type Error = PathError;
-
-    fn try_from(value: &str) -> Result<Self, Self::Error> {
-        if value.is_empty() || value.len() > 512 || !PATH_REGEX.is_match(&value) {
-            Err(PathError::Invalid(value.to_string()))
-        } else {
-            Ok(Path(value.to_string()))
-        }
-    }
-}
-
-#[derive(Debug, thiserror::Error)]
-pub enum PathError {
-    #[error("invalid path pattern: {0}")]
-    Invalid(String),
 }
 
 #[derive(Debug, Clone, Serialize)]

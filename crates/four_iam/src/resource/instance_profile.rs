@@ -11,14 +11,14 @@ use four::{
 };
 use serde::Serialize;
 
-use crate::resource::role::RoleName;
+use crate::{resource::role::RoleName, util::Path};
 
 #[derive(ManagedResource, Clone)]
 #[resource_type = "AWS::IAM::InstanceProfile"]
 pub struct InstanceProfile {
     logical_id: LogicalId,
     instance_profile_name: Option<WillBe<InstanceProfileName>>,
-    path: Option<String>,
+    path: Option<Path>,
     roles: Vec<WillBe<RoleName>>,
 }
 
