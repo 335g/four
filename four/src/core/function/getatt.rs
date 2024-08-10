@@ -3,7 +3,7 @@ use serde::{
     Serialize,
 };
 
-use crate::logical_id::{LogicalId, LogicalIdentified};
+use crate::core::logical_id::{LogicalId, LogicalIdentified};
 
 pub trait HaveAtt<A>: LogicalIdentified {}
 

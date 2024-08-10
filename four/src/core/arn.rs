@@ -1,6 +1,6 @@
 use serde::{Serialize, Serializer};
 
-use crate::{
+use crate::core::{
     account::Account,
     function::join::{Join, JoinElement},
     partition::Partition,

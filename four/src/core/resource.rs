@@ -1,6 +1,6 @@
 use dyn_clone::DynClone;
 
-use crate::logical_id::LogicalIdentified;
+use crate::core::logical_id::LogicalIdentified;
 
 // TODO: impl unmanaged resource
 

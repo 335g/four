@@ -2,7 +2,7 @@
 
 use serde::{Serialize, Serializer};
 
-use crate::{function::reference::Ref, pseudo};
+use crate::core::{function::reference::Ref, pseudo};
 
 #[non_exhaustive]
 #[derive(Debug, Clone, Copy)]

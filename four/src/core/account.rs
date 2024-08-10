@@ -1,4 +1,4 @@
-use crate::{function::reference::Ref, pseudo};
+use crate::core::{function::reference::Ref, pseudo};
 use regex::Regex;
 use serde::{Serialize, Serializer};
 use std::ops::Deref;

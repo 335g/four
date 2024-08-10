@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use serde::{ser::SerializeMap, Serialize};
 
-use crate::{
+use crate::core::{
     logical_id::{LogicalId, LogicalIdentified},
     parameter::Parameter,
     resource::ManagedResource,

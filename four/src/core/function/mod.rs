@@ -6,7 +6,7 @@ pub mod sub;
 use getatt::{Attribute, GetAtt, HaveAtt};
 use reference::{Ref, Referenced};
 
-use crate::convert::WillBe;
+use crate::core::convert::WillBe;
 
 pub fn r#ref<R: Referenced>(wrapped: R) -> WillBe<R::To> {
     WillBe::new(Box::new(Ref::new(wrapped)))

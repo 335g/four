@@ -3,7 +3,7 @@ use std::marker::PhantomData;
 use serde::{ser::SerializeMap, Serialize};
 use thiserror::Error;
 
-use crate::logical_id::{LogicalId, LogicalIdentified};
+use crate::core::logical_id::{LogicalId, LogicalIdentified};
 
 #[non_exhaustive]
 #[derive(Debug, Clone, Copy)]
