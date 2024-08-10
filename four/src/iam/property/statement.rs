@@ -1,6 +1,5 @@
+use crate::iam::property::{action::Action, effect::Effect, principal::Principal};
 use serde::Serialize;
-
-use crate::property::{action::Action, effect::Effect, principal::Principal};
 
 #[derive(Debug, Clone, Serialize)]
 #[serde(rename_all = "PascalCase")]

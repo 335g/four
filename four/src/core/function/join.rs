@@ -1,9 +1,7 @@
-use std::fmt::Debug;
-
+use crate::core::function::reference::{RefInner, Referenced};
 use dyn_clone::DynClone;
 use serde::{ser::SerializeMap as _, Serialize};
-
-use crate::core::function::reference::{RefInner, Referenced};
+use std::fmt::Debug;
 
 pub trait JoinElement: erased_serde::Serialize + DynClone + Debug {}
 erased_serde::serialize_trait_object!(JoinElement);

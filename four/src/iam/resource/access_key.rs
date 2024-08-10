@@ -1,15 +1,16 @@
-use four::{
-    convert::WillBe,
-    function::{
-        getatt::{Attribute, HaveAtt},
-        reference::{RefInner, Referenced},
+use crate::{
+    core::{
+        convert::WillBe,
+        function::{
+            getatt::{Attribute, HaveAtt},
+            reference::{RefInner, Referenced},
+        },
+        logical_id::LogicalId,
     },
-    logical_id::LogicalId,
-    ManagedResource,
+    iam::resource::user::UserName,
 };
+use four_derive::ManagedResource;
 use serde::Serialize;
-
-use super::user::UserName;
 
 #[derive(ManagedResource, Clone)]
 #[resource_type = "AWS::IAM::AccessKey"]

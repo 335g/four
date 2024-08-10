@@ -1,9 +1,8 @@
+use crate::core::logical_id::{LogicalId, LogicalIdentified};
 use serde::{
     ser::{SerializeMap, SerializeSeq},
     Serialize,
 };
-
-use crate::core::logical_id::{LogicalId, LogicalIdentified};
 
 pub trait HaveAtt<A>: LogicalIdentified {}
 

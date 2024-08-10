@@ -12,14 +12,14 @@ readme = "../../README.md"
 repository = "https://github.com/335g/four"
 
 [features]
-
+iam = []
 
 [dependencies]
 dyn-clone = "1.0.17"
 four_derive = { version = "0.0", path = "../four_derive" }
 erased-serde = "0.4"
 regex = "1.10"
-serde = "1"
+serde = { version = "1", features = ["derive"] }
 thiserror = "1"
 
 [dev-dependencies]

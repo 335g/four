@@ -1,14 +1,16 @@
-use four::{
-    convert::{WillBe, WillMappable},
-    function::reference::Referenced,
-    logical_id::LogicalId,
-    ManagedResource,
+use crate::{
+    core::{
+        convert::{WillBe, WillMappable},
+        function::reference::{RefInner, Referenced},
+        logical_id::LogicalId,
+    },
+    iam::{
+        property::policy_document::PolicyDocument,
+        resource::{group::GroupName, role::RoleName, user::UserName},
+    },
 };
+use four_derive::ManagedResource;
 use serde::Serialize;
-
-use crate::property::policy_document::PolicyDocument;
-
-use crate::resource::{group::GroupName, role::RoleName, user::UserName};
 
 #[derive(ManagedResource, Clone)]
 #[resource_type = "AWS::IAM::Policy"]
@@ -29,7 +31,7 @@ impl WillMappable<String> for PolicyName {}
 impl Referenced for Policy {
     type To = PolicyName;
 
-    fn referenced(&self) -> four::function::reference::RefInner {
-        four::function::reference::RefInner::Id(self.logical_id.clone())
+    fn referenced(&self) -> RefInner {
+        RefInner::Id(self.logical_id.clone())
     }
 }

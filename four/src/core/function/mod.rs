@@ -21,7 +21,7 @@ mod tests {
     use serde::Serialize;
 
     use super::*;
-    use crate::{
+    use crate::core::{
         logical_id::{LogicalId, LogicalIdentified},
         parameter::Parameter,
         pseudo::AccountId,

@@ -1,17 +1,18 @@
-use four::{
-    arn::Arn,
-    convert::{WillBe, WillMappable},
-    function::{
-        getatt::{Attribute, HaveAtt},
-        reference::Referenced,
+use crate::{
+    core::{
+        arn::Arn,
+        convert::{WillBe, WillMappable},
+        function::{
+            getatt::{Attribute, HaveAtt},
+            reference::{RefInner, Referenced},
+        },
+        logical_id::LogicalId,
+        service::IAM,
     },
-    logical_id::LogicalId,
-    service::IAM,
-    ManagedResource,
+    iam::{resource::role::RoleName, util::Path},
 };
+use four_derive::ManagedResource;
 use serde::Serialize;
-
-use crate::{resource::role::RoleName, util::Path};
 
 #[derive(ManagedResource, Clone)]
 #[resource_type = "AWS::IAM::InstanceProfile"]
@@ -30,8 +31,8 @@ impl WillMappable<String> for InstanceProfileName {}
 impl Referenced for InstanceProfile {
     type To = InstanceProfileName;
 
-    fn referenced(&self) -> four::function::reference::RefInner {
-        four::function::reference::RefInner::Id(self.logical_id.clone())
+    fn referenced(&self) -> RefInner {
+        RefInner::Id(self.logical_id.clone())
     }
 }
 

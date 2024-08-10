@@ -1,13 +1,13 @@
-use four::{
-    convert::WillBe,
-    function::reference::{RefInner, Referenced},
-    logical_id::LogicalId,
-    ManagedResource,
+use crate::{
+    core::{
+        convert::WillBe,
+        function::reference::{RefInner, Referenced},
+        logical_id::LogicalId,
+    },
+    iam::{property::policy_document::PolicyDocument, resource::policy::PolicyName},
 };
+use four_derive::ManagedResource;
 use serde::Serialize;
-
-use crate::property::policy_document::PolicyDocument;
-use crate::resource::policy::PolicyName;
 
 #[derive(ManagedResource, Clone)]
 #[resource_type = "AWS::IAM::GroupPolicy"]

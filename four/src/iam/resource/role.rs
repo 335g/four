@@ -1,19 +1,20 @@
-use four::{
-    arn::Arn,
-    convert::{WillBe, WillMappable},
-    function::{
-        getatt::{Attribute, HaveAtt},
-        reference::{RefInner, Referenced},
+use crate::{
+    core::{
+        arn::Arn,
+        convert::{WillBe, WillMappable},
+        function::{
+            getatt::{Attribute, HaveAtt},
+            reference::{RefInner, Referenced},
+        },
+        logical_id::LogicalId,
+        service::IAM,
     },
-    logical_id::LogicalId,
-    service::IAM,
-    ManagedResource,
+    iam::property::{
+        action, policy_document::PolicyDocument, principal::Principal, statement::Statement,
+    },
 };
+use four_derive::ManagedResource;
 use serde::Serialize;
-
-use crate::property::{
-    action, policy_document::PolicyDocument, principal::Principal, statement::Statement,
-};
 
 #[derive(ManagedResource, Clone)]
 #[resource_type = "AWS::IAM::Role"]

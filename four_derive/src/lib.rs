@@ -51,8 +51,8 @@ pub fn managed_resource(input: proc_macro::TokenStream) -> proc_macro::TokenStre
                 S: serde::Serializer,
             {
                 use serde::ser::SerializeMap as _;
-                use four::logical_id::LogicalIdentified as _;
-                use four::resource::ManagedResource as _;
+                use crate::core::logical_id::LogicalIdentified as _;
+                use crate::core::resource::ManagedResource as _;
 
                 struct Inner<'a> {
                     #(#inner_fields),*
@@ -80,13 +80,13 @@ pub fn managed_resource(input: proc_macro::TokenStream) -> proc_macro::TokenStre
             }
         }
 
-        impl four::logical_id::LogicalIdentified for #struct_name {
-            fn logical_id(&self) -> &four::logical_id::LogicalId {
+        impl crate::core::logical_id::LogicalIdentified for #struct_name {
+            fn logical_id(&self) -> &crate::core::logical_id::LogicalId {
                 &self.logical_id
             }
         }
 
-        impl four::resource::ManagedResource for #struct_name {
+        impl crate::core::resource::ManagedResource for #struct_name {
             fn resource_type(&self) -> &'static str {
                 #resource_type
             }

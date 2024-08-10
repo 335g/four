@@ -1,3 +1,6 @@
+#![allow(dead_code)]
+
 mod core;
 
-pub use four_derive::ManagedResource;
+#[cfg(feature = "iam")]
+mod iam;

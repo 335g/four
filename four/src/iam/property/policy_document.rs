@@ -1,6 +1,5 @@
+use crate::iam::property::{statement::Statement, version::Version};
 use serde::Serialize;
-
-use crate::property::{statement::Statement, version::Version};
 
 #[derive(Debug, Clone, Serialize)]
 #[serde(rename_all = "PascalCase")]

@@ -1,16 +1,17 @@
-use four::{
-    account::Account,
-    arn::Arn,
-    convert::WillBe,
-    function::reference::{RefInner, Referenced},
-    logical_id::LogicalId,
-    partition::Partition,
-    service::IAM,
-    ManagedResource,
+use crate::{
+    core::{
+        account::Account,
+        arn::Arn,
+        convert::WillBe,
+        function::reference::{RefInner, Referenced},
+        logical_id::LogicalId,
+        partition::Partition,
+        service::IAM,
+    },
+    iam::{property::policy_document::PolicyDocument, util::Path},
 };
+use four_derive::ManagedResource;
 use serde::Serialize;
-
-use crate::{property::policy_document::PolicyDocument, util::Path};
 
 #[derive(ManagedResource, Clone)]
 #[resource_type = "AWS::IAM::ManagedPolicy"]
