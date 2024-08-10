@@ -80,7 +80,7 @@ impl TryFrom<&str> for FunctionName {
 }
 
 impl Referenced for Function {
-    type To = Arn<Lambda>;
+    type To = FunctionName;
 
     fn referenced(&self) -> RefInner {
         RefInner::Id(self.logical_id.clone())

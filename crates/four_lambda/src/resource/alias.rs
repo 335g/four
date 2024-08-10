@@ -1,9 +1,26 @@
-use four::{arn::PartialArn, convert::WillBe, logical_id::LogicalId, ManagedResource};
+use four::{
+    arn::PartialArn,
+    convert::{WillBe, WillMappable},
+    logical_id::LogicalId,
+    ManagedResource,
+};
 use regex::Regex;
 use serde::Serialize;
 use thiserror::Error;
 
-use super::function::FunctionArn;
+use super::function::{self, FunctionArn};
+
+#[derive(ManagedResource, Clone)]
+#[resource_type = "AWS::Lambda::Alias"]
+pub struct Alias {
+    logical_id: LogicalId,
+    description: Option<Description>,
+    function_name: FunctionName,
+    function_version: FunctionVersion,
+    name: Name,
+    provisioned_concurrency_config: Option<ProvisionedConcurrencyConfiguration>,
+    routing_config: Option<AliasRoutingConfiguration>,
+}
 
 #[derive(Debug, Clone, Serialize)]
 #[serde(untagged)]
@@ -12,6 +29,8 @@ pub enum FunctionName {
     Arn(WillBe<FunctionArn>),
     Partial(WillBe<PartialArn>),
 }
+
+impl WillMappable<function::FunctionName> for FunctionName {}
 
 #[derive(Debug, Clone, Serialize)]
 pub struct Description(String);
@@ -91,16 +110,4 @@ pub struct AliasRoutingConfiguration {
 pub struct VersionWeight {
     function_version: String,
     function_weight: f32,
-}
-
-#[derive(ManagedResource, Clone)]
-#[resource_type = "AWS::Lambda::Alias"]
-pub struct Alias {
-    logical_id: LogicalId,
-    description: Option<Description>,
-    function_name: FunctionName,
-    function_version: FunctionVersion,
-    name: Name,
-    provisioned_concurrency_config: Option<ProvisionedConcurrencyConfiguration>,
-    routing_config: Option<AliasRoutingConfiguration>,
 }
