@@ -78,7 +78,7 @@ impl TryFrom<usize> for MaximumRetryAttempts {
 
     fn try_from(value: usize) -> Result<Self, Self::Error> {
         if value > 2 {
-            Err(EventInvokeConfigError::InvalidMaximumRetryAttempts((value)))
+            Err(EventInvokeConfigError::InvalidMaximumRetryAttempts(value))
         } else {
             Ok(MaximumRetryAttempts(value))
         }

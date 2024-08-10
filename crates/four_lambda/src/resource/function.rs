@@ -11,13 +11,10 @@ use four::{
 };
 use four_iam::resource::role::RoleArn;
 use serde::Serialize;
+use thiserror::Error;
 
 use crate::property::{
-    architecture::Architectures,
-    code::Code,
-    handler::Handler,
-    memory_size::{MemorySize, MemorySizeError},
-    runtime::Runtime,
+    architecture::Architectures, code::Code, handler::Handler, runtime::Runtime,
 };
 
 #[derive(ManagedResource, Clone)]
@@ -51,31 +48,16 @@ impl Function {
             .runtime(runtime)
     }
 
-    pub fn memory_size_value(mut self, value: usize) -> Result<Self, MemorySizeError> {
+    pub fn memory_size_value(mut self, value: usize) -> Result<Self, FunctionError> {
         let value = MemorySize::try_from(value)?;
         self.memory_size = Some(value);
         Ok(self)
     }
 
-    pub fn timeout_value(mut self, timeout: usize) -> Result<Self, TimeoutError> {
+    pub fn timeout_value(mut self, timeout: usize) -> Result<Self, FunctionError> {
         let timeout = Timeout::try_from(timeout)?;
         self.timeout = Some(timeout);
         Ok(self)
-    }
-}
-
-#[derive(Debug, Clone, Serialize)]
-pub struct FunctionName(String);
-
-impl TryFrom<&str> for FunctionName {
-    type Error = FunctionNameError;
-
-    fn try_from(value: &str) -> Result<Self, Self::Error> {
-        if value.len() == 0 {
-            Err(FunctionNameError::Invalid(value.to_string()))
-        } else {
-            Ok(FunctionName(value.to_string()))
-        }
     }
 }
 
@@ -87,33 +69,71 @@ impl Referenced for Function {
     }
 }
 
+impl HaveAtt<FunctionArn> for Function {}
+
+impl Attribute for FunctionArn {
+    fn name() -> &'static str {
+        "Arn"
+    }
+}
+
+#[derive(Debug, Error)]
+pub enum FunctionError {
+    #[error("invalid fucntion name: {0}")]
+    InvalidFunctionName(String),
+
+    #[error("invalid memory size: {0}")]
+    InvalidMemorySize(usize),
+
+    #[error("invalid timeout: {0}")]
+    InvalidTimeout(usize),
+}
+
+#[derive(Debug, Clone, Serialize)]
+pub struct FunctionName(String);
+
+impl TryFrom<&str> for FunctionName {
+    type Error = FunctionError;
+
+    fn try_from(value: &str) -> Result<Self, Self::Error> {
+        if value.len() == 0 {
+            Err(FunctionError::InvalidFunctionName(value.to_string()))
+        } else {
+            Ok(FunctionName(value.to_string()))
+        }
+    }
+}
+
 impl WillMappable<String> for FunctionName {}
 
-#[derive(Debug, thiserror::Error)]
-pub enum FunctionNameError {
-    #[error("invalid function name: {0}")]
-    Invalid(String),
+#[derive(Debug, Clone, Serialize)]
+pub struct MemorySize(usize);
+
+impl TryFrom<usize> for MemorySize {
+    type Error = FunctionError;
+
+    fn try_from(value: usize) -> Result<Self, Self::Error> {
+        if value < 128 || value > 10240 {
+            Err(FunctionError::InvalidMemorySize(value))
+        } else {
+            Ok(MemorySize(value))
+        }
+    }
 }
 
 #[derive(Debug, Clone, Serialize)]
 pub struct Timeout(usize);
 
 impl TryFrom<usize> for Timeout {
-    type Error = TimeoutError;
+    type Error = FunctionError;
 
     fn try_from(value: usize) -> Result<Self, Self::Error> {
         if value == 0 || value > 900 {
-            Err(TimeoutError::Invalid(value))
+            Err(FunctionError::InvalidTimeout(value))
         } else {
             Ok(Timeout(value))
         }
     }
-}
-
-#[derive(Debug, thiserror::Error)]
-pub enum TimeoutError {
-    #[error("invalid timeout: {0}")]
-    Invalid(usize),
 }
 
 #[derive(Debug, Clone, Serialize)]
@@ -122,14 +142,6 @@ pub struct FunctionArn(Arn<Lambda>);
 impl From<Arn<Lambda>> for FunctionArn {
     fn from(value: Arn<Lambda>) -> Self {
         FunctionArn(value)
-    }
-}
-
-impl HaveAtt<FunctionArn> for Function {}
-
-impl Attribute for FunctionArn {
-    fn name() -> &'static str {
-        "Arn"
     }
 }
 
@@ -150,6 +162,6 @@ mod tests {
 
         let role: RoleArn = Arn::builder(IAM, "abc", account).build().into();
         let arch = Architectures::x86_64();
-        let function = Function::new(id, arch, code, role.into());
+        let function = Function::new(id, code, role.into());
     }
 }
