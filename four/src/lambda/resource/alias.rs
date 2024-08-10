@@ -1,14 +1,15 @@
-use four::{
-    arn::PartialArn,
-    convert::{WillBe, WillMappable},
-    logical_id::LogicalId,
-    ManagedResource,
+use crate::{
+    core::{
+        arn::PartialArn,
+        convert::{WillBe, WillMappable},
+        logical_id::LogicalId,
+    },
+    lambda::resource::function::{self, FunctionArn},
 };
+use four_derive::ManagedResource;
 use regex::Regex;
 use serde::Serialize;
 use thiserror::Error;
-
-use super::function::{self, FunctionArn};
 
 #[derive(ManagedResource, Clone)]
 #[resource_type = "AWS::Lambda::Alias"]

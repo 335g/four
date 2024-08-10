@@ -1,21 +1,22 @@
-use four::{
-    arn::Arn,
-    convert::{WillBe, WillMappable},
-    function::{
-        getatt::{Attribute, HaveAtt},
-        reference::{RefInner, Referenced},
+use crate::{
+    core::{
+        arn::Arn,
+        convert::{WillBe, WillMappable},
+        function::{
+            getatt::{Attribute, HaveAtt},
+            reference::{RefInner, Referenced},
+        },
+        logical_id::LogicalId,
+        service::Lambda,
     },
-    logical_id::LogicalId,
-    service::Lambda,
-    ManagedResource,
+    iam::resource::role::RoleArn,
+    lambda::property::{
+        architecture::Architectures, code::Code, handler::Handler, runtime::Runtime,
+    },
 };
-use four_iam::resource::role::RoleArn;
+use four_derive::ManagedResource;
 use serde::Serialize;
 use thiserror::Error;
-
-use crate::property::{
-    architecture::Architectures, code::Code, handler::Handler, runtime::Runtime,
-};
 
 #[derive(ManagedResource, Clone)]
 #[resource_type = "AWS::Lambda::Function"]

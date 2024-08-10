@@ -1,7 +1,6 @@
-use std::sync::LazyLock;
-
 use regex::Regex;
 use serde::Serialize;
+use std::sync::LazyLock;
 
 static HANDLER_REGEX: LazyLock<Regex> = LazyLock::new(|| Regex::new(r#"^[^\s]+$"#).unwrap());
 

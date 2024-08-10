@@ -1,4 +1,5 @@
-use four::{logical_id::LogicalId, ManagedResource};
+use crate::core::logical_id::LogicalId;
+use four_derive::ManagedResource;
 use regex::Regex;
 use serde::Serialize;
 use thiserror::Error;

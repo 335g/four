@@ -13,6 +13,8 @@ repository = "https://github.com/335g/four"
 
 [features]
 iam = []
+lambda = ["iam"]
+full = ["iam", "lambda"]
 
 [dependencies]
 dyn-clone = "1.0.17"
