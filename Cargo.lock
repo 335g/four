@@ -60,32 +60,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "four_iam"
-version = "0.0.6"
-dependencies = [
- "dyn-clone",
- "erased-serde",
- "four",
- "regex",
- "serde",
- "serde_json",
- "thiserror",
-]
-
-[[package]]
-name = "four_lambda"
-version = "0.0.6"
-dependencies = [
- "dyn-clone",
- "erased-serde",
- "four",
- "four_iam",
- "regex",
- "serde",
- "thiserror",
-]
-
-[[package]]
 name = "itoa"
 version = "1.0.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"

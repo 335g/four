@@ -11,5 +11,4 @@ pub mod resource;
 pub mod service;
 pub mod template;
 
-#[cfg(feature = "derive")]
 pub use four_derive::ManagedResource;
