@@ -24,7 +24,7 @@ use crate::property::{
 #[resource_type = "AWS::Lambda::Function"]
 pub struct Function {
     logical_id: LogicalId,
-    architectures: Architectures,
+    architectures: Option<Architectures>,
     code: Code,
     description: Option<String>,
     function_name: Option<WillBe<FunctionName>>,
@@ -45,9 +45,8 @@ impl Function {
         runtime: Runtime,
     ) -> Function {
         let code = Code::new(bucket_name, key);
-        let arch = Architectures::x86_64();
 
-        Function::new(logical_id, arch, code, role)
+        Function::new(logical_id, code, role)
             .handler(handler)
             .runtime(runtime)
     }
