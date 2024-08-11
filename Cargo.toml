@@ -1,5 +1,5 @@
 [workspace]
-members = ["four", "four_derive"]
+members = ["four", "four_cli", "four_derive"]
 resolver = "2"
 
 [patch.crates-io]
