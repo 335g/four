@@ -28,8 +28,11 @@ pub struct PolicyName(String);
 
 impl WillMappable<String> for PolicyName {}
 
+#[derive(Debug)]
+pub struct PolicyId;
+
 impl Referenced for Policy {
-    type To = PolicyName;
+    type To = PolicyId;
 
     fn referenced(&self) -> RefInner {
         RefInner::Id(self.logical_id.clone())

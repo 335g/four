@@ -21,8 +21,11 @@ pub struct GroupPolicy {
 #[derive(Debug, Clone, Serialize)]
 pub struct GroupName(String);
 
+#[derive(Debug)]
+pub struct GroupPolicyId;
+
 impl Referenced for GroupPolicy {
-    type To = GroupName;
+    type To = GroupPolicyId;
 
     fn referenced(&self) -> RefInner {
         RefInner::Id(self.logical_id.clone())

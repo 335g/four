@@ -57,7 +57,7 @@ impl RoleName {
 impl WillMappable<String> for RoleName {}
 
 #[derive(Debug, Clone, Serialize)]
-pub struct RoleArn(Arn<IAM>);
+pub struct RoleName;
 
 impl From<Arn<IAM>> for RoleArn {
     fn from(value: Arn<IAM>) -> RoleArn {

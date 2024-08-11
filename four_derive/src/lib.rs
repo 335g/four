@@ -10,7 +10,7 @@ pub fn managed_resource(input: proc_macro::TokenStream) -> proc_macro::TokenStre
         Ok(s) => s,
         Err(e) => return e.to_compile_error().into(),
     };
-    let struct_name = &input.ident;
+    let resource_name = &input.ident;
 
     let syn::Data::Struct(syn::DataStruct {
         struct_token: _,
@@ -35,9 +35,9 @@ pub fn managed_resource(input: proc_macro::TokenStream) -> proc_macro::TokenStre
     let setter = get_setter(named);
 
     let expnaded = quote::quote! {
-        impl #struct_name {
-            pub fn new(#(#initializer_props),*) -> #struct_name {
-                #struct_name {
+        impl #resource_name {
+            pub fn new(#(#initializer_props),*) -> #resource_name {
+                #resource_name {
                     #(#initializer_values),*
                 }
             }
@@ -45,7 +45,7 @@ pub fn managed_resource(input: proc_macro::TokenStream) -> proc_macro::TokenStre
             #(#setter)*
         }
 
-        impl serde::Serialize for #struct_name {
+        impl serde::Serialize for #resource_name {
             fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
             where
                 S: serde::Serializer,
@@ -80,13 +80,13 @@ pub fn managed_resource(input: proc_macro::TokenStream) -> proc_macro::TokenStre
             }
         }
 
-        impl crate::core::logical_id::LogicalIdentified for #struct_name {
+        impl crate::core::logical_id::LogicalIdentified for #resource_name {
             fn logical_id(&self) -> &crate::core::logical_id::LogicalId {
                 &self.logical_id
             }
         }
 
-        impl crate::core::resource::ManagedResource for #struct_name {
+        impl crate::core::resource::ManagedResource for #resource_name {
             fn resource_type(&self) -> &'static str {
                 #resource_type
             }

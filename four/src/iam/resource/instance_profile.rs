@@ -28,8 +28,11 @@ pub struct InstanceProfileName(String);
 
 impl WillMappable<String> for InstanceProfileName {}
 
+#[derive(Debug)]
+pub struct InstanceProfileId;
+
 impl Referenced for InstanceProfile {
-    type To = InstanceProfileName;
+    type To = InstanceProfileId;
 
     fn referenced(&self) -> RefInner {
         RefInner::Id(self.logical_id.clone())

@@ -27,8 +27,8 @@ pub enum AccessKeyStatus {
     Active,
 }
 
-#[derive(Debug, Clone, Serialize)]
-pub struct AccessKeyId(String);
+#[derive(Debug)]
+pub struct AccessKeyId;
 
 impl Referenced for AccessKey {
     type To = AccessKeyId;

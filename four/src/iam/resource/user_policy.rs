@@ -20,8 +20,11 @@ pub struct UserPolicy {
     user_name: WillBe<UserName>,
 }
 
+#[derive(Debug)]
+pub struct UserPolicyId;
+
 impl Referenced for UserPolicy {
-    type To = UserName;
+    type To = UserPolicyId;
 
     fn referenced(&self) -> RefInner {
         RefInner::Id(self.logical_id.clone())

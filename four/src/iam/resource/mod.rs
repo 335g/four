@@ -8,3 +8,4 @@ pub mod role;
 pub mod role_policy;
 pub mod user;
 pub mod user_policy;
+pub mod user_to_group_addition;
