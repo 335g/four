@@ -1,6 +1,6 @@
 [package]
 name = "four_derive"
-version = "0.0.6"
+version = "0.0.7"
 authors = ["Yoshiki Kudo"]
 edition = "2021"
 license = "MIT"
