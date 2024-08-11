@@ -282,8 +282,7 @@ impl Serialize for PartialArn {
 
 #[cfg(test)]
 mod tests {
-    use crate::partition::Partition;
-    use crate::service;
+    use crate::core::{partition::Partition, service};
 
     use super::*;
 
