@@ -19,7 +19,7 @@ macro_rules! services {
 
             impl Service for $service_name {
                 fn to_string(&self) -> String {
-                    format!("{}", stringify!($stringify_service))
+                    $stringify_service.to_string()
                 }
             }
         )*
