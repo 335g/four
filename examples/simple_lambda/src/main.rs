@@ -1,14 +1,16 @@
 use std::io::Write;
 
 use dotenvy::dotenv;
-use four::{function::get_att, logical_id::LogicalId, template::Template};
-use four_iam::{
-    property::principal::{Principal, ServicePrincipal},
-    resource::role::{Role, RoleArn},
-};
-use four_lambda::{
-    property::{handler::Handler, runtime::Runtime},
-    resource::function::Function,
+use four::{
+    core::{function::get_att, logical_id::LogicalId, template::Template},
+    iam::{
+        property::principal::{Principal, ServicePrincipal},
+        resource::role::{Role, RoleArn},
+    },
+    lambda::{
+        property::{handler::Handler, runtime::Runtime},
+        resource::function::Function,
+    },
 };
 
 fn main() -> anyhow::Result<()> {
