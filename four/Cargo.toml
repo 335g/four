@@ -1,6 +1,6 @@
 [package]
 name = "four"
-version = "0.0.8"
+version = "0.0.9"
 authors = ["Yoshiki Kudo"]
 edition = "2021"
 license = "MIT"

@@ -195,7 +195,7 @@ dependencies = [
 
 [[package]]
 name = "four"
-version = "0.0.8"
+version = "0.0.9"
 dependencies = [
  "dyn-clone",
  "erased-serde",
@@ -208,7 +208,7 @@ dependencies = [
 
 [[package]]
 name = "four_derive"
-version = "0.0.8"
+version = "0.0.9"
 dependencies = [
  "convert_case",
  "proc-macro2",
