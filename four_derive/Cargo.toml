@@ -8,7 +8,7 @@ rust-version = "1.80.0"
 categories = ["development-tools"]
 description = "framework for creating AWS CloudFormation template"
 keywords = ["four", "aws", "cloudformation", "iac"]
-readme = "../../README.md"
+readme = "../README.md"
 repository = "https://github.com/335g/four"
 
 [lib]
