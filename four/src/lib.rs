@@ -1,8 +1,8 @@
 #![allow(dead_code)]
 
-mod core;
+pub mod core;
 
 #[cfg(feature = "iam")]
-mod iam;
+pub mod iam;
 #[cfg(feature = "lambda")]
-mod lambda;
+pub mod lambda;
