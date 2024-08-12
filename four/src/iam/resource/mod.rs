@@ -3,6 +3,7 @@ pub mod group;
 pub mod group_policy;
 pub mod instance_profile;
 pub mod managed_policy;
+pub mod oidc_provider;
 pub mod policy;
 pub mod role;
 pub mod role_policy;
