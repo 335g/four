@@ -9,4 +9,5 @@ pub mod pseudo;
 pub mod region;
 pub mod resource;
 pub mod service;
+pub mod tag;
 pub mod template;

@@ -1,3 +1,5 @@
+use std::sync::LazyLock;
+
 use crate::{
     core::{
         account::Account,
@@ -11,39 +13,42 @@ use crate::{
     iam::{property::policy_document::PolicyDocument, util::Path},
 };
 use four_derive::ManagedResource;
+use nutype::nutype;
+use regex::Regex;
 use serde::Serialize;
+
+use super::{role::RoleName, user::UserName};
 
 #[derive(ManagedResource, Clone)]
 #[resource_type = "AWS::IAM::ManagedPolicy"]
 pub struct ManagedPolicy {
     logical_id: LogicalId,
     description: Option<Description>,
+    groups: Option<Groups>,
     managed_policy_name: Option<WillBe<String>>,
     path: Option<Path>,
     policy_document: PolicyDocument,
+    roles: Option<Vec<WillBe<RoleName>>>,
+    users: Option<Vec<WillBe<UserName>>>,
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[nutype(validate(len_char_max = 1000), derive(Debug, Clone, Serialize))]
 pub struct Description(String);
 
-impl TryFrom<&str> for Description {
-    type Error = DescriptionError;
+static GROUP_REGEX: LazyLock<Regex> = LazyLock::new(|| Regex::new(r#"[\w+=,.@-]+"#).unwrap());
 
-    fn try_from(value: &str) -> Result<Self, Self::Error> {
-        let len = value.len();
-        if len > 1000 {
-            Err(DescriptionError::Over(len))
-        } else {
-            Ok(Description(value.to_string()))
-        }
-    }
+fn valid_groups(groups: &Vec<String>) -> bool {
+    groups
+        .into_iter()
+        .map(|g| !g.is_empty() && g.len() < 128 && GROUP_REGEX.is_match(g))
+        .fold(false, |acc, x| acc || x)
 }
 
-#[derive(Debug, thiserror::Error)]
-pub enum DescriptionError {
-    #[error("character count exceeds the specified value(1000): {0}")]
-    Over(usize),
-}
+#[nutype(
+    validate(predicate = valid_groups),
+    derive(Debug, Clone, Serialize)
+)]
+pub struct Groups(Vec<String>);
 
 #[derive(Debug, Clone, Serialize)]
 pub struct ManagedPolicyArn(Arn<IAM>);

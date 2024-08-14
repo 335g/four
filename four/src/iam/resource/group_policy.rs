@@ -7,7 +7,7 @@ use crate::{
     iam::{property::policy_document::PolicyDocument, resource::policy::PolicyName},
 };
 use four_derive::ManagedResource;
-use serde::Serialize;
+use nutype::nutype;
 
 #[derive(ManagedResource, Clone)]
 #[resource_type = "AWS::IAM::GroupPolicy"]
@@ -18,7 +18,10 @@ pub struct GroupPolicy {
     policy_name: WillBe<PolicyName>,
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[nutype(
+    validate(not_empty, len_char_max = 128, regex = r#"[\w+=,.@-]+"#),
+    derive(Debug, Clone, Serialize)
+)]
 pub struct GroupName(String);
 
 #[derive(Debug)]

@@ -10,7 +10,7 @@ use crate::{
     },
 };
 use four_derive::ManagedResource;
-use serde::Serialize;
+use nutype::nutype;
 
 #[derive(ManagedResource, Clone)]
 #[resource_type = "AWS::IAM::Policy"]
@@ -23,7 +23,10 @@ pub struct Policy {
     users: Option<Vec<WillBe<UserName>>>,
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[nutype(
+    validate(not_empty, len_char_max = 128, regex = r#"[\w+=,.@-]+"#),
+    derive(Debug, Clone, Serialize)
+)]
 pub struct PolicyName(String);
 
 impl WillMappable<String> for PolicyName {}

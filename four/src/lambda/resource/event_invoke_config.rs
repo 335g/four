@@ -1,7 +1,6 @@
 use crate::core::logical_id::LogicalId;
 use four_derive::ManagedResource;
-use regex::Regex;
-use serde::Serialize;
+use nutype::nutype;
 use thiserror::Error;
 
 #[derive(ManagedResource, Clone)]
@@ -29,76 +28,23 @@ pub enum EventInvokeConfigError {
     InvalidQualifier(String),
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[nutype(
+    validate(len_char_max = 64, regex = r#"[a-zA-Z0-9-_]+"#),
+    derive(Debug, Clone, Serialize)
+)]
 pub struct FunctionName(String);
 
-impl TryFrom<&str> for FunctionName {
-    type Error = EventInvokeConfigError;
-
-    fn try_from(value: &str) -> Result<Self, Self::Error> {
-        let len = value.len();
-        if len == 0 || len > 64 {
-            return Err(EventInvokeConfigError::InvalidFunctionName(
-                value.to_string(),
-            ));
-        }
-
-        let pattern = Regex::new(r#"[a-zA-Z0-9-_]+"#).unwrap();
-        if !pattern.is_match(value) {
-            return Err(EventInvokeConfigError::InvalidFunctionName(
-                value.to_string(),
-            ));
-        } else {
-            return Ok(FunctionName(value.to_string()));
-        }
-    }
-}
-
-#[derive(Debug, Clone, Serialize)]
+#[nutype(
+    validate(greater_or_equal = 60, less_or_equal = 21600),
+    derive(Debug, Clone, Serialize)
+)]
 pub struct MaximumEventAgeInSeconds(usize);
 
-impl TryFrom<usize> for MaximumEventAgeInSeconds {
-    type Error = EventInvokeConfigError;
-
-    fn try_from(value: usize) -> Result<Self, Self::Error> {
-        if value < 60 || value > 21600 {
-            Err(EventInvokeConfigError::InvalidMaximumEventAgeInSeconds(
-                value,
-            ))
-        } else {
-            Ok(MaximumEventAgeInSeconds(value))
-        }
-    }
-}
-
-#[derive(Debug, Clone, Serialize)]
+#[nutype(validate(less_or_equal = 2), derive(Debug, Clone, Serialize))]
 pub struct MaximumRetryAttempts(usize);
 
-impl TryFrom<usize> for MaximumRetryAttempts {
-    type Error = EventInvokeConfigError;
-
-    fn try_from(value: usize) -> Result<Self, Self::Error> {
-        if value > 2 {
-            Err(EventInvokeConfigError::InvalidMaximumRetryAttempts(value))
-        } else {
-            Ok(MaximumRetryAttempts(value))
-        }
-    }
-}
-
-#[derive(Debug, Clone, Serialize)]
+#[nutype(
+    validate(regex = r#"^(|[a-zA-Z0-9$_-]{1,129})$"#),
+    derive(Debug, Clone, Serialize)
+)]
 pub struct Qualifier(String);
-
-impl TryFrom<&str> for Qualifier {
-    type Error = EventInvokeConfigError;
-
-    fn try_from(value: &str) -> Result<Self, Self::Error> {
-        let pattern = Regex::new(r#"^(|[a-zA-Z0-9$_-]{1,129})$"#).unwrap();
-
-        if !pattern.is_match(value) {
-            Err(EventInvokeConfigError::InvalidQualifier(value.to_string()))
-        } else {
-            Ok(Qualifier(value.to_string()))
-        }
-    }
-}

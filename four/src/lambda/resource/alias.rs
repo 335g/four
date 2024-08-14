@@ -7,7 +7,7 @@ use crate::{
     lambda::resource::function::{self, FunctionArn},
 };
 use four_derive::ManagedResource;
-use regex::Regex;
+use nutype::nutype;
 use serde::Serialize;
 use thiserror::Error;
 
@@ -33,54 +33,20 @@ pub enum FunctionName {
 
 impl WillMappable<function::FunctionName> for FunctionName {}
 
-#[derive(Debug, Clone, Serialize)]
+#[nutype(
+    validate(not_empty, len_char_max = 256),
+    derive(Debug, Clone, Serialize)
+)]
 pub struct Description(String);
 
-impl TryFrom<&str> for Description {
-    type Error = AliasError;
-
-    fn try_from(value: &str) -> Result<Self, Self::Error> {
-        let len = value.len();
-        if len > 256 {
-            Err(AliasError::InvalidDescription(value.to_string()))
-        } else {
-            Ok(Description(value.to_string()))
-        }
-    }
-}
-
-#[derive(Debug, Clone, Serialize)]
+#[nutype(
+    validate(regex = r#"\$LATEST|[0-9]+"#),
+    derive(Debug, Clone, Serialize)
+)]
 pub struct FunctionVersion(String);
 
-impl TryFrom<&str> for FunctionVersion {
-    type Error = AliasError;
-
-    fn try_from(value: &str) -> Result<Self, Self::Error> {
-        let pattern = Regex::new(r#"\$LATEST|[0-9]+"#).unwrap();
-        if pattern.is_match(value) {
-            Ok(FunctionVersion(value.to_string()))
-        } else {
-            Err(AliasError::InvalidFunctionVersion(value.to_string()))
-        }
-    }
-}
-
-#[derive(Debug, Clone, Serialize)]
+#[nutype(validate(regex = r#"[a-zA-Z0-9-_]+"#), derive(Debug, Clone, Serialize))]
 pub struct Name(String);
-
-impl TryFrom<&str> for Name {
-    type Error = AliasError;
-
-    fn try_from(value: &str) -> Result<Self, Self::Error> {
-        let pattern = Regex::new(r#"(?!^[0-9]+$)([a-zA-Z0-9-_]+"#).unwrap();
-
-        if pattern.is_match(value) {
-            Ok(Name(value.to_string()))
-        } else {
-            Err(AliasError::InvalidName(value.to_string()))
-        }
-    }
-}
 
 #[derive(Debug, Error)]
 pub enum AliasError {

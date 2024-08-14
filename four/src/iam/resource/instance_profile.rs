@@ -12,6 +12,7 @@ use crate::{
     iam::{resource::role::RoleName, util::Path},
 };
 use four_derive::ManagedResource;
+use nutype::nutype;
 use serde::Serialize;
 
 #[derive(ManagedResource, Clone)]
@@ -23,7 +24,10 @@ pub struct InstanceProfile {
     roles: Vec<WillBe<RoleName>>,
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[nutype(
+    validate(not_empty, len_char_max = 128, regex = r#"[\w+=,.@-]+"#),
+    derive(Debug, Clone, Serialize)
+)]
 pub struct InstanceProfileName(String);
 
 impl WillMappable<String> for InstanceProfileName {}
