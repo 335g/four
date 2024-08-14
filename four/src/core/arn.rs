@@ -19,16 +19,147 @@ pub struct Arn<Se: Service> {
     resource: String,
 }
 
-impl<Se> Arn<Se>
+/// Amazon Resource Name (ARN) for type erasure
+///
+#[derive(Debug, Clone)]
+pub struct AnyArn {
+    partition: Partition,
+    service: Box<dyn Service>,
+    region: Region,
+    account: Account,
+    resource: String,
+}
+
+pub fn arn_builder(resource: &str, account: Account) -> RefNameAccount {
+    RefNameAccount {
+        account,
+        resource: resource.to_string(),
+    }
+}
+
+impl<Se> From<Arn<Se>> for AnyArn
 where
     Se: Service,
 {
-    pub fn builder(service: Se, resource: &str, account: Account) -> RefNameAccount<Se> {
-        RefNameAccount {
-            service,
-            account,
-            resource: resource.to_string(),
+    fn from(value: Arn<Se>) -> AnyArn {
+        AnyArn {
+            partition: value.partition,
+            service: Box::new(value.service),
+            region: value.region,
+            account: value.account,
+            resource: value.resource,
         }
+    }
+}
+
+fn serialize<S>(
+    partition: &Partition,
+    service: &dyn Service,
+    region: &Region,
+    account: &Account,
+    resource: &str,
+    serializer: S,
+) -> Result<S::Ok, S::Error>
+where
+    S: Serializer,
+{
+    #[derive(Clone)]
+    enum StringOr {
+        String(String),
+        Or(Box<dyn JoinElement>),
+    }
+
+    let mut contents: Vec<StringOr> = vec![];
+    if let Some(partition) = partition.to_str() {
+        contents.push(StringOr::String("arn".to_string()));
+        contents.push(StringOr::String(partition.to_string()));
+        contents.push(StringOr::String(service.to_string()));
+    } else {
+        contents.push(StringOr::String("arn".to_string()));
+        contents.push(StringOr::Or(Box::new(partition.clone())));
+        contents.push(StringOr::String(service.to_string()));
+    }
+
+    if let Some(region) = region.to_str() {
+        contents.push(StringOr::String(region.to_string()));
+    } else {
+        contents.push(StringOr::Or(Box::new(region.clone())));
+    }
+
+    if let Some(account) = account.to_str() {
+        contents.push(StringOr::String(account.to_string()));
+    } else {
+        contents.push(StringOr::Or(Box::new(account.clone())));
+    }
+
+    contents.push(StringOr::String(resource.to_string()));
+
+    let contents = contents
+        .into_iter()
+        .enumerate()
+        .fold(vec![], |mut acc, (i, x)| {
+            if i != 0 {
+                let tail = acc.pop().expect("at least 1 value");
+                match (tail, x) {
+                    (StringOr::String(tail), StringOr::String(x)) => {
+                        acc.push(StringOr::String(format!("{tail}:{x}")));
+                    }
+                    (StringOr::String(tail), StringOr::Or(x)) => {
+                        acc.push(StringOr::String(format!("{tail}:")));
+                        acc.push(StringOr::Or(x));
+                    }
+                    (StringOr::Or(tail), StringOr::String(x)) => {
+                        acc.push(StringOr::Or(tail));
+                        acc.push(StringOr::String(format!(":{x}")));
+                    }
+                    (StringOr::Or(tail), StringOr::Or(x)) => {
+                        acc.push(StringOr::Or(tail));
+                        acc.push(StringOr::String(":".to_string()));
+                        acc.push(StringOr::Or(x));
+                    }
+                }
+            } else {
+                acc.push(x);
+            }
+
+            acc
+        });
+
+    if contents.len() == 1 {
+        let elem = &contents[0];
+        let StringOr::String(elem) = elem else {
+            unreachable!("first element is string")
+        };
+
+        elem.serialize(serializer)
+    } else {
+        let contents = contents
+            .into_iter()
+            .map(|x| -> Box<dyn JoinElement> {
+                match x {
+                    StringOr::String(x) => Box::new(x),
+                    StringOr::Or(x) => Box::new(x),
+                }
+            })
+            .collect::<Vec<_>>();
+
+        Join(contents).serialize(serializer)
+    }
+}
+
+impl Serialize for AnyArn {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        serialize(
+            &self.partition,
+            &*self.service,
+            &self.region,
+            &self.account,
+            &self.resource,
+            serializer,
+        )
     }
 }
 
@@ -40,123 +171,43 @@ where
     where
         S: Serializer,
     {
-        #[derive(Clone)]
-        enum StringOr {
-            String(String),
-            Or(Box<dyn JoinElement>),
-        }
-
-        let mut contents: Vec<StringOr> = vec![];
-        if let Some(partition) = self.partition.to_str() {
-            contents.push(StringOr::String("arn".to_string()));
-            contents.push(StringOr::String(partition.to_string()));
-            contents.push(StringOr::String(self.service.to_string()));
-        } else {
-            contents.push(StringOr::String("arn".to_string()));
-            contents.push(StringOr::Or(Box::new(self.partition)));
-            contents.push(StringOr::String(self.service.to_string()));
-        }
-
-        if let Some(region) = self.region.to_str() {
-            contents.push(StringOr::String(region.to_string()));
-        } else {
-            contents.push(StringOr::Or(Box::new(self.region)));
-        }
-
-        if let Some(account) = self.account.to_str() {
-            contents.push(StringOr::String(account.to_string()));
-        } else {
-            contents.push(StringOr::Or(Box::new(self.account.clone())));
-        }
-
-        contents.push(StringOr::String(self.resource.clone()));
-
-        let contents = contents
-            .into_iter()
-            .enumerate()
-            .fold(vec![], |mut acc, (i, x)| {
-                if i != 0 {
-                    let tail = acc.pop().expect("at least 1 value");
-                    match (tail, x) {
-                        (StringOr::String(tail), StringOr::String(x)) => {
-                            acc.push(StringOr::String(format!("{tail}:{x}")));
-                        }
-                        (StringOr::String(tail), StringOr::Or(x)) => {
-                            acc.push(StringOr::String(format!("{tail}:")));
-                            acc.push(StringOr::Or(x));
-                        }
-                        (StringOr::Or(tail), StringOr::String(x)) => {
-                            acc.push(StringOr::Or(tail));
-                            acc.push(StringOr::String(format!(":{x}")));
-                        }
-                        (StringOr::Or(tail), StringOr::Or(x)) => {
-                            acc.push(StringOr::Or(tail));
-                            acc.push(StringOr::String(":".to_string()));
-                            acc.push(StringOr::Or(x));
-                        }
-                    }
-                } else {
-                    acc.push(x);
-                }
-
-                acc
-            });
-
-        if contents.len() == 1 {
-            let elem = &contents[0];
-            let StringOr::String(elem) = elem else {
-                unreachable!("first element is string")
-            };
-
-            elem.serialize(serializer)
-        } else {
-            let contents = contents
-                .into_iter()
-                .map(|x| -> Box<dyn JoinElement> {
-                    match x {
-                        StringOr::String(x) => Box::new(x),
-                        StringOr::Or(x) => Box::new(x),
-                    }
-                })
-                .collect::<Vec<_>>();
-
-            Join(contents).serialize(serializer)
-        }
+        serialize(
+            &self.partition,
+            &self.service,
+            &self.region,
+            &self.account,
+            &self.resource,
+            serializer,
+        )
     }
 }
 
-pub struct RefNameAccount<Se> {
-    service: Se,
+pub struct RefNameAccount {
     account: Account,
     resource: String,
 }
 
-impl<Se> RefNameAccount<Se>
-where
-    Se: Service,
-{
-    pub fn region(self, region: Region) -> RefNameRegion<Se> {
+impl RefNameAccount {
+    pub fn region(self, region: Region) -> RefNameRegion {
         RefNameRegion {
-            service: self.service,
             region,
             account: self.account,
             resource: self.resource,
         }
     }
 
-    pub fn partition(self, partition: Partition) -> RefNamePartition<Se> {
+    pub fn partition(self, partition: Partition) -> RefNamePartition {
         RefNamePartition {
             partition,
-            service: self.service,
             account: self.account,
             resource: self.resource,
         }
     }
 
-    pub fn build(self) -> Arn<Se> {
+    pub fn build<Se: Service>(self, service: Se) -> Arn<Se> {
         Arn {
             partition: Partition::Ref,
-            service: self.service,
+            service,
             region: Region::Null,
             account: self.account,
             resource: self.resource,
@@ -164,31 +215,26 @@ where
     }
 }
 
-pub struct RefNameRegion<Se> {
-    service: Se,
+pub struct RefNameRegion {
     region: Region,
     account: Account,
     resource: String,
 }
 
-impl<Se> RefNameRegion<Se>
-where
-    Se: Service,
-{
-    pub fn partition(self, partition: Partition) -> RefNameRegionPartition<Se> {
+impl RefNameRegion {
+    pub fn partition(self, partition: Partition) -> RefNameRegionPartition {
         RefNameRegionPartition {
             partition,
-            service: self.service,
             region: self.region,
             account: self.account,
             resource: self.resource,
         }
     }
 
-    pub fn build(self) -> Arn<Se> {
+    pub fn build<Se: Service>(self, service: Se) -> Arn<Se> {
         Arn {
             partition: Partition::Ref,
-            service: self.service,
+            service,
             region: self.region,
             account: self.account,
             resource: self.resource,
@@ -196,31 +242,26 @@ where
     }
 }
 
-pub struct RefNamePartition<Se> {
+pub struct RefNamePartition {
     partition: Partition,
-    service: Se,
     account: Account,
     resource: String,
 }
 
-impl<Se> RefNamePartition<Se>
-where
-    Se: Service,
-{
-    pub fn region(self, region: Region) -> RefNameRegionPartition<Se> {
+impl RefNamePartition {
+    pub fn region(self, region: Region) -> RefNameRegionPartition {
         RefNameRegionPartition {
             partition: self.partition,
-            service: self.service,
             region,
             account: self.account,
             resource: self.resource,
         }
     }
 
-    pub fn build(self) -> Arn<Se> {
+    pub fn build<Se: Service>(self, service: Se) -> Arn<Se> {
         Arn {
             partition: self.partition,
-            service: self.service,
+            service,
             region: Region::Null,
             account: self.account,
             resource: self.resource,
@@ -228,22 +269,18 @@ where
     }
 }
 
-pub struct RefNameRegionPartition<Se> {
+pub struct RefNameRegionPartition {
     partition: Partition,
-    service: Se,
     region: Region,
     account: Account,
     resource: String,
 }
 
-impl<Se> RefNameRegionPartition<Se>
-where
-    Se: Service,
-{
-    pub fn build(self) -> Arn<Se> {
+impl RefNameRegionPartition {
+    pub fn build<Se: Service>(self, service: Se) -> Arn<Se> {
         Arn {
             partition: self.partition,
-            service: self.service,
+            service,
             region: self.region,
             account: self.account,
             resource: self.resource,
@@ -288,10 +325,10 @@ mod tests {
 
     #[test]
     fn test_arn1() {
-        let arn = Arn::builder(service::IAM, "r", Account::Aws)
+        let arn = arn_builder("r", Account::Aws)
             .partition(Partition::Aws)
             .region(Region::Ref)
-            .build();
+            .build(service::IAM);
         let s = serde_json::to_string(&arn).unwrap();
 
         let rhs = r#"{"Fn::Join":["arn:aws:iam:",{"Ref":"AWS::Region"},":aws:r"]}"#;
@@ -300,9 +337,9 @@ mod tests {
 
     #[test]
     fn test_arn2() {
-        let arn = Arn::builder(service::IAM, "r", Account::Aws)
+        let arn = arn_builder("r", Account::Aws)
             .partition(Partition::Aws)
-            .build();
+            .build(service::IAM);
         let s = serde_json::to_string(&arn).unwrap();
 
         let rhs = r#""arn:aws:iam::aws:r""#;
@@ -314,7 +351,7 @@ mod tests {
         // minimum settings
         //  partition => pseudo::Partition
         //  region => no region
-        let arn = Arn::builder(service::IAM, "r", Account::Aws).build();
+        let arn = arn_builder("r", Account::Aws).build(service::IAM);
         let s = serde_json::to_string(&arn).unwrap();
 
         let rhs = r#"{"Fn::Join":["arn:",{"Ref":"AWS::Partition"},":iam::aws:r"]}"#;

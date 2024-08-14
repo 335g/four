@@ -1,10 +1,6 @@
 use crate::{
-    core::{
-        arn::PartialArn,
-        convert::{WillBe, WillMappable},
-        logical_id::LogicalId,
-    },
-    lambda::resource::function::{self, FunctionArn},
+    core::{convert::WillMappable, logical_id::LogicalId},
+    lambda::{property::function_name::FunctionName, resource::function},
 };
 use four_derive::ManagedResource;
 use nutype::nutype;
@@ -21,14 +17,6 @@ pub struct Alias {
     name: Name,
     provisioned_concurrency_config: Option<ProvisionedConcurrencyConfiguration>,
     routing_config: Option<AliasRoutingConfiguration>,
-}
-
-#[derive(Debug, Clone, Serialize)]
-#[serde(untagged)]
-pub enum FunctionName {
-    Name(String),
-    Arn(WillBe<FunctionArn>),
-    Partial(WillBe<PartialArn>),
 }
 
 impl WillMappable<function::FunctionName> for FunctionName {}
