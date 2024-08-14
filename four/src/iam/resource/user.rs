@@ -12,6 +12,7 @@ use crate::{
     iam::{property::policy_document::PolicyDocument, resource::group::GroupName, util::Path},
 };
 use four_derive::ManagedResource;
+use nutype::nutype;
 use serde::Serialize;
 
 #[derive(ManagedResource, Clone)]
@@ -38,7 +39,10 @@ pub struct Policy {
     policy_name: String,
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[nutype(
+    validate(not_empty, len_char_max = 128, regex = r#"[\w+=,.@-]+"#),
+    derive(Debug, Clone, Serialize)
+)]
 pub struct UserName(String);
 
 impl WillMappable<String> for UserName {}

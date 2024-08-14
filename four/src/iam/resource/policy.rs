@@ -10,6 +10,7 @@ use crate::{
     },
 };
 use four_derive::ManagedResource;
+use nutype::nutype;
 use serde::Serialize;
 
 #[derive(ManagedResource, Clone)]
@@ -23,7 +24,10 @@ pub struct Policy {
     users: Option<Vec<WillBe<UserName>>>,
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[nutype(
+    validate(not_empty, len_char_max = 128, regex = r#"[\w+=,.@-]+"#),
+    derive(Debug, Clone, Serialize)
+)]
 pub struct PolicyName(String);
 
 impl WillMappable<String> for PolicyName {}
