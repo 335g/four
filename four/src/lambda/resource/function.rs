@@ -108,6 +108,7 @@ impl From<Arn<Lambda>> for FunctionArn {
 mod tests {
     use crate::core::{
         account::{Account, AccountDetail},
+        arn::arn_builder,
         service::IAM,
     };
 
@@ -119,7 +120,7 @@ mod tests {
         let code = Code::new("mybucket", "mykey");
         let account = Account::Detail(AccountDetail::try_from("123456789012").unwrap());
 
-        let role: RoleArn = Arn::builder(IAM, "abc", account).build().into();
+        let role: RoleArn = arn_builder("abc", account).build(IAM).into();
         let arch = Architectures::x86_64();
         let function = Function::new(id, code, role.into());
     }

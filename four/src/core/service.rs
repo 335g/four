@@ -1,6 +1,11 @@
-pub trait Service {
+use dyn_clone::DynClone;
+
+pub trait Service: erased_serde::Serialize + DynClone + std::fmt::Debug + 'static {
     fn to_string(&self) -> String;
 }
+
+erased_serde::serialize_trait_object!(Service);
+dyn_clone::clone_trait_object!(Service);
 
 macro_rules! services {
     ($(($service_name:ident, $stringify_service:expr)),*) => {

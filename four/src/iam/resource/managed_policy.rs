@@ -3,7 +3,7 @@ use std::sync::LazyLock;
 use crate::{
     core::{
         account::Account,
-        arn::Arn,
+        arn::{arn_builder, Arn},
         convert::WillBe,
         function::reference::{RefInner, Referenced},
         logical_id::LogicalId,
@@ -68,9 +68,9 @@ macro_rules! aws_managed_policy {
     ($(($name:ident, $resource:expr)),*) => {
         impl AWSManagedPolicy {
             $(pub fn $name() -> Self {
-                let arn = Arn::builder(IAM, $resource, Account::Aws)
+                let arn = arn_builder($resource, Account::Aws)
                     .partition(Partition::Ref)
-                    .build();
+                    .build(IAM);
                 AWSManagedPolicy(arn)
             })*
         }
