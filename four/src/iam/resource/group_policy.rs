@@ -8,7 +8,6 @@ use crate::{
 };
 use four_derive::ManagedResource;
 use nutype::nutype;
-use serde::Serialize;
 
 #[derive(ManagedResource, Clone)]
 #[resource_type = "AWS::IAM::GroupPolicy"]

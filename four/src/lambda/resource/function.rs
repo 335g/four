@@ -15,8 +15,8 @@ use crate::{
     },
 };
 use four_derive::ManagedResource;
+use nutype::nutype;
 use serde::Serialize;
-use thiserror::Error;
 
 #[derive(ManagedResource, Clone)]
 #[resource_type = "AWS::Lambda::Function"]
@@ -49,14 +49,14 @@ impl Function {
             .runtime(runtime)
     }
 
-    pub fn memory_size_value(mut self, value: usize) -> Result<Self, FunctionError> {
-        let value = MemorySize::try_from(value)?;
+    pub fn memory_size_value(mut self, value: usize) -> Result<Self, MemorySizeError> {
+        let value = MemorySize::try_new(value)?;
         self.memory_size = Some(value);
         Ok(self)
     }
 
-    pub fn timeout_value(mut self, timeout: usize) -> Result<Self, FunctionError> {
-        let timeout = Timeout::try_from(timeout)?;
+    pub fn timeout_value(mut self, timeout: usize) -> Result<Self, TimeoutError> {
+        let timeout = Timeout::try_new(timeout)?;
         self.timeout = Some(timeout);
         Ok(self)
     }
@@ -78,64 +78,22 @@ impl Attribute for FunctionArn {
     }
 }
 
-#[derive(Debug, Error)]
-pub enum FunctionError {
-    #[error("invalid fucntion name: {0}")]
-    InvalidFunctionName(String),
-
-    #[error("invalid memory size: {0}")]
-    InvalidMemorySize(usize),
-
-    #[error("invalid timeout: {0}")]
-    InvalidTimeout(usize),
-}
-
-#[derive(Debug, Clone, Serialize)]
+#[nutype(validate(len_char_min = 1), derive(Debug, Clone, Serialize))]
 pub struct FunctionName(String);
-
-impl TryFrom<&str> for FunctionName {
-    type Error = FunctionError;
-
-    fn try_from(value: &str) -> Result<Self, Self::Error> {
-        if value.len() == 0 {
-            Err(FunctionError::InvalidFunctionName(value.to_string()))
-        } else {
-            Ok(FunctionName(value.to_string()))
-        }
-    }
-}
 
 impl WillMappable<String> for FunctionName {}
 
-#[derive(Debug, Clone, Serialize)]
+#[nutype(
+    validate(greater_or_equal = 128, less_or_equal = 10240),
+    derive(Debug, Clone, Serialize)
+)]
 pub struct MemorySize(usize);
 
-impl TryFrom<usize> for MemorySize {
-    type Error = FunctionError;
-
-    fn try_from(value: usize) -> Result<Self, Self::Error> {
-        if value < 128 || value > 10240 {
-            Err(FunctionError::InvalidMemorySize(value))
-        } else {
-            Ok(MemorySize(value))
-        }
-    }
-}
-
-#[derive(Debug, Clone, Serialize)]
+#[nutype(
+    validate(greater = 0, less_or_equal = 900),
+    derive(Debug, Clone, Serialize)
+)]
 pub struct Timeout(usize);
-
-impl TryFrom<usize> for Timeout {
-    type Error = FunctionError;
-
-    fn try_from(value: usize) -> Result<Self, Self::Error> {
-        if value == 0 || value > 900 {
-            Err(FunctionError::InvalidTimeout(value))
-        } else {
-            Ok(Timeout(value))
-        }
-    }
-}
 
 #[derive(Debug, Clone, Serialize)]
 pub struct FunctionArn(Arn<Lambda>);
@@ -148,7 +106,7 @@ impl From<Arn<Lambda>> for FunctionArn {
 
 #[cfg(test)]
 mod tests {
-    use four::{
+    use crate::core::{
         account::{Account, AccountDetail},
         service::IAM,
     };
