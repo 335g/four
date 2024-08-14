@@ -3,7 +3,7 @@ use nutype::nutype;
 use serde::Serialize;
 
 use crate::{
-    core::{account::AccountDetail, logical_id::LogicalId},
+    core::{account::AccountDetail, arn::AnyArn, logical_id::LogicalId},
     iam::property::{action::lambda::LambdaAction, principal::ServicePrincipal},
     lambda::property::function_name::FunctionName,
 };
@@ -21,6 +21,7 @@ pub struct Permission {
     // TODO: rename (four_derive)
     principal_org_i_d: Option<PrincipalOrgID>,
     source_account: Option<AccountDetail>,
+    source_arn: Option<AnyArn>,
 }
 
 #[nutype(
