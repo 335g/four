@@ -86,7 +86,7 @@ impl Attribute for RoleId {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::property::{action, principal::ServicePrincipal};
+    use crate::iam::property::{action, principal::ServicePrincipal};
 
     #[test]
     fn test_role1() {
