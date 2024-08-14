@@ -5,7 +5,7 @@ use serde::Serialize;
 use crate::{
     core::{account::AccountDetail, arn::AnyArn, logical_id::LogicalId},
     iam::property::{action::lambda::LambdaAction, principal::ServicePrincipal},
-    lambda::property::function_name::FunctionName,
+    lambda::{property::function_name::FunctionName, resource::url::AuthType},
 };
 
 #[derive(ManagedResource, Clone)]
@@ -15,7 +15,7 @@ pub struct Permission {
     action: Box<dyn LambdaAction>,
     event_source_token: Option<EventSourceToken>,
     function_name: FunctionName,
-    function_url_auth_type: Option<FunctionUrlAuthType>,
+    function_url_auth_type: Option<AuthType>,
     principal: Option<Principal>,
 
     // TODO: rename (four_derive)
@@ -29,14 +29,6 @@ pub struct Permission {
     derive(Debug, Clone, Serialize)
 )]
 pub struct EventSourceToken(String);
-
-#[derive(Debug, Clone, Serialize)]
-pub enum FunctionUrlAuthType {
-    #[serde(rename(serialize = "AWS_IAM"))]
-    AwsIam,
-    #[serde(rename(serialize = "NONE"))]
-    None,
-}
 
 #[derive(Debug, Clone)]
 enum Principal {
