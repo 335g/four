@@ -4,7 +4,7 @@ use crate::{
     core::{
         arn_builder,
         convert::WillBe,
-        function::reference::{RefInner, Referenced},
+        function::{RefInner, Referenced},
         service::IAM,
         Account, Arn, LogicalId, Partition,
     },

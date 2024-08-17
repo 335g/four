@@ -1,10 +1,13 @@
-pub mod getatt;
-pub mod join;
-pub mod reference;
-pub mod sub;
+mod getatt;
+mod join;
+mod reference;
+mod sub;
 
-use getatt::{Attribute, GetAtt, HaveAtt};
-use reference::{Ref, Referenced};
+pub use getatt::{Attribute, GetAtt, HaveAtt};
+pub use join::Join;
+pub(crate) use join::JoinElement;
+pub(crate) use reference::RefInner;
+pub use reference::{Ref, Referenced};
 
 use crate::core::convert::WillBe;
 
@@ -34,15 +37,6 @@ mod tests {
         let s = serde_json::to_string(&param).unwrap();
         assert_eq!(s, r#"{"Ref":"AWS::AccountId"}"#);
     }
-
-    // #[test]
-    // fn test_ref_param() {
-    //     let param_id = LogicalId::try_from("id-of-param").unwrap();
-    //     let param = Parameter::string().build(param_id).unwrap();
-    //     let param = r#ref(&param);
-    //     let s = serde_json::to_string(&param).unwrap();
-    //     assert_eq!(s, r#"{"Ref":"id-of-param"}"#);
-    // }
 
     #[test]
     fn test_get_att() {

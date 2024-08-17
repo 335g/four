@@ -4,7 +4,7 @@ use serde::Serialize;
 
 use crate::{
     core::{
-        function::reference::{RefInner, Referenced},
+        function::{RefInner, Referenced},
         LogicalId,
     },
     lambda::resource::layer_version::LayerName,

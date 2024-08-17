@@ -5,10 +5,7 @@ use serde::Serialize;
 use crate::{
     core::{
         convert::WillMappable,
-        function::{
-            getatt::{Attribute, HaveAtt},
-            reference::{RefInner, Referenced},
-        },
+        function::{Attribute, HaveAtt, RefInner, Referenced},
         service::IAM,
         Arn, LogicalId,
     },

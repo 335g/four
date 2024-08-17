@@ -1,10 +1,7 @@
 use serde::{Serialize, Serializer};
 
 use crate::core::{
-    account::Account,
-    function::join::{Join, JoinElement},
-    partition::Partition,
-    region::Region,
+    account::Account, function::Join, function::JoinElement, partition::Partition, region::Region,
     service::Service,
 };
 

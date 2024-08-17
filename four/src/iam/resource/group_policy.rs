@@ -1,7 +1,7 @@
 use crate::{
     core::{
         convert::WillBe,
-        function::reference::{RefInner, Referenced},
+        function::{RefInner, Referenced},
         LogicalId,
     },
     iam::{property::policy_document::PolicyDocument, resource::policy::PolicyName},

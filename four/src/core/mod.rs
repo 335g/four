@@ -17,6 +17,7 @@ pub use arn::{
     arn_builder, AnyArn, Arn, PartialArn, RefNameAccount, RefNamePartition, RefNameRegion,
     RefNameRegionPartition,
 };
+pub use function::{get_att, r#ref};
 pub use logical_id::{LogicalId, LogicalIdError, LogicalIdentified};
 pub use parameter::{
     NumberParameterBuilder, Parameter, ParameterError, ParameterType, StringParameterBuilder,

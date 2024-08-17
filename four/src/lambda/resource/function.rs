@@ -1,10 +1,7 @@
 use crate::{
     core::{
         convert::{WillBe, WillMappable},
-        function::{
-            getatt::{Attribute, HaveAtt},
-            reference::{RefInner, Referenced},
-        },
+        function::{Attribute, HaveAtt, RefInner, Referenced},
         service::Lambda,
         Arn, LogicalId,
     },
