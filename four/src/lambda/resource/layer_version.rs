@@ -4,14 +4,10 @@ use serde::Serialize;
 
 use crate::{
     core::{
-        arn::Arn,
         convert::WillMappable,
-        function::{
-            getatt::{Attribute, HaveAtt},
-            reference::{RefInner, Referenced},
-        },
-        logical_id::LogicalId,
+        function::{Attribute, HaveAtt, RefInner, Referenced},
         service::IAM,
+        Arn, LogicalId,
     },
     lambda::property::{architecture::Architecture, runtime::Runtime},
 };

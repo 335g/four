@@ -1,6 +1,6 @@
 use serde::{Serialize, Serializer};
 
-use crate::core::{function::reference::Ref, pseudo};
+use crate::core::{function::Ref, pseudo};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Partition {

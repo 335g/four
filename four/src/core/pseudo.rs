@@ -1,7 +1,7 @@
 use crate::core::{
     account::Account,
     arn::Arn,
-    function::reference::{RefInner, Referenced},
+    function::{RefInner, Referenced},
     service::{CloudFormation, SimpleNotification},
 };
 use serde::Serialize;

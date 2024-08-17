@@ -1,13 +1,9 @@
 use crate::{
     core::{
-        arn::Arn,
         convert::{WillBe, WillMappable},
-        function::{
-            getatt::{Attribute, HaveAtt},
-            reference::{RefInner, Referenced},
-        },
-        logical_id::LogicalId,
+        function::{Attribute, HaveAtt, RefInner, Referenced},
         service::Lambda,
+        Arn, LogicalId,
     },
     iam::resource::role::RoleArn,
     lambda::property::{
@@ -106,11 +102,7 @@ impl From<Arn<Lambda>> for FunctionArn {
 
 #[cfg(test)]
 mod tests {
-    use crate::core::{
-        account::{Account, AccountDetail},
-        arn::arn_builder,
-        service::IAM,
-    };
+    use crate::core::{arn_builder, service::IAM, Account, AccountDetail};
 
     use super::*;
 

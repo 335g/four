@@ -1,11 +1,8 @@
 use crate::{
     core::{
         convert::WillBe,
-        function::{
-            getatt::{Attribute, HaveAtt},
-            reference::{RefInner, Referenced},
-        },
-        logical_id::LogicalId,
+        function::{Attribute, HaveAtt, RefInner, Referenced},
+        LogicalId,
     },
     iam::resource::user::UserName,
 };

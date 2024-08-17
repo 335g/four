@@ -1,13 +1,9 @@
 use crate::{
     core::{
-        arn::Arn,
         convert::{WillBe, WillMappable},
-        function::{
-            getatt::{Attribute, HaveAtt},
-            reference::{RefInner, Referenced},
-        },
-        logical_id::LogicalId,
+        function::{Attribute, HaveAtt, RefInner, Referenced},
         service::IAM,
+        Arn, LogicalId,
     },
     iam::{property::policy_document::PolicyDocument, resource::group::GroupName, util::Path},
 };

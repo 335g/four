@@ -1,5 +1,5 @@
 use crate::{
-    core::{convert::WillMappable, logical_id::LogicalId},
+    core::{convert::WillMappable, LogicalId},
     lambda::{property::function_name::FunctionName, resource::function},
 };
 use four_derive::ManagedResource;
@@ -7,6 +7,22 @@ use nutype::nutype;
 use serde::Serialize;
 use thiserror::Error;
 
+/// [The AWS::Lambda::Alias resource](https://docs.aws.amazon.com/ja_jp/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-alias.html)
+///
+/// The AWS::Lambda::Alias resource creates an alias for a Lambda function version.
+/// Use aliases to provide clients with a function identifier that you can update
+/// to invoke a different version. You can also map an alias to split invocation requests
+/// between two versions. Use the RoutingConfig parameter to specify a second version
+/// and the percentage of invocation requests that it receives.
+///
+/// ```
+/// use four::{
+///     LogicalId,
+///     lambda::resource::{Function, Alias},
+/// };
+///
+///
+/// ```
 #[derive(ManagedResource, Clone)]
 #[resource_type = "AWS::Lambda::Alias"]
 pub struct Alias {

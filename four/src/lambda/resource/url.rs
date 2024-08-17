@@ -4,13 +4,9 @@ use serde::Serialize;
 
 use crate::{
     core::{
-        arn::Arn,
-        function::{
-            getatt::{Attribute, HaveAtt},
-            reference::{RefInner, Referenced},
-        },
-        logical_id::LogicalId,
+        function::{Attribute, HaveAtt, RefInner, Referenced},
         service::Lambda,
+        Arn, LogicalId,
     },
     lambda::property::function_name::FunctionName,
 };

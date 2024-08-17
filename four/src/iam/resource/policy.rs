@@ -1,8 +1,8 @@
 use crate::{
     core::{
         convert::{WillBe, WillMappable},
-        function::reference::{RefInner, Referenced},
-        logical_id::LogicalId,
+        function::{RefInner, Referenced},
+        LogicalId,
     },
     iam::{
         property::policy_document::PolicyDocument,

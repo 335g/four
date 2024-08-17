@@ -2,13 +2,11 @@ use std::sync::LazyLock;
 
 use crate::{
     core::{
-        account::Account,
-        arn::{arn_builder, Arn},
+        arn_builder,
         convert::WillBe,
-        function::reference::{RefInner, Referenced},
-        logical_id::LogicalId,
-        partition::Partition,
+        function::{RefInner, Referenced},
         service::IAM,
+        Account, Arn, LogicalId, Partition,
     },
     iam::{property::policy_document::PolicyDocument, util::Path},
 };

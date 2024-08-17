@@ -2,12 +2,13 @@ use std::io::Write;
 
 use dotenvy::dotenv;
 use four::{
-    core::{function::get_att, logical_id::LogicalId, template::Template},
+    get_att,
     iam::{
         resource::{role::RoleArn, Role},
         Principal, ServicePrincipal,
     },
     lambda::{resource::Function, Handler, Runtime},
+    LogicalId, Template,
 };
 
 fn main() -> anyhow::Result<()> {

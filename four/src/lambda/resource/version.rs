@@ -2,7 +2,7 @@ use four_derive::ManagedResource;
 use nutype::nutype;
 use serde::Serialize;
 
-use crate::{core::logical_id::LogicalId, lambda::property::function_name::FunctionName};
+use crate::{core::LogicalId, lambda::property::function_name::FunctionName};
 
 #[derive(ManagedResource, Clone)]
 #[resource_type = "AWS::Lambda::Version"]
