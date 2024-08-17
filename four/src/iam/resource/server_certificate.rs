@@ -9,8 +9,7 @@ use crate::{
             reference::{RefInner, Referenced},
         },
         service::IAM,
-        tag::Tag,
-        Arn, LogicalId,
+        Arn, LogicalId, Tag,
     },
     iam::util::Path,
 };

@@ -9,7 +9,7 @@ pub mod pseudo;
 mod region;
 mod resource;
 pub mod service;
-pub mod tag;
+mod tag;
 pub mod template;
 
 pub use account::{Account, AccountDetail, AccountDetailError};
@@ -24,3 +24,5 @@ pub use parameter::{
 pub use partition::Partition;
 pub use region::{Region, RegionDetail};
 pub use resource::ManagedResource;
+pub use tag::{Tag, TagError, TagKey, TagValue};
+pub use template::Template;

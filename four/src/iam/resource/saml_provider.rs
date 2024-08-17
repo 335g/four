@@ -8,8 +8,7 @@ use crate::core::{
         reference::{RefInner, Referenced},
     },
     service::IAM,
-    tag::Tag,
-    Arn, LogicalId,
+    Arn, LogicalId, Tag,
 };
 
 #[derive(ManagedResource, Clone)]
