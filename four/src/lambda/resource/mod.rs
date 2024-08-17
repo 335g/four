@@ -8,3 +8,11 @@ pub mod permission;
 pub mod url;
 pub mod utils;
 pub mod version;
+
+pub use alias::Alias;
+pub use event_invoke_config::EventInvokeConfig;
+pub use function::Function;
+pub use layer_version::LayerVersion;
+pub use permission::Permission;
+pub use url::Url;
+pub use version::Version;
