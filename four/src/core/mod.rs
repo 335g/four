@@ -3,7 +3,7 @@ mod arn;
 pub mod convert;
 pub mod function;
 mod logical_id;
-pub mod parameter;
+mod parameter;
 pub mod partition;
 pub mod pseudo;
 pub mod region;
@@ -18,3 +18,6 @@ pub use arn::{
     RefNameRegionPartition,
 };
 pub use logical_id::{LogicalId, LogicalIdError, LogicalIdentified};
+pub use parameter::{
+    NumberParameterBuilder, Parameter, ParameterError, ParameterType, StringParameterBuilder,
+};
