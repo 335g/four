@@ -4,13 +4,10 @@ use dotenvy::dotenv;
 use four::{
     core::{function::get_att, logical_id::LogicalId, template::Template},
     iam::{
-        property::principal::{Principal, ServicePrincipal},
-        resource::role::{Role, RoleArn},
+        resource::{role::RoleArn, Role},
+        Principal, ServicePrincipal,
     },
-    lambda::{
-        property::{handler::Handler, runtime::Runtime},
-        resource::function::Function,
-    },
+    lambda::{resource::Function, Handler, Runtime},
 };
 
 fn main() -> anyhow::Result<()> {

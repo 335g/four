@@ -12,3 +12,18 @@ pub mod server_certificate;
 pub mod user;
 pub mod user_policy;
 pub mod user_to_group_addition;
+
+pub use access_key::AccessKey;
+pub use group::Group;
+pub use group_policy::GroupPolicy;
+pub use instance_profile::InstanceProfile;
+pub use managed_policy::{AWSManagedPolicy, ManagedPolicy};
+pub use oidc_provider::OIDCProvider;
+pub use policy::Policy;
+pub use role::Role;
+pub use role_policy::RolePolicy;
+pub use saml_provider::SAMLProvider;
+pub use server_certificate::ServerCertificate;
+pub use user::User;
+pub use user_policy::UserPolicy;
+pub use user_to_group_addition::UserToGroupAddition;
