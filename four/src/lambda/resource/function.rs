@@ -105,11 +105,7 @@ impl From<Arn<Lambda>> for FunctionArn {
 
 #[cfg(test)]
 mod tests {
-    use crate::core::{
-        account::{Account, AccountDetail},
-        arn::arn_builder,
-        service::IAM,
-    };
+    use crate::core::{arn_builder, service::IAM, Account, AccountDetail};
 
     use super::*;
 

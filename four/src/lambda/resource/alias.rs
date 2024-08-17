@@ -21,7 +21,7 @@ use thiserror::Error;
 ///     lambda::resource::{Function, Alias},
 /// };
 ///
-/// let function =
+///
 /// ```
 #[derive(ManagedResource, Clone)]
 #[resource_type = "AWS::Lambda::Alias"]
