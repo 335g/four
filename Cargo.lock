@@ -98,7 +98,7 @@ dependencies = [
 
 [[package]]
 name = "cargo-four"
-version = "0.0.11"
+version = "0.0.12"
 dependencies = [
  "clap",
  "tokio",
@@ -204,7 +204,7 @@ dependencies = [
 
 [[package]]
 name = "four"
-version = "0.0.11"
+version = "0.0.12"
 dependencies = [
  "dyn-clone",
  "erased-serde",
@@ -219,7 +219,7 @@ dependencies = [
 
 [[package]]
 name = "four_derive"
-version = "0.0.11"
+version = "0.0.12"
 dependencies = [
  "convert_case",
  "proc-macro2",

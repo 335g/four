@@ -7,6 +7,6 @@ rust-version = "1.80"
 [dependencies]
 anyhow = "1.0.86"
 dotenvy = "0.15.7"
-four = { version = "0.0.11", features = ["iam", "lambda"] }
+four = { version = "0.0.12", features = ["iam", "lambda"] }
 serde = "1"
 serde_json = "1"
