@@ -4,10 +4,10 @@ pub mod convert;
 pub mod function;
 mod logical_id;
 mod parameter;
-pub mod partition;
+mod partition;
 pub mod pseudo;
-pub mod region;
-pub mod resource;
+mod region;
+mod resource;
 pub mod service;
 pub mod tag;
 pub mod template;
@@ -21,3 +21,6 @@ pub use logical_id::{LogicalId, LogicalIdError, LogicalIdentified};
 pub use parameter::{
     NumberParameterBuilder, Parameter, ParameterError, ParameterType, StringParameterBuilder,
 };
+pub use partition::Partition;
+pub use region::{Region, RegionDetail};
+pub use resource::ManagedResource;

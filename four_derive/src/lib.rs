@@ -52,7 +52,7 @@ pub fn managed_resource(input: proc_macro::TokenStream) -> proc_macro::TokenStre
             {
                 use serde::ser::SerializeMap as _;
                 use crate::core::LogicalIdentified as _;
-                use crate::core::resource::ManagedResource as _;
+                use crate::core::ManagedResource as _;
 
                 struct Inner<'a> {
                     #(#inner_fields),*
@@ -86,7 +86,7 @@ pub fn managed_resource(input: proc_macro::TokenStream) -> proc_macro::TokenStre
             }
         }
 
-        impl crate::core::resource::ManagedResource for #resource_name {
+        impl crate::core::ManagedResource for #resource_name {
             fn resource_type(&self) -> &'static str {
                 #resource_type
             }
