@@ -4,7 +4,7 @@ use serde::Serialize;
 
 use crate::{
     core::{account::AccountDetail, arn::AnyArn, logical_id::LogicalId},
-    iam::property::{action::lambda::LambdaAction, principal::ServicePrincipal},
+    iam::{action::lambda::LambdaAction, ServicePrincipal},
     lambda::{property::function_name::FunctionName, resource::url::AuthType},
 };
 
