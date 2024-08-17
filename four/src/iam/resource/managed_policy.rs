@@ -5,10 +5,9 @@ use crate::{
         arn_builder,
         convert::WillBe,
         function::reference::{RefInner, Referenced},
-        logical_id::LogicalId,
         partition::Partition,
         service::IAM,
-        Account, Arn,
+        Account, Arn, LogicalId,
     },
     iam::{property::policy_document::PolicyDocument, util::Path},
 };

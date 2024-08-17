@@ -1,4 +1,4 @@
-use crate::core::{function::join::Join, logical_id::LogicalId, pseudo::PseudoParam};
+use crate::core::{function::join::Join, pseudo::PseudoParam, LogicalId};
 use serde::{ser::SerializeMap, Serialize};
 pub trait Referenced {
     type To;

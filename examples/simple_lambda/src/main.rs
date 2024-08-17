@@ -2,7 +2,7 @@ use std::io::Write;
 
 use dotenvy::dotenv;
 use four::{
-    core::{function::get_att, logical_id::LogicalId, template::Template},
+    core::{function::get_att, template::Template, LogicalId},
     iam::{
         resource::{role::RoleArn, Role},
         Principal, ServicePrincipal,

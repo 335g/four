@@ -5,9 +5,8 @@ use crate::{
             getatt::{Attribute, HaveAtt},
             reference::{RefInner, Referenced},
         },
-        logical_id::LogicalId,
         service::IAM,
-        Arn,
+        Arn, LogicalId,
     },
     iam::property::{
         action, policy_document::PolicyDocument, principal::Principal, statement::Statement,

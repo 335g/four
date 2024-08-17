@@ -1,5 +1,5 @@
 use crate::{
-    core::{convert::WillMappable, logical_id::LogicalId},
+    core::{convert::WillMappable, LogicalId},
     lambda::{property::function_name::FunctionName, resource::function},
 };
 use four_derive::ManagedResource;

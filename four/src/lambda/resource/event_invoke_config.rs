@@ -1,4 +1,4 @@
-use crate::core::logical_id::LogicalId;
+use crate::core::LogicalId;
 use four_derive::ManagedResource;
 use nutype::nutype;
 use thiserror::Error;

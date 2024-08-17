@@ -7,10 +7,9 @@ use crate::core::{
         getatt::{Attribute, HaveAtt},
         reference::{RefInner, Referenced},
     },
-    logical_id::LogicalId,
     service::IAM,
     tag::Tag,
-    Arn,
+    Arn, LogicalId,
 };
 
 #[derive(ManagedResource, Clone)]

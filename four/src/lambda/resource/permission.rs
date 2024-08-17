@@ -3,7 +3,7 @@ use nutype::nutype;
 use serde::Serialize;
 
 use crate::{
-    core::{logical_id::LogicalId, AccountDetail, AnyArn},
+    core::{AccountDetail, AnyArn, LogicalId},
     iam::{action::lambda::LambdaAction, ServicePrincipal},
     lambda::{property::function_name::FunctionName, resource::url::AuthType},
 };

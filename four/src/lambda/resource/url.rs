@@ -8,9 +8,8 @@ use crate::{
             getatt::{Attribute, HaveAtt},
             reference::{RefInner, Referenced},
         },
-        logical_id::LogicalId,
         service::Lambda,
-        Arn,
+        Arn, LogicalId,
     },
     lambda::property::function_name::FunctionName,
 };

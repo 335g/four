@@ -2,7 +2,7 @@ use crate::{
     core::{
         convert::{WillBe, WillMappable},
         function::reference::{RefInner, Referenced},
-        logical_id::LogicalId,
+        LogicalId,
     },
     iam::{
         property::policy_document::PolicyDocument,

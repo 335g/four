@@ -58,7 +58,7 @@ mod tests {
         }
 
         impl LogicalIdentified for A {
-            fn logical_id(&self) -> &crate::core::logical_id::LogicalId {
+            fn logical_id(&self) -> &crate::core::LogicalId {
                 &self.id
             }
         }
