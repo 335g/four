@@ -3,7 +3,6 @@ use nutype::nutype;
 use serde::Serialize;
 
 use crate::core::{
-    arn::Arn,
     function::{
         getatt::{Attribute, HaveAtt},
         reference::{RefInner, Referenced},
@@ -11,6 +10,7 @@ use crate::core::{
     logical_id::LogicalId,
     service::IAM,
     tag::Tag,
+    Arn,
 };
 
 #[derive(ManagedResource, Clone)]

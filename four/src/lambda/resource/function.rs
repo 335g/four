@@ -1,6 +1,5 @@
 use crate::{
     core::{
-        arn::Arn,
         convert::{WillBe, WillMappable},
         function::{
             getatt::{Attribute, HaveAtt},
@@ -8,6 +7,7 @@ use crate::{
         },
         logical_id::LogicalId,
         service::Lambda,
+        Arn,
     },
     iam::resource::role::RoleArn,
     lambda::property::{

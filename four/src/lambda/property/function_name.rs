@@ -1,7 +1,7 @@
 use serde::Serialize;
 
 use crate::{
-    core::{arn::PartialArn, convert::WillBe},
+    core::{convert::WillBe, PartialArn},
     lambda::resource::function::FunctionArn,
 };
 

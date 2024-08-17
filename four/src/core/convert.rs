@@ -3,14 +3,14 @@ use std::{fmt::Debug, marker::PhantomData};
 use dyn_clone::DynClone;
 use serde::Serialize;
 
-pub trait WillFrom: erased_serde::Serialize + DynClone + Debug {}
+pub(crate) trait WillFrom: erased_serde::Serialize + DynClone + Debug {}
 
 impl<T> WillFrom for T where T: Serialize + Clone + Debug {}
 
 erased_serde::serialize_trait_object!(WillFrom);
 dyn_clone::clone_trait_object!(WillFrom);
 
-pub trait WillMappable<F> {}
+pub(crate) trait WillMappable<F> {}
 
 impl<F> WillMappable<F> for F {}
 
@@ -28,7 +28,7 @@ impl<T> WillBe<T> {
         }
     }
 
-    pub fn map<U>(self) -> WillBe<U>
+    pub(crate) fn map<U>(self) -> WillBe<U>
     where
         U: WillMappable<T>,
     {
