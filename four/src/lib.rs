@@ -1,7 +1,8 @@
 #![allow(dead_code)]
 #![cfg_attr(docsrs, feature(doc_cfg))]
 
-pub mod core;
+mod core;
+pub use core::*;
 
 #[cfg(feature = "iam")]
 #[cfg_attr(docsrs, doc(cfg(feature = "iam")))]

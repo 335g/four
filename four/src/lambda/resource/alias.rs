@@ -17,7 +17,7 @@ use thiserror::Error;
 ///
 /// ```
 /// use four::{
-///     core::LogicalId,
+///     LogicalId,
 ///     lambda::resource::{Function, Alias},
 /// };
 ///
