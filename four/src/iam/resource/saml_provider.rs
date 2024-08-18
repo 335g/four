@@ -3,7 +3,7 @@ use nutype::nutype;
 use serde::Serialize;
 
 use crate::core::{
-    function::{Attribute, HaveAtt, RefInner, Referenced},
+    function::{HaveAtt, RefInner, Referenced},
     service::IAM,
     Arn, LogicalId, Tag,
 };
@@ -46,10 +46,6 @@ impl Referenced for SAMLProvider {
     }
 }
 
-impl HaveAtt<SAMLProviderArn> for SAMLProvider {}
-
-impl Attribute for SAMLProviderArn {
-    fn name() -> &'static str {
-        "Arn"
-    }
+impl HaveAtt<SAMLProviderArn> for SAMLProvider {
+    const KEY: &'static str = "Arn";
 }

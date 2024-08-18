@@ -4,7 +4,9 @@ use serde::{
     Serialize,
 };
 
-pub trait HaveAtt<A>: LogicalIdentified {}
+pub trait HaveAtt<A>: LogicalIdentified {
+    const KEY: &'static str;
+}
 
 #[derive(Debug, Clone)]
 pub struct GetAtt {
@@ -13,10 +15,10 @@ pub struct GetAtt {
 }
 
 impl GetAtt {
-    pub(crate) fn new<A: Attribute>(resource: &dyn HaveAtt<A>) -> GetAtt {
+    pub(crate) fn new<A, H: HaveAtt<A>>(resource: &H) -> GetAtt {
         GetAtt {
             logical_id: resource.logical_id().clone(),
-            name: A::name(),
+            name: H::KEY,
         }
     }
 }
@@ -34,10 +36,6 @@ impl Serialize for GetAtt {
         map.serialize_entry("Fn::GetAtt", &inner)?;
         map.end()
     }
-}
-
-pub trait Attribute {
-    fn name() -> &'static str;
 }
 
 struct GetAttInner<'a> {

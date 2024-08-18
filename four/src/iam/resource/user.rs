@@ -1,7 +1,7 @@
 use crate::{
     core::{
         convert::{WillBe, WillMappable},
-        function::{Attribute, HaveAtt, RefInner, Referenced},
+        function::{HaveAtt, RefInner, Referenced},
         service::IAM,
         Arn, LogicalId,
     },
@@ -54,10 +54,6 @@ impl Referenced for User {
 #[derive(Debug, Clone, Serialize)]
 pub struct UserArn(Arn<IAM>);
 
-impl HaveAtt<UserArn> for User {}
-
-impl Attribute for UserArn {
-    fn name() -> &'static str {
-        "Arn"
-    }
+impl HaveAtt<UserArn> for User {
+    const KEY: &'static str = "Arn";
 }

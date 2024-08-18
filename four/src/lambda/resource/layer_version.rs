@@ -5,7 +5,7 @@ use serde::Serialize;
 use crate::{
     core::{
         convert::WillMappable,
-        function::{Attribute, HaveAtt, RefInner, Referenced},
+        function::{HaveAtt, RefInner, Referenced},
         service::IAM,
         Arn, LogicalId,
     },
@@ -76,9 +76,6 @@ impl Referenced for LayerVersion {
 
 impl WillMappable<LayerName> for LayerVersionArn {}
 
-impl HaveAtt<LayerVersionArn> for LayerVersion {}
-impl Attribute for LayerVersionArn {
-    fn name() -> &'static str {
-        "LayerVersionArn"
-    }
+impl HaveAtt<LayerVersionArn> for LayerVersion {
+    const KEY: &'static str = "LayerVersionArn";
 }

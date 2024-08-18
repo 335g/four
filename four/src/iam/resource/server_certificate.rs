@@ -4,7 +4,7 @@ use serde::Serialize;
 
 use crate::{
     core::{
-        function::{Attribute, HaveAtt, RefInner, Referenced},
+        function::{HaveAtt, RefInner, Referenced},
         service::IAM,
         Arn, LogicalId, Tag,
     },
@@ -75,9 +75,6 @@ impl Referenced for ServerCertificate {
     }
 }
 
-impl HaveAtt<ServerCertificateArn> for ServerCertificate {}
-impl Attribute for ServerCertificateArn {
-    fn name() -> &'static str {
-        "Arn"
-    }
+impl HaveAtt<ServerCertificateArn> for ServerCertificate {
+    const KEY: &'static str = "Arn";
 }

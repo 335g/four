@@ -3,7 +3,7 @@ use serde::Serialize;
 use url::Url;
 
 use crate::core::{
-    function::{Attribute, HaveAtt, RefInner, Referenced},
+    function::{HaveAtt, RefInner, Referenced},
     service::IAM,
     Arn, LogicalId, Tag,
 };
@@ -35,10 +35,6 @@ impl Referenced for OIDCProvider {
     }
 }
 
-impl HaveAtt<OIDCProviderArn> for OIDCProvider {}
-
-impl Attribute for OIDCProviderArn {
-    fn name() -> &'static str {
-        "Arn"
-    }
+impl HaveAtt<OIDCProviderArn> for OIDCProvider {
+    const KEY: &'static str = "Arn";
 }

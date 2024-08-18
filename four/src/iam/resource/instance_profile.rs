@@ -1,7 +1,7 @@
 use crate::{
     core::{
         convert::{WillBe, WillMappable},
-        function::{Attribute, HaveAtt, RefInner, Referenced},
+        function::{HaveAtt, RefInner, Referenced},
         service::IAM,
         Arn, LogicalId,
     },
@@ -42,10 +42,6 @@ impl Referenced for InstanceProfile {
 #[derive(Debug, Clone, Serialize)]
 pub struct InstanceProfileArn(Arn<IAM>);
 
-impl Attribute for InstanceProfileArn {
-    fn name() -> &'static str {
-        "Arn"
-    }
+impl HaveAtt<InstanceProfileArn> for InstanceProfile {
+    const KEY: &'static str = "Arn";
 }
-
-impl HaveAtt<InstanceProfileName> for InstanceProfile {}

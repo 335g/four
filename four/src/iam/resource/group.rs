@@ -1,7 +1,7 @@
 use crate::{
     core::{
         convert::{WillBe, WillMappable},
-        function::{Attribute, HaveAtt, RefInner, Referenced},
+        function::{HaveAtt, RefInner, Referenced},
         service::IAM,
         Arn, LogicalId,
     },
@@ -39,10 +39,6 @@ impl Referenced for Group {
 #[derive(Debug, Clone, Serialize)]
 pub struct GroupArn(Arn<IAM>);
 
-impl Attribute for GroupArn {
-    fn name() -> &'static str {
-        "Arn"
-    }
+impl HaveAtt<GroupArn> for Group {
+    const KEY: &'static str = "Arn";
 }
-
-impl HaveAtt<GroupArn> for Group {}

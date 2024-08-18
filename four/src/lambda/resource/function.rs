@@ -1,7 +1,7 @@
 use crate::{
     core::{
         convert::{WillBe, WillMappable},
-        function::{Attribute, HaveAtt, RefInner, Referenced},
+        function::{HaveAtt, RefInner, Referenced},
         service::Lambda,
         Arn, LogicalId,
     },
@@ -66,12 +66,8 @@ impl Referenced for Function {
     }
 }
 
-impl HaveAtt<FunctionArn> for Function {}
-
-impl Attribute for FunctionArn {
-    fn name() -> &'static str {
-        "Arn"
-    }
+impl HaveAtt<FunctionArn> for Function {
+    const KEY: &'static str = "Arn";
 }
 
 #[nutype(validate(len_char_min = 1), derive(Debug, Clone, Serialize))]

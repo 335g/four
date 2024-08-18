@@ -1,7 +1,7 @@
 use crate::{
     core::{
         convert::WillBe,
-        function::{Attribute, HaveAtt, RefInner, Referenced},
+        function::{HaveAtt, RefInner, Referenced},
         LogicalId,
     },
     iam::resource::user::UserName,
@@ -38,10 +38,6 @@ impl Referenced for AccessKey {
 #[derive(Debug, Clone, Serialize)]
 pub struct SecretAccessKey(String);
 
-impl HaveAtt<SecretAccessKey> for AccessKey {}
-
-impl Attribute for SecretAccessKey {
-    fn name() -> &'static str {
-        "SecretAccessKey"
-    }
+impl HaveAtt<SecretAccessKey> for AccessKey {
+    const KEY: &'static str = "SecretAccessKey";
 }
