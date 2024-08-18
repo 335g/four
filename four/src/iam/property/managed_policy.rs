@@ -1,46 +1,10 @@
-use std::sync::LazyLock;
-
-use crate::{
-    core::{
-        arn_builder,
-        convert::WillBe,
-        function::{RefInner, Referenced},
-        service::IAM,
-        Account, Arn, LogicalId, Partition,
-    },
-    iam::{
-        property::{policy_document::PolicyDocument, Groups, ManagedPolicyDescription},
-        util::Path,
-    },
-};
-use four_derive::ManagedResource;
+use nutype::nutype;
 use serde::Serialize;
 
-use super::{role::RoleName, user::UserName};
+use crate::{arn_builder, service::IAM, Account, Arn, Partition};
 
-#[derive(ManagedResource, Clone)]
-#[resource_type = "AWS::IAM::ManagedPolicy"]
-pub struct ManagedPolicy {
-    logical_id: LogicalId,
-    description: Option<ManagedPolicyDescription>,
-    groups: Option<Groups>,
-    managed_policy_name: Option<WillBe<String>>,
-    path: Option<Path>,
-    policy_document: PolicyDocument,
-    roles: Option<Vec<WillBe<RoleName>>>,
-    users: Option<Vec<WillBe<UserName>>>,
-}
-
-#[derive(Debug, Clone, Serialize)]
-pub struct ManagedPolicyArn(Arn<IAM>);
-
-impl Referenced for ManagedPolicy {
-    type To = ManagedPolicyArn;
-
-    fn referenced(&self) -> RefInner {
-        RefInner::Id(self.logical_id.clone())
-    }
-}
+#[nutype(validate(len_char_max = 1000), derive(Debug, Clone, Serialize))]
+pub struct ManagedPolicyDescription(String);
 
 #[derive(Debug, Clone, Serialize)]
 pub struct AWSManagedPolicy(Arn<IAM>);
