@@ -5,8 +5,8 @@ use crate::{
         LogicalId,
     },
     iam::{
-        property::policy_document::PolicyDocument,
-        resource::{group::GroupName, role::RoleName, user::UserName},
+        property::{policy_document::PolicyDocument, GroupName},
+        resource::{role::RoleName, user::UserName},
     },
 };
 use four_derive::ManagedResource;

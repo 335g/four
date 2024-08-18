@@ -4,7 +4,7 @@ use crate::{
         function::{RefInner, Referenced},
         LogicalId,
     },
-    iam::resource::{group::GroupName, user::UserName},
+    iam::{property::GroupName, resource::user::UserName},
 };
 use four_derive::ManagedResource;
 

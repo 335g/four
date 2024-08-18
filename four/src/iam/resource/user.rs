@@ -5,7 +5,10 @@ use crate::{
         service::IAM,
         Arn, LogicalId,
     },
-    iam::{property::policy_document::PolicyDocument, resource::group::GroupName, util::Path},
+    iam::{
+        property::{policy_document::PolicyDocument, GroupName},
+        util::Path,
+    },
 };
 use four_derive::ManagedResource;
 use nutype::nutype;
