@@ -11,3 +11,5 @@ pub mod iam;
 #[cfg(feature = "lambda")]
 #[cfg_attr(docsrs, doc(cfg(feature = "lambda")))]
 pub mod lambda;
+
+pub use four_derive::ManagedResource;
