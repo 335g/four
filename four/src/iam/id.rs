@@ -1,25 +1,23 @@
-use serde::Serialize;
-
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct AccessKeyId;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct InstanceProfileId;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct GroupPolicyId;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct PolicyId;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct RolePolicyId;
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone)]
 pub struct RoleId(String);
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct UserPolicyId;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct UserToGroupAdditionId;
