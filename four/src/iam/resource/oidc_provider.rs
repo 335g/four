@@ -1,11 +1,12 @@
 use four_derive::ManagedResource;
-use serde::Serialize;
 use url::Url;
 
-use crate::core::{
-    function::{HaveAtt, RefInner, Referenced},
-    service::IAM,
-    Arn, LogicalId, Tag,
+use crate::{
+    core::{
+        function::{HaveAtt, RefInner, Referenced},
+        LogicalId, Tag,
+    },
+    iam::OIDCProviderArn,
 };
 
 #[derive(ManagedResource, Clone)]
@@ -16,15 +17,6 @@ pub struct OIDCProvider {
     tags: Option<Vec<Tag>>,
     thumbprint_list: Option<Vec<String>>,
     url: Option<Url>,
-}
-
-#[derive(Debug, Clone, Serialize)]
-pub struct OIDCProviderArn(Arn<IAM>);
-
-impl From<Arn<IAM>> for OIDCProviderArn {
-    fn from(value: Arn<IAM>) -> Self {
-        OIDCProviderArn(value)
-    }
 }
 
 impl Referenced for OIDCProvider {

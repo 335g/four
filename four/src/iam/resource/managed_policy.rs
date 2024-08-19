@@ -5,9 +5,9 @@ use crate::{
         LogicalId,
     },
     iam::{
+        path::Path,
         property::{policy_document::PolicyDocument, ManagedPolicyDescription},
         resource::{role::RoleName, user::UserName},
-        util::Path,
         Groups, ManagedPolicyArn,
     },
 };

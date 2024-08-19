@@ -5,7 +5,7 @@ use crate::{
         LogicalId,
     },
     iam::{
-        resource::role::RoleName, util::Path, InstanceProfileArn, InstanceProfileId,
+        path::Path, resource::role::RoleName, InstanceProfileArn, InstanceProfileId,
         InstanceProfileName,
     },
 };

@@ -8,7 +8,7 @@ use crate::{
         service::IAM,
         Arn, LogicalId, Tag,
     },
-    iam::util::Path,
+    iam::path::Path,
 };
 
 #[derive(ManagedResource, Clone)]
