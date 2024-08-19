@@ -1,13 +1,13 @@
 use crate::{
     core::{
-        convert::{WillBe, WillMappable},
+        convert::WillBe,
         function::{HaveAtt, RefInner, Referenced},
         service::IAM,
         Arn, LogicalId,
     },
     iam::{path::Path, GroupName, LoginProfile, Policy, UserArn, UserName},
+    ManagedResource,
 };
-use four_derive::ManagedResource;
 
 #[derive(ManagedResource, Clone)]
 #[resource_type = "AWS::IAM::User"]
@@ -20,8 +20,6 @@ pub struct User {
     policies: Option<Vec<Policy>>,
     user_name: Option<WillBe<UserName>>,
 }
-
-impl WillMappable<String> for UserName {}
 
 impl Referenced for User {
     type To = UserName;

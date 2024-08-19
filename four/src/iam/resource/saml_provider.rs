@@ -4,8 +4,8 @@ use crate::{
         LogicalId, Tag,
     },
     iam::{SAMLMetadataDocument, SAMLProviderArn, SAMLProviderName},
+    ManagedResource,
 };
-use four_derive::ManagedResource;
 
 #[derive(ManagedResource, Clone)]
 #[resource_type = "AWS::IAM::SAMLProvider"]

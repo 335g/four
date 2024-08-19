@@ -7,8 +7,8 @@ use crate::{
         CertificateBody, CertificateChain, Path, PrivateKey, ServerCertificateArn,
         ServerCertificateName,
     },
+    ManagedResource,
 };
-use four_derive::ManagedResource;
 
 #[derive(ManagedResource, Clone)]
 #[resource_type = "AWS::IAM::ServerCertificate"]

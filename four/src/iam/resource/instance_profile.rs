@@ -5,8 +5,8 @@ use crate::{
         LogicalId,
     },
     iam::{path::Path, InstanceProfileArn, InstanceProfileId, InstanceProfileName, RoleName},
+    ManagedResource,
 };
-use four_derive::ManagedResource;
 
 #[derive(ManagedResource, Clone)]
 #[resource_type = "AWS::IAM::InstanceProfile"]

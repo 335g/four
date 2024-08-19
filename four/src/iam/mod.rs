@@ -4,6 +4,7 @@ mod group;
 mod id;
 mod instance_profile;
 mod path;
+mod policy;
 mod property;
 pub mod resource;
 mod role;
@@ -23,6 +24,7 @@ pub use id::{
 };
 pub use instance_profile::{InstanceProfileName, InstanceProfileNameError};
 pub use path::{Path, PathError};
+pub use policy::{PolicyName, PolicyNameError};
 pub use property::{
     action,
     effect::Effect,

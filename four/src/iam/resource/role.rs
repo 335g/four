@@ -11,8 +11,8 @@ use crate::{
         },
         RoleArn, RoleId, RoleName,
     },
+    ManagedResource,
 };
-use four_derive::ManagedResource;
 
 #[derive(ManagedResource, Clone)]
 #[resource_type = "AWS::IAM::Role"]

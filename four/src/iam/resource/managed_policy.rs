@@ -9,8 +9,8 @@ use crate::{
         property::{policy_document::PolicyDocument, ManagedPolicyDescription},
         Groups, ManagedPolicyArn, RoleName, UserName,
     },
+    ManagedResource,
 };
-use four_derive::ManagedResource;
 
 #[derive(ManagedResource, Clone)]
 #[resource_type = "AWS::IAM::ManagedPolicy"]

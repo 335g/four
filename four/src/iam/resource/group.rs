@@ -5,8 +5,8 @@ use crate::{
         LogicalId,
     },
     iam::{path::Path, resource::policy::Policy, GroupArn, GroupName, ManagedPolicyArn},
+    ManagedResource,
 };
-use four_derive::ManagedResource;
 
 #[derive(ManagedResource, Clone)]
 #[resource_type = "AWS::IAM::Group"]

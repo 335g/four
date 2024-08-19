@@ -1,13 +1,12 @@
-use four_derive::ManagedResource;
-use url::Url;
-
 use crate::{
     core::{
         function::{HaveAtt, RefInner, Referenced},
         LogicalId, Tag,
     },
     iam::OIDCProviderArn,
+    ManagedResource,
 };
+use url::Url;
 
 #[derive(ManagedResource, Clone)]
 #[resource_type = "AWS::IAM::OIDCProvider"]

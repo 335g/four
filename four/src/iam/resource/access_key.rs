@@ -5,8 +5,8 @@ use crate::{
         LogicalId,
     },
     iam::{AccessKeyId, AccessKeyStatus, SecretAccessKey, UserName},
+    ManagedResource,
 };
-use four_derive::ManagedResource;
 
 #[derive(ManagedResource, Clone)]
 #[resource_type = "AWS::IAM::AccessKey"]

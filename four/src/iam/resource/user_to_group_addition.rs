@@ -5,8 +5,8 @@ use crate::{
         LogicalId,
     },
     iam::{GroupName, UserName, UserToGroupAdditionId},
+    ManagedResource,
 };
-use four_derive::ManagedResource;
 
 #[derive(ManagedResource, Clone)]
 #[resource_type = "AWS::IAM::UserToGroupAddition"]

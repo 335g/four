@@ -4,12 +4,9 @@ use crate::{
         function::{RefInner, Referenced},
         LogicalId,
     },
-    iam::{
-        property::policy_document::PolicyDocument, resource::policy::PolicyName, RoleName,
-        RolePolicyId,
-    },
+    iam::{property::policy_document::PolicyDocument, PolicyName, RoleName, RolePolicyId},
+    ManagedResource,
 };
-use four_derive::ManagedResource;
 
 #[derive(ManagedResource, Clone)]
 #[resource_type = "AWS::IAM::RolePolicy"]
