@@ -1,15 +1,13 @@
 use crate::{
     core::{
-        convert::{WillBe, WillMappable},
-        function::{Attribute, HaveAtt, RefInner, Referenced},
+        convert::WillBe,
+        function::{HaveAtt, RefInner, Referenced},
         service::IAM,
         Arn, LogicalId,
     },
-    iam::{property::policy_document::PolicyDocument, resource::group::GroupName, util::Path},
+    iam::{path::Path, GroupName, LoginProfile, Policy, UserArn, UserName},
+    ManagedResource,
 };
-use four_derive::ManagedResource;
-use nutype::nutype;
-use serde::Serialize;
 
 #[derive(ManagedResource, Clone)]
 #[resource_type = "AWS::IAM::User"]
@@ -23,26 +21,6 @@ pub struct User {
     user_name: Option<WillBe<UserName>>,
 }
 
-#[derive(Debug, Clone, Serialize)]
-pub struct LoginProfile {
-    password: String,
-    password_reset_required: Option<bool>,
-}
-
-#[derive(Debug, Clone, Serialize)]
-pub struct Policy {
-    policy_document: PolicyDocument,
-    policy_name: String,
-}
-
-#[nutype(
-    validate(not_empty, len_char_max = 128, regex = r#"[\w+=,.@-]+"#),
-    derive(Debug, Clone, Serialize)
-)]
-pub struct UserName(String);
-
-impl WillMappable<String> for UserName {}
-
 impl Referenced for User {
     type To = UserName;
 
@@ -51,13 +29,6 @@ impl Referenced for User {
     }
 }
 
-#[derive(Debug, Clone, Serialize)]
-pub struct UserArn(Arn<IAM>);
-
-impl HaveAtt<UserArn> for User {}
-
-impl Attribute for UserArn {
-    fn name() -> &'static str {
-        "Arn"
-    }
+impl HaveAtt<UserArn> for User {
+    const KEY: &'static str = "Arn";
 }

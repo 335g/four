@@ -1,16 +1,18 @@
 use crate::{
     core::{
-        convert::{WillBe, WillMappable},
-        function::{Attribute, HaveAtt, RefInner, Referenced},
+        convert::WillBe,
+        function::{HaveAtt, RefInner, Referenced},
         service::IAM,
         Arn, LogicalId,
     },
-    iam::property::{
-        action, policy_document::PolicyDocument, principal::Principal, statement::Statement,
+    iam::{
+        property::{
+            action, policy_document::PolicyDocument, principal::Principal, statement::Statement,
+        },
+        RoleArn, RoleId, RoleName,
     },
+    ManagedResource,
 };
-use four_derive::ManagedResource;
-use serde::Serialize;
 
 #[derive(ManagedResource, Clone)]
 #[resource_type = "AWS::IAM::Role"]
@@ -41,42 +43,11 @@ impl Referenced for Role {
     }
 }
 
-#[derive(Debug, Clone, Serialize)]
-pub struct RoleName(String);
-
-impl RoleName {
-    pub fn new(name: String) -> Self {
-        Self(name)
-    }
+impl HaveAtt<RoleArn> for Role {
+    const KEY: &'static str = "Arn";
 }
-
-impl WillMappable<String> for RoleName {}
-
-#[derive(Debug, Clone, Serialize)]
-pub struct RoleArn(Arn<IAM>);
-
-impl From<Arn<IAM>> for RoleArn {
-    fn from(value: Arn<IAM>) -> RoleArn {
-        RoleArn(value)
-    }
-}
-
-#[derive(Debug, Clone, Serialize)]
-pub struct RoleId(String);
-
-impl HaveAtt<RoleArn> for Role {}
-impl HaveAtt<RoleId> for Role {}
-
-impl Attribute for RoleArn {
-    fn name() -> &'static str {
-        "Arn"
-    }
-}
-
-impl Attribute for RoleId {
-    fn name() -> &'static str {
-        "RoleId"
-    }
+impl HaveAtt<RoleId> for Role {
+    const KEY: &'static str = "RoleId";
 }
 
 #[cfg(test)]

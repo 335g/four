@@ -209,6 +209,7 @@ dependencies = [
  "dyn-clone",
  "erased-serde",
  "four_derive",
+ "lazy_static",
  "nutype",
  "regex",
  "serde",
@@ -283,6 +284,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "lazy_static"
+version = "1.5.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "bbd2bcb4c963f2ddae06a2efc7e9f3591312473c50c6685e1f298068316e66fe"
+
+[[package]]
 name = "libc"
 version = "0.2.155"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -306,7 +313,8 @@ dependencies = [
 [[package]]
 name = "nutype"
 version = "0.4.3"
-source = "git+https://github.com/greyblake/nutype.git#f9aa85726da171a56918096140d449f52b6718f9"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "362399c4581483ed2813c9b05dd6bcd903c60e61005c4b838c65ae755be69dd6"
 dependencies = [
  "nutype_macros",
 ]
@@ -314,7 +322,8 @@ dependencies = [
 [[package]]
 name = "nutype_macros"
 version = "0.4.3"
-source = "git+https://github.com/greyblake/nutype.git#f9aa85726da171a56918096140d449f52b6718f9"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0625bcc0c714bdf12a451c4f6510b949abb095d98cc3cc8fe3812a8100ca6592"
 dependencies = [
  "cfg-if",
  "kinded",

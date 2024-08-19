@@ -1,15 +1,12 @@
 use crate::{
     core::{
-        convert::{WillBe, WillMappable},
-        function::{Attribute, HaveAtt, RefInner, Referenced},
-        service::IAM,
-        Arn, LogicalId,
+        convert::WillBe,
+        function::{HaveAtt, RefInner, Referenced},
+        LogicalId,
     },
-    iam::{resource::role::RoleName, util::Path},
+    iam::{path::Path, InstanceProfileArn, InstanceProfileId, InstanceProfileName, RoleName},
+    ManagedResource,
 };
-use four_derive::ManagedResource;
-use nutype::nutype;
-use serde::Serialize;
 
 #[derive(ManagedResource, Clone)]
 #[resource_type = "AWS::IAM::InstanceProfile"]
@@ -20,17 +17,6 @@ pub struct InstanceProfile {
     roles: Vec<WillBe<RoleName>>,
 }
 
-#[nutype(
-    validate(not_empty, len_char_max = 128, regex = r#"[\w+=,.@-]+"#),
-    derive(Debug, Clone, Serialize)
-)]
-pub struct InstanceProfileName(String);
-
-impl WillMappable<String> for InstanceProfileName {}
-
-#[derive(Debug)]
-pub struct InstanceProfileId;
-
 impl Referenced for InstanceProfile {
     type To = InstanceProfileId;
 
@@ -39,13 +25,6 @@ impl Referenced for InstanceProfile {
     }
 }
 
-#[derive(Debug, Clone, Serialize)]
-pub struct InstanceProfileArn(Arn<IAM>);
-
-impl Attribute for InstanceProfileArn {
-    fn name() -> &'static str {
-        "Arn"
-    }
+impl HaveAtt<InstanceProfileArn> for InstanceProfile {
+    const KEY: &'static str = "Arn";
 }
-
-impl HaveAtt<InstanceProfileName> for InstanceProfile {}

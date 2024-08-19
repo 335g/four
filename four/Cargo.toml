@@ -25,10 +25,8 @@ regex = "1.10"
 serde = { version = "1", features = ["derive"] }
 thiserror = "1"
 url = { version = "2.5", optional = true, features = ["serde"] }
-nutype = { version = "0.4.3", features = [
-    "regex",
-    "serde",
-], git = "https://github.com/greyblake/nutype.git" }
+nutype = { version = "0.4.3", features = ["regex", "serde"] }
+lazy_static = "1.5.0"
 
 [dev-dependencies]
 serde = { version = "1", features = ["derive"] }

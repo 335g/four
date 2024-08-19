@@ -1,12 +1,12 @@
-use four_derive::ManagedResource;
-use serde::Serialize;
-use url::Url;
-
-use crate::core::{
-    function::{Attribute, HaveAtt, RefInner, Referenced},
-    service::IAM,
-    Arn, LogicalId, Tag,
+use crate::{
+    core::{
+        function::{HaveAtt, RefInner, Referenced},
+        LogicalId, Tag,
+    },
+    iam::OIDCProviderArn,
+    ManagedResource,
 };
+use url::Url;
 
 #[derive(ManagedResource, Clone)]
 #[resource_type = "AWS::IAM::OIDCProvider"]
@@ -18,15 +18,6 @@ pub struct OIDCProvider {
     url: Option<Url>,
 }
 
-#[derive(Debug, Clone, Serialize)]
-pub struct OIDCProviderArn(Arn<IAM>);
-
-impl From<Arn<IAM>> for OIDCProviderArn {
-    fn from(value: Arn<IAM>) -> Self {
-        OIDCProviderArn(value)
-    }
-}
-
 impl Referenced for OIDCProvider {
     type To = OIDCProviderArn;
 
@@ -35,10 +26,6 @@ impl Referenced for OIDCProvider {
     }
 }
 
-impl HaveAtt<OIDCProviderArn> for OIDCProvider {}
-
-impl Attribute for OIDCProviderArn {
-    fn name() -> &'static str {
-        "Arn"
-    }
+impl HaveAtt<OIDCProviderArn> for OIDCProvider {
+    const KEY: &'static str = "Arn";
 }

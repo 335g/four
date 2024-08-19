@@ -4,9 +4,9 @@ use crate::{
         function::{RefInner, Referenced},
         LogicalId,
     },
-    iam::resource::{group::GroupName, user::UserName},
+    iam::{GroupName, UserName, UserToGroupAdditionId},
+    ManagedResource,
 };
-use four_derive::ManagedResource;
 
 #[derive(ManagedResource, Clone)]
 #[resource_type = "AWS::IAM::UserToGroupAddition"]
@@ -15,9 +15,6 @@ pub struct UserToGroupAddition {
     group_name: WillBe<GroupName>,
     users: Vec<WillBe<UserName>>,
 }
-
-#[derive(Debug)]
-pub struct UserToGroupAdditionId;
 
 impl Referenced for UserToGroupAddition {
     type To = UserToGroupAdditionId;

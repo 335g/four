@@ -4,12 +4,9 @@ use crate::{
         function::{RefInner, Referenced},
         LogicalId,
     },
-    iam::{
-        property::policy_document::PolicyDocument,
-        resource::{policy::PolicyName, role::RoleName},
-    },
+    iam::{property::policy_document::PolicyDocument, PolicyName, RoleName, RolePolicyId},
+    ManagedResource,
 };
-use four_derive::ManagedResource;
 
 #[derive(ManagedResource, Clone)]
 #[resource_type = "AWS::IAM::RolePolicy"]
@@ -19,9 +16,6 @@ pub struct RolePolicy {
     policy_name: WillBe<PolicyName>,
     role_name: WillBe<RoleName>,
 }
-
-#[derive(Debug)]
-pub struct RolePolicyId;
 
 impl Referenced for RolePolicy {
     type To = RolePolicyId;

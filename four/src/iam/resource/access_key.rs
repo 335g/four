@@ -1,13 +1,12 @@
 use crate::{
     core::{
         convert::WillBe,
-        function::{Attribute, HaveAtt, RefInner, Referenced},
+        function::{HaveAtt, RefInner, Referenced},
         LogicalId,
     },
-    iam::resource::user::UserName,
+    iam::{AccessKeyId, AccessKeyStatus, SecretAccessKey, UserName},
+    ManagedResource,
 };
-use four_derive::ManagedResource;
-use serde::Serialize;
 
 #[derive(ManagedResource, Clone)]
 #[resource_type = "AWS::IAM::AccessKey"]
@@ -18,15 +17,6 @@ pub struct AccessKey {
     user_name: WillBe<UserName>,
 }
 
-#[derive(Debug, Clone, Serialize)]
-pub enum AccessKeyStatus {
-    Inactive,
-    Active,
-}
-
-#[derive(Debug)]
-pub struct AccessKeyId;
-
 impl Referenced for AccessKey {
     type To = AccessKeyId;
 
@@ -35,13 +25,6 @@ impl Referenced for AccessKey {
     }
 }
 
-#[derive(Debug, Clone, Serialize)]
-pub struct SecretAccessKey(String);
-
-impl HaveAtt<SecretAccessKey> for AccessKey {}
-
-impl Attribute for SecretAccessKey {
-    fn name() -> &'static str {
-        "SecretAccessKey"
-    }
+impl HaveAtt<SecretAccessKey> for AccessKey {
+    const KEY: &'static str = "SecretAccessKey";
 }

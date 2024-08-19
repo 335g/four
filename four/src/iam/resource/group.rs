@@ -1,17 +1,12 @@
 use crate::{
     core::{
-        convert::{WillBe, WillMappable},
-        function::{Attribute, HaveAtt, RefInner, Referenced},
-        service::IAM,
-        Arn, LogicalId,
+        convert::WillBe,
+        function::{HaveAtt, RefInner, Referenced},
+        LogicalId,
     },
-    iam::{
-        resource::{managed_policy::ManagedPolicyArn, policy::Policy},
-        util::Path,
-    },
+    iam::{path::Path, resource::policy::Policy, GroupArn, GroupName, ManagedPolicyArn},
+    ManagedResource,
 };
-use four_derive::ManagedResource;
-use serde::Serialize;
 
 #[derive(ManagedResource, Clone)]
 #[resource_type = "AWS::IAM::Group"]
@@ -23,11 +18,6 @@ pub struct Group {
     policies: Option<Vec<Policy>>,
 }
 
-#[derive(Debug, Clone, Serialize)]
-pub struct GroupName(String);
-
-impl WillMappable<String> for GroupName {}
-
 impl Referenced for Group {
     type To = GroupName;
 
@@ -36,13 +26,6 @@ impl Referenced for Group {
     }
 }
 
-#[derive(Debug, Clone, Serialize)]
-pub struct GroupArn(Arn<IAM>);
-
-impl Attribute for GroupArn {
-    fn name() -> &'static str {
-        "Arn"
-    }
+impl HaveAtt<GroupArn> for Group {
+    const KEY: &'static str = "Arn";
 }
-
-impl HaveAtt<GroupArn> for Group {}

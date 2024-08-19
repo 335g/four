@@ -3,7 +3,7 @@ mod join;
 mod reference;
 mod sub;
 
-pub use getatt::{Attribute, GetAtt, HaveAtt};
+pub use getatt::{GetAtt, HaveAtt};
 pub use join::Join;
 pub(crate) use join::JoinElement;
 pub(crate) use reference::RefInner;
@@ -15,7 +15,7 @@ pub fn r#ref<R: Referenced>(wrapped: R) -> WillBe<R::To> {
     WillBe::new(Box::new(Ref::new(wrapped)))
 }
 
-pub fn get_att<A: Attribute, H: HaveAtt<A>>(resource: &H) -> WillBe<A> {
+pub fn get_att<A, H: HaveAtt<A>>(resource: &H) -> WillBe<A> {
     WillBe::new(Box::new(GetAtt::new(resource)))
 }
 
@@ -26,7 +26,6 @@ mod tests {
     use super::*;
     use crate::core::{
         logical_id::{LogicalId, LogicalIdentified},
-        parameter::Parameter,
         pseudo::AccountId,
         resource::ManagedResource,
     };
@@ -59,12 +58,8 @@ mod tests {
 
         struct B;
 
-        impl HaveAtt<B> for A {}
-
-        impl Attribute for B {
-            fn name() -> &'static str {
-                "name of B"
-            }
+        impl HaveAtt<B> for A {
+            const KEY: &'static str = "name of B";
         }
 
         let a = A {

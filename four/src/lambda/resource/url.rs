@@ -4,7 +4,7 @@ use serde::Serialize;
 
 use crate::{
     core::{
-        function::{Attribute, HaveAtt, RefInner, Referenced},
+        function::{HaveAtt, RefInner, Referenced},
         service::Lambda,
         Arn, LogicalId,
     },
@@ -99,17 +99,10 @@ impl Referenced for Url {
 #[derive(Debug, Clone, Serialize)]
 pub struct FunctionArn(Arn<Lambda>);
 
-impl HaveAtt<FunctionArn> for Url {}
-impl HaveAtt<url::Url> for Url {}
-
-impl Attribute for FunctionArn {
-    fn name() -> &'static str {
-        "FunctionArn"
-    }
+impl HaveAtt<FunctionArn> for Url {
+    const KEY: &'static str = "FunctionArn";
 }
 
-impl Attribute for url::Url {
-    fn name() -> &'static str {
-        "FunctionUrl"
-    }
+impl HaveAtt<url::Url> for Url {
+    const KEY: &'static str = "FunctionUrl";
 }
