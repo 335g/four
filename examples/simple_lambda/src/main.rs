@@ -3,10 +3,7 @@ use std::io::Write;
 use dotenvy::dotenv;
 use four::{
     get_att,
-    iam::{
-        resource::{role::RoleArn, Role},
-        Principal, ServicePrincipal,
-    },
+    iam::{resource::Role, Principal, RoleArn, ServicePrincipal},
     lambda::{resource::Function, Handler, Runtime},
     LogicalId, Template,
 };

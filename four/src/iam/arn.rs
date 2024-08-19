@@ -37,3 +37,12 @@ impl From<Arn<IAM>> for OIDCProviderArn {
         OIDCProviderArn(value)
     }
 }
+
+#[derive(Debug, Clone, Serialize)]
+pub struct RoleArn(Arn<IAM>);
+
+impl From<Arn<IAM>> for RoleArn {
+    fn from(value: Arn<IAM>) -> RoleArn {
+        RoleArn(value)
+    }
+}

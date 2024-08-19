@@ -5,8 +5,8 @@ use crate::{
         LogicalId,
     },
     iam::{
-        property::policy_document::PolicyDocument,
-        resource::{policy::PolicyName, role::RoleName},
+        property::policy_document::PolicyDocument, resource::policy::PolicyName, RoleName,
+        RolePolicyId,
     },
 };
 use four_derive::ManagedResource;
@@ -19,9 +19,6 @@ pub struct RolePolicy {
     policy_name: WillBe<PolicyName>,
     role_name: WillBe<RoleName>,
 }
-
-#[derive(Debug)]
-pub struct RolePolicyId;
 
 impl Referenced for RolePolicy {
     type To = RolePolicyId;

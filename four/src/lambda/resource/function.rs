@@ -5,7 +5,7 @@ use crate::{
         service::Lambda,
         Arn, LogicalId,
     },
-    iam::resource::role::RoleArn,
+    iam::RoleArn,
     lambda::property::{
         architecture::Architectures, code::Code, handler::Handler, runtime::Runtime,
     },

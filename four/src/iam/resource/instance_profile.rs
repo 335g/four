@@ -4,10 +4,7 @@ use crate::{
         function::{HaveAtt, RefInner, Referenced},
         LogicalId,
     },
-    iam::{
-        path::Path, resource::role::RoleName, InstanceProfileArn, InstanceProfileId,
-        InstanceProfileName,
-    },
+    iam::{path::Path, InstanceProfileArn, InstanceProfileId, InstanceProfileName, RoleName},
 };
 use four_derive::ManagedResource;
 

@@ -5,9 +5,8 @@ use crate::{
         LogicalId,
     },
     iam::{
-        property::policy_document::PolicyDocument,
-        resource::{role::RoleName, user::UserName},
-        GroupName,
+        property::policy_document::PolicyDocument, resource::user::UserName, GroupName, PolicyId,
+        RoleName,
     },
 };
 use four_derive::ManagedResource;
@@ -31,9 +30,6 @@ pub struct Policy {
 pub struct PolicyName(String);
 
 impl WillMappable<String> for PolicyName {}
-
-#[derive(Debug)]
-pub struct PolicyId;
 
 impl Referenced for Policy {
     type To = PolicyId;

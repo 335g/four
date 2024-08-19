@@ -6,8 +6,5 @@ pub enum AccessKeyStatus {
     Active,
 }
 
-#[derive(Debug)]
-pub struct AccessKeyId;
-
 #[derive(Debug, Clone, Serialize)]
 pub struct SecretAccessKey(String);
