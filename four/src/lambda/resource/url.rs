@@ -8,7 +8,7 @@ use crate::{
         service::Lambda,
         Arn, LogicalId,
     },
-    lambda::property::function_name::FunctionName,
+    lambda::LooseFunctionName,
 };
 
 #[derive(ManagedResource, Clone)]
@@ -19,7 +19,7 @@ pub struct Url {
     cors: Option<Cors>,
     invoke_mode: Option<InvokeMode>,
     qualifier: Option<Qualifier>,
-    target_function_arn: FunctionName,
+    target_function_arn: LooseFunctionName,
 }
 
 #[derive(Debug, Clone, Serialize)]

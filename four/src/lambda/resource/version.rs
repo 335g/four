@@ -2,7 +2,7 @@ use four_derive::ManagedResource;
 use nutype::nutype;
 use serde::Serialize;
 
-use crate::{core::LogicalId, lambda::property::function_name::FunctionName};
+use crate::{core::LogicalId, lambda::LooseFunctionName};
 
 #[derive(ManagedResource, Clone)]
 #[resource_type = "AWS::Lambda::Version"]
@@ -10,7 +10,7 @@ pub struct Version {
     logical_id: LogicalId,
     code_sha256: Option<String>,
     description: Option<Description>,
-    function_name: FunctionName,
+    function_name: LooseFunctionName,
     provisioned_concurrency_config: Option<ProvisionedConcurrencyConfiguration>,
     runtime_policy: Option<RuntimePolicy>,
 }

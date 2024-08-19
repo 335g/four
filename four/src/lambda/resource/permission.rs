@@ -5,7 +5,7 @@ use serde::Serialize;
 use crate::{
     core::{AccountDetail, AnyArn, LogicalId},
     iam::{action::lambda::LambdaAction, ServicePrincipal},
-    lambda::{property::function_name::FunctionName, resource::url::AuthType},
+    lambda::{resource::url::AuthType, LooseFunctionName},
 };
 
 #[derive(ManagedResource, Clone)]
@@ -14,7 +14,7 @@ pub struct Permission {
     logical_id: LogicalId,
     action: Box<dyn LambdaAction>,
     event_source_token: Option<EventSourceToken>,
-    function_name: FunctionName,
+    function_name: LooseFunctionName,
     function_url_auth_type: Option<AuthType>,
     principal: Option<Principal>,
 

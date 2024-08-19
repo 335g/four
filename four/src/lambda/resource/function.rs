@@ -1,18 +1,16 @@
 use crate::{
     core::{
-        convert::{WillBe, WillMappable},
+        convert::WillBe,
         function::{HaveAtt, RefInner, Referenced},
-        service::Lambda,
-        Arn, LogicalId,
+        LogicalId,
     },
     iam::RoleArn,
-    lambda::property::{
-        architecture::Architectures, code::Code, handler::Handler, runtime::Runtime,
+    lambda::{
+        property::{architecture::Architectures, code::Code, handler::Handler, runtime::Runtime},
+        FunctionArn, FunctionName, MemorySize, MemorySizeError, Timeout, TimeoutError,
     },
+    ManagedResource,
 };
-use four_derive::ManagedResource;
-use nutype::nutype;
-use serde::Serialize;
 
 #[derive(ManagedResource, Clone)]
 #[resource_type = "AWS::Lambda::Function"]
@@ -68,32 +66,6 @@ impl Referenced for Function {
 
 impl HaveAtt<FunctionArn> for Function {
     const KEY: &'static str = "Arn";
-}
-
-#[nutype(validate(len_char_min = 1), derive(Debug, Clone, Serialize))]
-pub struct FunctionName(String);
-
-impl WillMappable<String> for FunctionName {}
-
-#[nutype(
-    validate(greater_or_equal = 128, less_or_equal = 10240),
-    derive(Debug, Clone, Serialize)
-)]
-pub struct MemorySize(usize);
-
-#[nutype(
-    validate(greater = 0, less_or_equal = 900),
-    derive(Debug, Clone, Serialize)
-)]
-pub struct Timeout(usize);
-
-#[derive(Debug, Clone, Serialize)]
-pub struct FunctionArn(Arn<Lambda>);
-
-impl From<Arn<Lambda>> for FunctionArn {
-    fn from(value: Arn<Lambda>) -> Self {
-        FunctionArn(value)
-    }
 }
 
 #[cfg(test)]
