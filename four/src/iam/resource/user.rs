@@ -5,11 +5,9 @@ use crate::{
         service::IAM,
         Arn, LogicalId,
     },
-    iam::{path::Path, property::policy_document::PolicyDocument, GroupName},
+    iam::{path::Path, GroupName, LoginProfile, Policy, UserArn, UserName},
 };
 use four_derive::ManagedResource;
-use nutype::nutype;
-use serde::Serialize;
 
 #[derive(ManagedResource, Clone)]
 #[resource_type = "AWS::IAM::User"]
@@ -23,24 +21,6 @@ pub struct User {
     user_name: Option<WillBe<UserName>>,
 }
 
-#[derive(Debug, Clone, Serialize)]
-pub struct LoginProfile {
-    password: String,
-    password_reset_required: Option<bool>,
-}
-
-#[derive(Debug, Clone, Serialize)]
-pub struct Policy {
-    policy_document: PolicyDocument,
-    policy_name: String,
-}
-
-#[nutype(
-    validate(not_empty, len_char_max = 128, regex = r#"[\w+=,.@-]+"#),
-    derive(Debug, Clone, Serialize)
-)]
-pub struct UserName(String);
-
 impl WillMappable<String> for UserName {}
 
 impl Referenced for User {
@@ -50,9 +30,6 @@ impl Referenced for User {
         RefInner::Id(self.logical_id.clone())
     }
 }
-
-#[derive(Debug, Clone, Serialize)]
-pub struct UserArn(Arn<IAM>);
 
 impl HaveAtt<UserArn> for User {
     const KEY: &'static str = "Arn";

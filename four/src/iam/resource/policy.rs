@@ -4,10 +4,7 @@ use crate::{
         function::{RefInner, Referenced},
         LogicalId,
     },
-    iam::{
-        property::policy_document::PolicyDocument, resource::user::UserName, GroupName, PolicyId,
-        RoleName,
-    },
+    iam::{property::policy_document::PolicyDocument, GroupName, PolicyId, RoleName, UserName},
 };
 use four_derive::ManagedResource;
 use nutype::nutype;

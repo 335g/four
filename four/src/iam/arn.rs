@@ -46,3 +46,30 @@ impl From<Arn<IAM>> for RoleArn {
         RoleArn(value)
     }
 }
+
+#[derive(Debug, Clone, Serialize)]
+pub struct SAMLProviderArn(Arn<IAM>);
+
+impl From<Arn<IAM>> for SAMLProviderArn {
+    fn from(value: Arn<IAM>) -> Self {
+        SAMLProviderArn(value)
+    }
+}
+
+#[derive(Debug, Clone, Serialize)]
+pub struct ServerCertificateArn(Arn<IAM>);
+
+impl From<Arn<IAM>> for ServerCertificateArn {
+    fn from(value: Arn<IAM>) -> Self {
+        ServerCertificateArn(value)
+    }
+}
+
+#[derive(Debug, Clone, Serialize)]
+pub struct UserArn(Arn<IAM>);
+
+impl From<Arn<IAM>> for UserArn {
+    fn from(value: Arn<IAM>) -> Self {
+        UserArn(value)
+    }
+}

@@ -17,3 +17,9 @@ pub struct RolePolicyId;
 
 #[derive(Debug, Clone, Serialize)]
 pub struct RoleId(String);
+
+#[derive(Debug)]
+pub struct UserPolicyId;
+
+#[derive(Debug)]
+pub struct UserToGroupAdditionId;

@@ -7,8 +7,7 @@ use crate::{
     iam::{
         path::Path,
         property::{policy_document::PolicyDocument, ManagedPolicyDescription},
-        resource::user::UserName,
-        Groups, ManagedPolicyArn, RoleName,
+        Groups, ManagedPolicyArn, RoleName, UserName,
     },
 };
 use four_derive::ManagedResource;

@@ -7,11 +7,20 @@ mod path;
 mod property;
 pub mod resource;
 mod role;
+mod saml_provider;
+mod server_certificate;
+mod user;
 
 pub use access_key::{AccessKeyStatus, SecretAccessKey};
-pub use arn::{GroupArn, InstanceProfileArn, ManagedPolicyArn, OIDCProviderArn, RoleArn};
+pub use arn::{
+    GroupArn, InstanceProfileArn, ManagedPolicyArn, OIDCProviderArn, RoleArn, SAMLProviderArn,
+    ServerCertificateArn, UserArn,
+};
 pub use group::{GroupName, GroupNameError, Groups};
-pub use id::{AccessKeyId, GroupPolicyId, InstanceProfileId, PolicyId, RoleId, RolePolicyId};
+pub use id::{
+    AccessKeyId, GroupPolicyId, InstanceProfileId, PolicyId, RoleId, RolePolicyId, UserPolicyId,
+    UserToGroupAdditionId,
+};
 pub use instance_profile::{InstanceProfileName, InstanceProfileNameError};
 pub use path::{Path, PathError};
 pub use property::{
@@ -22,3 +31,11 @@ pub use property::{
     statement::{ActionOr, PrincipalOr, Statement, StatementBuilder1, StatementBuilder2},
 };
 pub use role::RoleName;
+pub use saml_provider::{
+    SAMLMetadataDocument, SAMLMetadataDocumentError, SAMLProviderName, SAMLProviderNameError,
+};
+pub use server_certificate::{
+    CertificateBody, CertificateBodyError, CertificateChain, CertificateChainError, PrivateKey,
+    PrivateKeyError, ServerCertificateName, ServerCertificateNameError,
+};
+pub use user::{LoginProfile, Policy, UserName, UserNameError};

@@ -4,7 +4,7 @@ use crate::{
         function::{RefInner, Referenced},
         LogicalId,
     },
-    iam::{resource::user::UserName, GroupName},
+    iam::{GroupName, UserName, UserToGroupAdditionId},
 };
 use four_derive::ManagedResource;
 
@@ -15,9 +15,6 @@ pub struct UserToGroupAddition {
     group_name: WillBe<GroupName>,
     users: Vec<WillBe<UserName>>,
 }
-
-#[derive(Debug)]
-pub struct UserToGroupAdditionId;
 
 impl Referenced for UserToGroupAddition {
     type To = UserToGroupAdditionId;
