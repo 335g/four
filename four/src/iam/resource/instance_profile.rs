@@ -5,9 +5,8 @@ use crate::{
         LogicalId,
     },
     iam::{
-        property::{InstanceProfileArn, InstanceProfileId, InstanceProfileName},
-        resource::role::RoleName,
-        util::Path,
+        resource::role::RoleName, util::Path, InstanceProfileArn, InstanceProfileId,
+        InstanceProfileName,
     },
 };
 use four_derive::ManagedResource;

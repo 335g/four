@@ -7,3 +7,6 @@ pub struct GroupArn(Arn<IAM>);
 
 #[derive(Debug, Clone, Serialize)]
 pub struct InstanceProfileArn(Arn<IAM>);
+
+#[derive(Debug, Clone, Serialize)]
+pub struct ManagedPolicyArn(Arn<IAM>);

@@ -4,11 +4,7 @@ use crate::{
         function::{HaveAtt, RefInner, Referenced},
         LogicalId,
     },
-    iam::{
-        property::{GroupArn, GroupName},
-        resource::{managed_policy::ManagedPolicyArn, policy::Policy},
-        util::Path,
-    },
+    iam::{resource::policy::Policy, util::Path, GroupArn, GroupName, ManagedPolicyArn},
 };
 use four_derive::ManagedResource;
 

@@ -17,7 +17,7 @@ pub use access_key::AccessKey;
 pub use group::Group;
 pub use group_policy::GroupPolicy;
 pub use instance_profile::InstanceProfile;
-pub use managed_policy::{AWSManagedPolicy, ManagedPolicy};
+pub use managed_policy::ManagedPolicy;
 pub use oidc_provider::OIDCProvider;
 pub use policy::Policy;
 pub use role::Role;

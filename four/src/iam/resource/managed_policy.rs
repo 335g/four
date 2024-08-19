@@ -1,22 +1,17 @@
-use std::sync::LazyLock;
-
 use crate::{
     core::{
-        arn_builder,
         convert::WillBe,
         function::{RefInner, Referenced},
-        service::IAM,
-        Account, Arn, LogicalId, Partition,
+        LogicalId,
     },
     iam::{
-        property::{policy_document::PolicyDocument, Groups, ManagedPolicyDescription},
+        property::{policy_document::PolicyDocument, ManagedPolicyDescription},
+        resource::{role::RoleName, user::UserName},
         util::Path,
+        Groups, ManagedPolicyArn,
     },
 };
 use four_derive::ManagedResource;
-use serde::Serialize;
-
-use super::{role::RoleName, user::UserName};
 
 #[derive(ManagedResource, Clone)]
 #[resource_type = "AWS::IAM::ManagedPolicy"]
@@ -31,9 +26,6 @@ pub struct ManagedPolicy {
     users: Option<Vec<WillBe<UserName>>>,
 }
 
-#[derive(Debug, Clone, Serialize)]
-pub struct ManagedPolicyArn(Arn<IAM>);
-
 impl Referenced for ManagedPolicy {
     type To = ManagedPolicyArn;
 
@@ -41,62 +33,3 @@ impl Referenced for ManagedPolicy {
         RefInner::Id(self.logical_id.clone())
     }
 }
-
-#[derive(Debug, Clone, Serialize)]
-pub struct AWSManagedPolicy(Arn<IAM>);
-
-macro_rules! aws_managed_policy {
-    ($(($name:ident, $resource:expr)),*) => {
-        impl AWSManagedPolicy {
-            $(pub fn $name() -> Self {
-                let arn = arn_builder($resource, Account::Aws)
-                    .partition(Partition::Ref)
-                    .build(IAM);
-                AWSManagedPolicy(arn)
-            })*
-        }
-    };
-}
-
-aws_managed_policy!(
-    (lambda_full_access, "policy/AWSLambda_FullAccess"),
-    (lambda_read_only_access, "policy/AWSLambda_ReadOnlyAccess"),
-    (
-        lambda_basic_execution_role,
-        "policy/service-role/AWSLambdaBasicExecutionRole"
-    ),
-    (
-        lambda_dynamo_db_execution_role,
-        "policy/service-role/AWSLambdaDynamoDBExecutionRole"
-    ),
-    (
-        lambda_eni_management_access,
-        "policy/service-role/AWSLambdaENIManagementAccess"
-    ),
-    (lambda_execute, "policy/AWSLambdaExecute"),
-    (
-        lambda_invocation_dynamo_db,
-        "policy/AWSLambdaInvocation-DynamoDB"
-    ),
-    (
-        lambda_kinesis_execution_role,
-        "policy/service-role/AWSLambdaKinesisExecutionRole"
-    ),
-    (
-        lambda_msk_execution_role,
-        "policy/service-role/AWSLambdaMSKExecutionRole"
-    ),
-    (
-        lambda_replicator,
-        "policy/aws-service-role/AWSLambdaReplicator"
-    ),
-    (lambda_role, "policy/service-role/AWSLambdaRole"),
-    (
-        lambda_sqs_queue_execution_role,
-        "policy/service-role/AWSLambdaSQSQueueExecutionRole"
-    ),
-    (
-        lambda_vpc_access_execution_role,
-        "policy/service-role/AWSLambdaVPCAccessExecutionRole"
-    )
-);

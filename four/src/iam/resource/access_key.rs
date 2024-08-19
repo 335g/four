@@ -4,10 +4,7 @@ use crate::{
         function::{HaveAtt, RefInner, Referenced},
         LogicalId,
     },
-    iam::{
-        property::{AccessKeyId, AccessKeyStatus, SecretAccessKey},
-        resource::user::UserName,
-    },
+    iam::{resource::user::UserName, AccessKeyId, AccessKeyStatus, SecretAccessKey},
 };
 use four_derive::ManagedResource;
 
