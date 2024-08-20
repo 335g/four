@@ -1,4 +1,5 @@
 #![allow(dead_code)]
+#![allow(unused_imports)]
 #![cfg_attr(docsrs, feature(doc_cfg))]
 
 mod core;
