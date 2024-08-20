@@ -67,21 +67,3 @@ impl Referenced for Function {
 impl HaveAtt<FunctionArn> for Function {
     const KEY: &'static str = "Arn";
 }
-
-#[cfg(test)]
-mod tests {
-    use crate::core::{arn_builder, service::IAM, Account, AccountDetail};
-
-    use super::*;
-
-    #[test]
-    fn test_function1() {
-        let id = LogicalId::try_from("function-id").unwrap();
-        let code = Code::new("mybucket", "mykey");
-        let account = Account::Detail(AccountDetail::try_from("123456789012").unwrap());
-
-        let role: RoleArn = arn_builder("abc", account).build(IAM).into();
-        let arch = Architectures::x86_64();
-        let function = Function::new(id, code, role.into());
-    }
-}

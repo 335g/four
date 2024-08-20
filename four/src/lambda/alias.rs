@@ -18,12 +18,6 @@ pub struct AliasName(String);
 
 #[derive(Debug, Clone, Serialize)]
 #[serde(rename_all = "PascalCase")]
-pub struct ProvisionedConcurrencyConfiguration {
-    provisioned_concurrency_executions: usize,
-}
-
-#[derive(Debug, Clone, Serialize)]
-#[serde(rename_all = "PascalCase")]
 pub struct AliasRoutingConfiguration {
     additional_version_weights: Vec<VersionWeight>,
 }

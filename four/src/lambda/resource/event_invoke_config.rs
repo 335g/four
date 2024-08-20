@@ -1,9 +1,6 @@
 use crate::{
     core::LogicalId,
-    lambda::{
-        event_invoke_config::Qualifier, FunctionName, MaximumEventAgeInSeconds,
-        MaximumRetryAttempts,
-    },
+    lambda::{FunctionName, MaximumEventAgeInSeconds, MaximumRetryAttempts, Qualifier},
     ManagedResource,
 };
 
