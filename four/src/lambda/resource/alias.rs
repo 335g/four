@@ -7,7 +7,7 @@ use crate::{
 };
 use four_derive::ManagedResource;
 
-/// [The AWS::Lambda::Alias resource](https://docs.aws.amazon.com/ja_jp/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-alias.html)
+/// [AWS::Lambda::Alias]
 ///
 /// The AWS::Lambda::Alias resource creates an alias for a Lambda function version.
 /// Use aliases to provide clients with a function identifier that you can update
@@ -22,7 +22,10 @@ use four_derive::ManagedResource;
 /// };
 ///
 ///
+///
 /// ```
+///
+/// [AWS::Lambda::Alias]: https://docs.aws.amazon.com/ja_jp/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-alias.html
 #[derive(ManagedResource, Clone)]
 #[resource_type = "AWS::Lambda::Alias"]
 pub struct Alias {

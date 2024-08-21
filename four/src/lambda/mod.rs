@@ -15,7 +15,7 @@ pub use alias::{
     AliasDescription, AliasDescriptionError, AliasName, AliasNameError, AliasRoutingConfiguration,
     FunctionVersion, FunctionVersionError, VersionWeight,
 };
-pub use arn::FunctionArn;
+pub use arn::{FunctionArn, LayerVersionArn, VersionArn};
 pub use event_invoke_config::{
     MaximumEventAgeInSeconds, MaximumEventAgeInSecondsError, MaximumRetryAttempts,
     MaximumRetryAttemptsError,
@@ -49,7 +49,7 @@ pub use url::{
 };
 pub use version::{
     RuntimePolicy, RuntimeVersionArn, RuntimeVersionArnError, VersionDescription,
-    VersionDescriptionError,
+    VersionDescriptionError, VersionNumber,
 };
 
 #[derive(Debug, Clone, Serialize)]

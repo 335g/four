@@ -1,9 +1,6 @@
 use serde::Serialize;
 
-use crate::{
-    service::{Lambda, IAM},
-    Arn,
-};
+use crate::{service::Lambda, Arn};
 
 #[derive(Debug, Clone, Serialize)]
 pub struct FunctionArn(Arn<Lambda>);
@@ -15,10 +12,19 @@ impl From<Arn<Lambda>> for FunctionArn {
 }
 
 #[derive(Debug, Clone, Serialize)]
-pub struct LayerVersionArn(Arn<IAM>);
+pub struct LayerVersionArn(Arn<Lambda>);
 
-impl From<Arn<IAM>> for LayerVersionArn {
-    fn from(value: Arn<IAM>) -> Self {
+impl From<Arn<Lambda>> for LayerVersionArn {
+    fn from(value: Arn<Lambda>) -> Self {
+        Self(value)
+    }
+}
+
+#[derive(Debug, Clone, Serialize)]
+pub struct VersionArn(Arn<Lambda>);
+
+impl From<Arn<Lambda>> for VersionArn {
+    fn from(value: Arn<Lambda>) -> Self {
         Self(value)
     }
 }

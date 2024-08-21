@@ -4,7 +4,7 @@ use crate::{
         function::{HaveAtt, RefInner, Referenced},
         LogicalId,
     },
-    iam::RoleArn,
+    iam::{resource::Role, RoleArn},
     lambda::{
         property::{architecture::Architectures, code::Code, handler::Handler, runtime::Runtime},
         FunctionArn, FunctionName, MemorySize, MemorySizeError, Timeout, TimeoutError,
@@ -12,7 +12,7 @@ use crate::{
     ManagedResource,
 };
 
-/// [The AWS::Lambda::Function](https://docs.aws.amazon.com/ja_jp/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-function.html)
+/// [AWS::Lambda::Function]
 ///
 /// The AWS::Lambda::Function resource creates a Lambda function.
 /// To create a function, you need a deployment package and an execution role.
@@ -78,6 +78,7 @@ use crate::{
 /// assert_eq!(lhs, rhs);
 /// ```
 ///
+/// [AWS::Lambda::Function]: https://docs.aws.amazon.com/ja_jp/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-function.html
 /// [cargo-lambda]: https://github.com/cargo-lambda/cargo-lambda
 #[derive(ManagedResource, Clone)]
 #[resource_type = "AWS::Lambda::Function"]
@@ -120,6 +121,17 @@ impl Function {
         let timeout = Timeout::try_new(timeout)?;
         self.timeout = Some(timeout);
         Ok(self)
+    }
+
+    pub fn zip_with_role(
+        logical_id: LogicalId,
+        bucket_name: &str,
+        key: &str,
+        handler: Handler,
+        runtime: Runtime,
+        role_id: Option<LogicalId>,
+    ) -> (Function, Role) {
+        todo!()
     }
 }
 

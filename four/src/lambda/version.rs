@@ -19,3 +19,6 @@ pub struct RuntimePolicy {
     derive(Debug, Clone, Serialize)
 )]
 pub struct RuntimeVersionArn(String);
+
+#[derive(Debug, Clone)]
+pub struct VersionNumber(usize);
