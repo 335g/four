@@ -16,12 +16,13 @@ use crate::{
 ///
 /// ```
 /// use four::{
-///     LogicalId, Account, Partition, arn_builder, service,
+///     LogicalId, Account, Partition, arn_builder, service, r#ref,
 ///     lambda::{
 ///         resource::{Function, Version},
-///         Handler, Runtime,
+///         Handler, Runtime, VersionDescription, ProvisionedConcurrencyConfiguration,
 ///     },
 ///     iam::RoleArn,
+///     ManagedResource,
 /// };
 ///
 /// let account = Account::try_from("123456789012").unwrap();
@@ -34,7 +35,28 @@ use crate::{
 /// let runtime = Runtime::ProvidedAl2023;
 /// let function = Function::zip(function_id, "mybucket", "mykey.zip", role_arn.into(), handler, runtime);
 ///
-/// let version_id = LogicalId::try_from("MyLayer");
+/// let version_id = LogicalId::try_from("version").unwrap();
+/// let function_name = r#ref(function).into();
+/// let version = Version::new(version_id, function_name)
+///     .description(VersionDescription::try_new("v1").unwrap())
+///     .provisioned_concurrency_config(ProvisionedConcurrencyConfiguration::new(20));
+///
+/// let lhs = serde_json::to_string(&version).unwrap();
+/// let mut rhs = r#"
+///     {
+///         "Type": "AWS::Lambda::Version",
+///         "Properties": {
+///             "Description": "v1",
+///             "FunctionName": { "Ref": "function" },
+///             "ProvisionedConcurrencyConfig": {
+///                 "ProvisionedConcurrentExecutions": 20
+///             }
+///         }
+///     }
+/// "#.to_string();
+/// rhs.retain(|c| c != '\n' && c != ' ');
+///
+/// assert_eq!(lhs, rhs);
 ///
 /// ```
 ///

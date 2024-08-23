@@ -55,7 +55,15 @@ pub use version::{
 #[derive(Debug, Clone, Serialize)]
 #[serde(rename_all = "PascalCase")]
 pub struct ProvisionedConcurrencyConfiguration {
-    provisioned_concurrency_executions: usize,
+    provisioned_concurrent_executions: usize,
+}
+
+impl ProvisionedConcurrencyConfiguration {
+    pub fn new(executions: usize) -> Self {
+        Self {
+            provisioned_concurrent_executions: executions,
+        }
+    }
 }
 
 #[derive(Debug, Clone)]

@@ -306,7 +306,7 @@ fn get_setter<'a>(
             };
 
             quote! {
-                fn #name(mut self, #name: #ty) -> Self {
+                pub fn #name(mut self, #name: #ty) -> Self {
                     self.#name = Some(#name);
                     self
                 }
