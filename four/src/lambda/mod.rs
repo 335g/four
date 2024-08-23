@@ -25,9 +25,9 @@ pub use function::{
 };
 pub use id::{LayerVersionPermissionId, UrlId};
 pub use layer_version::{
-    CompatibleArchitectures, CompatibleArchitecturesError, FunctionContent, LayerName,
-    LayerNameError, LayerVersionDescription, LayerVersionDescriptionError, LicenseInfo,
-    LicenseInfoError,
+    CompatibleArchitectures, CompatibleArchitecturesError, CompatibleRuntimes,
+    CompatibleRuntimesError, FunctionContent, LayerName, LayerNameError, LayerVersionDescription,
+    LayerVersionDescriptionError, LicenseInfo, LicenseInfoError,
 };
 pub use layer_version_permission::{
     GetLayerVersionAction, OrganizationId, OrganizationIdError, Principal, PrincipalError,

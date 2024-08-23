@@ -8,7 +8,7 @@ use crate::{
     ManagedResource,
 };
 
-/// The [AWS::Lambda::Version]
+/// [AWS::Lambda::Version]
 ///
 /// The AWS::Lambda::Version resource creates a version from the current code
 /// and configuration of a function. Use versions to create a snapshot of your function code
@@ -22,7 +22,6 @@ use crate::{
 ///         Handler, Runtime, VersionDescription, ProvisionedConcurrencyConfiguration,
 ///     },
 ///     iam::RoleArn,
-///     ManagedResource,
 /// };
 ///
 /// let account = Account::try_from("123456789012").unwrap();
