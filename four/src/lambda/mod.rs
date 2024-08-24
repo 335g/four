@@ -30,7 +30,7 @@ pub use layer_version::{
     LayerVersionDescriptionError, LicenseInfo, LicenseInfoError,
 };
 pub use layer_version_permission::{
-    GetLayerVersionAction, OrganizationId, OrganizationIdError, Principal, PrincipalError,
+    GetLayerVersionAction, LayerVersionPrincipal, OrganizationId, OrganizationIdError,
 };
 pub use permission::{
     EventSourceToken, EventSourceTokenError, PermissionPrincipal, PrincipalOrgID,

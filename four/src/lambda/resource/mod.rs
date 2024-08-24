@@ -12,6 +12,7 @@ pub use alias::Alias;
 pub use event_invoke_config::EventInvokeConfig;
 pub use function::Function;
 pub use layer_version::LayerVersion;
+pub use layer_version_permission::LayerVersionPermission;
 pub use permission::Permission;
 pub use url::Url;
 pub use version::Version;
