@@ -9,7 +9,7 @@ use crate::{
         property::{
             action, policy_document::PolicyDocument, principal::Principal, statement::Statement,
         },
-        RoleArn, RoleId, RoleName,
+        AWSManagedPolicy, RoleArn, RoleId, RoleName,
     },
     ManagedResource,
 };
@@ -21,7 +21,7 @@ pub struct Role {
     assume_role_policy_document: PolicyDocument,
     description: Option<String>,
     role_name: Option<WillBe<RoleName>>,
-    managed_policy_arns: Option<Vec<WillBe<Arn<IAM>>>>,
+    managed_policy_arns: Option<Vec<AWSManagedPolicy>>,
 }
 
 impl Role {

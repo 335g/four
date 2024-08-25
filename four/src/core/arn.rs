@@ -328,7 +328,17 @@ mod tests {
             .build(service::IAM);
         let s = serde_json::to_string(&arn).unwrap();
 
-        let rhs = r#"{"Fn::Join":["arn:aws:iam:",{"Ref":"AWS::Region"},":aws:r"]}"#;
+        let mut rhs = r#"
+            {
+                "Fn::Join": [
+                    "",
+                    ["arn:aws:iam:",{"Ref":"AWS::Region"},":aws:r"]
+                ]
+            }
+        "#
+        .to_string();
+        rhs.retain(|c| c != '\n' && c != ' ');
+
         assert_eq!(s, rhs);
     }
 
@@ -351,7 +361,17 @@ mod tests {
         let arn = arn_builder("r", Account::Aws).build(service::IAM);
         let s = serde_json::to_string(&arn).unwrap();
 
-        let rhs = r#"{"Fn::Join":["arn:",{"Ref":"AWS::Partition"},":iam::aws:r"]}"#;
+        let mut rhs = r#"
+            {
+                "Fn::Join": [
+                    "",
+                    ["arn:",{"Ref":"AWS::Partition"},":iam::aws:r"]
+                ]
+            }
+        "#
+        .to_string();
+        rhs.retain(|c| c != '\n' && c != ' ');
+
         assert_eq!(s, rhs);
     }
 }

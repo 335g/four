@@ -4,7 +4,8 @@ use crate::{
         function::{HaveAtt, RefInner, Referenced},
         LogicalId,
     },
-    iam::{resource::Role, RoleArn},
+    get_att,
+    iam::{resource::Role, AWSManagedPolicy, Principal, RoleArn, ServicePrincipal},
     lambda::{
         property::{architecture::Architectures, code::Code, handler::Handler, runtime::Runtime},
         FunctionArn, FunctionName, MemorySize, MemorySizeError, Timeout, TimeoutError,
@@ -78,6 +79,85 @@ use crate::{
 /// assert_eq!(lhs, rhs);
 /// ```
 ///
+/// If you want to create a new role in this template instead of
+/// using a role that already exists, there is a method `Function::zip_with_role`
+/// for that purpose.
+///
+/// ex2. Simple Function with iam.Role
+/// ```
+/// use four::{
+///     LogicalId,
+///     iam::{resource::Role},
+///     lambda::{resource::Function, Handler, Runtime},
+/// };
+///
+/// let function_id = LogicalId::try_from("function").unwrap();
+/// let role_id = LogicalId::try_from("role").unwrap();
+/// let handler = Handler::try_from("bootstrap").unwrap();
+/// let runtime = Runtime::ProvidedAl2023;
+/// let (function, role) = Function::zip_with_role(function_id, role_id, "mybucket", "mykey.zip", handler, runtime);
+///
+/// let lhs = serde_json::to_string(&function).unwrap();
+/// let mut rhs = r#"
+///     {
+///         "Type": "AWS::Lambda::Function",
+///         "Properties": {
+///             "Code": {
+///                 "S3Bucket": "mybucket",
+///                 "S3Key": "mykey.zip"
+///             },
+///             "Handler": "bootstrap",
+///             "Role": {
+///                 "Fn::GetAtt": ["role", "Arn"]
+///             },
+///             "Runtime": "provided.al2023"
+///         }
+///     }
+/// "#.to_string();
+/// rhs.retain(|c| c != '\n' && c != ' ');
+///
+/// assert_eq!(lhs, rhs);
+///
+/// let lhs = serde_json::to_string(&role).unwrap();
+/// let mut rhs = r#"
+///     {
+///         "Type": "AWS::IAM::Role",
+///         "Properties": {
+///             "AssumeRolePolicyDocument": {
+///                 "Version": "2012-10-17",
+///                 "Statement": [
+///                     {
+///                         "Effect": "Allow",
+///                         "Action": ["sts:AssumeRole"],
+///                         "Principal": {
+///                             "Service": ["lambda.amazonaws.com"]
+///                         }
+///                     }
+///                 ]
+///             },
+///             "ManagedPolicyArns": [
+///                 {
+///                     "Fn::Join": [
+///                         "",
+///                         [
+///                             "arn:",
+///                             {
+///                                  "Ref": "AWS::Partition"
+///                             },
+///                             ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+///                         ]
+///                     ]
+///                 }
+///             ]
+///         }
+///     }
+/// "#.to_string();
+/// rhs.retain(|c| c != '\n' && c != ' ');
+///
+/// assert_eq!(lhs, rhs);
+///
+/// ```
+///
 /// [AWS::Lambda::Function]: https://docs.aws.amazon.com/ja_jp/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-function.html
 /// [cargo-lambda]: https://github.com/cargo-lambda/cargo-lambda
 #[derive(ManagedResource, Clone)]
@@ -111,27 +191,22 @@ impl Function {
             .runtime(runtime)
     }
 
-    pub fn memory_size_value(mut self, value: usize) -> Result<Self, MemorySizeError> {
-        let value = MemorySize::try_new(value)?;
-        self.memory_size = Some(value);
-        Ok(self)
-    }
-
-    pub fn timeout_value(mut self, timeout: usize) -> Result<Self, TimeoutError> {
-        let timeout = Timeout::try_new(timeout)?;
-        self.timeout = Some(timeout);
-        Ok(self)
-    }
-
     pub fn zip_with_role(
-        logical_id: LogicalId,
+        function_id: LogicalId,
+        role_id: LogicalId,
         bucket_name: &str,
         key: &str,
         handler: Handler,
         runtime: Runtime,
-        role_id: Option<LogicalId>,
     ) -> (Function, Role) {
-        todo!()
+        let principal = Principal::from(ServicePrincipal::Lambda);
+        let execution_policy = AWSManagedPolicy::lambda_basic_execution_role();
+        let role =
+            Role::assume_role(role_id, principal).managed_policy_arns(vec![execution_policy]);
+        let role_arn = get_att::<RoleArn, _>(&role);
+        let function = Function::zip(function_id, bucket_name, key, role_arn, handler, runtime);
+
+        (function, role)
     }
 }
 
