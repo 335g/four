@@ -12,8 +12,9 @@ mod url;
 mod version;
 
 pub use alias::{
-    AliasDescription, AliasDescriptionError, AliasName, AliasNameError, AliasRoutingConfiguration,
-    FunctionVersion, FunctionVersionError, VersionWeight,
+    version_weight, version_weights, AliasDescription, AliasDescriptionError, AliasName,
+    AliasNameError, AliasRoutingConfiguration, FunctionVersion, FunctionVersionError,
+    VersionWeight,
 };
 pub use arn::{FunctionArn, LayerVersionArn, VersionArn};
 pub use event_invoke_config::{
@@ -49,7 +50,7 @@ pub use url::{
 };
 pub use version::{
     RuntimePolicy, RuntimeVersionArn, RuntimeVersionArnError, VersionDescription,
-    VersionDescriptionError, VersionNumber,
+    VersionDescriptionError,
 };
 
 #[derive(Debug, Clone, Serialize)]

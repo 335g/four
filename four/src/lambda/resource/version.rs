@@ -2,8 +2,8 @@ use crate::{
     core::LogicalId,
     function::{HaveAtt, RefInner, Referenced},
     lambda::{
-        FunctionArn, LooseFunctionName, ProvisionedConcurrencyConfiguration, RuntimePolicy,
-        VersionArn, VersionDescription, VersionNumber,
+        FunctionArn, FunctionVersion, LooseFunctionName, ProvisionedConcurrencyConfiguration,
+        RuntimePolicy, VersionArn, VersionDescription,
     },
     ManagedResource,
 };
@@ -84,6 +84,6 @@ impl HaveAtt<FunctionArn> for Version {
     const KEY: &'static str = "FunctionArn";
 }
 
-impl HaveAtt<VersionNumber> for Version {
+impl HaveAtt<FunctionVersion> for Version {
     const KEY: &'static str = "Version";
 }
