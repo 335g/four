@@ -1,7 +1,7 @@
 use nutype::nutype;
 use serde::Serialize;
 
-use crate::{iam::ServicePrincipal, AccountDetail};
+use crate::{iam::ServicePrincipal, AccountDetail, AccountDetailError};
 
 #[nutype(
     validate(not_empty, len_char_max = 256, regex = r#"^[a-zA-Z0-9._\-]+$"#),
@@ -14,6 +14,28 @@ pub enum PermissionPrincipal {
     Service(ServicePrincipal),
     Any,
     Account(AccountDetail),
+}
+
+impl From<ServicePrincipal> for PermissionPrincipal {
+    fn from(value: ServicePrincipal) -> Self {
+        PermissionPrincipal::Service(value)
+    }
+}
+
+impl From<AccountDetail> for PermissionPrincipal {
+    fn from(value: AccountDetail) -> Self {
+        PermissionPrincipal::Account(value)
+    }
+}
+
+impl TryFrom<&str> for PermissionPrincipal {
+    type Error = AccountDetailError;
+
+    fn try_from(value: &str) -> Result<Self, Self::Error> {
+        let account = AccountDetail::try_from(value)?;
+        let principal = PermissionPrincipal::Account(account);
+        Ok(principal)
+    }
 }
 
 impl Serialize for PermissionPrincipal {
