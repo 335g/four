@@ -17,7 +17,9 @@ pub use arn::{
     GroupArn, InstanceProfileArn, ManagedPolicyArn, OIDCProviderArn, RoleArn, SAMLProviderArn,
     ServerCertificateArn, UserArn,
 };
-pub use group::{GroupName, GroupNameError, Groups};
+pub use group::{
+    GroupName, GroupNameError, GroupPolicy, GroupPolicyName, GroupPolicyNameError, Groups,
+};
 pub use id::{
     AccessKeyId, GroupPolicyId, InstanceProfileId, PolicyId, RoleId, RolePolicyId, UserPolicyId,
     UserToGroupAdditionId,
@@ -28,9 +30,9 @@ pub use policy::{PolicyName, PolicyNameError};
 pub use property::{
     action,
     effect::Effect,
-    policy_document::PolicyDocument,
+    policy_document::{PolicyDocument, PolicyDocumentVersion},
     principal::{Principal, ServicePrincipal},
-    statement::{ActionOr, PrincipalOr, Statement, StatementBuilder1, StatementBuilder2},
+    statement::{ActionOr, PrincipalOr, Statement},
     AWSManagedPolicy, ManagedPolicyDescription, ManagedPolicyDescriptionError,
 };
 pub use role::RoleName;

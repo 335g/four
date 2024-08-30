@@ -6,7 +6,7 @@ pub enum AccessKeyStatus {
     Active,
 }
 
-/// Secret access key for the specified [`AccessKey`].
+/// Secret access key for the specified [`AccessKey`][`crate::iam::resource::AccessKey`].
 /// For example: wJalrXUtnFEMI/K7MDENG/bPxRfiCYzEXAMPLEKEY.
 #[derive(Debug, Clone, Serialize)]
 pub enum SecretAccessKey {}

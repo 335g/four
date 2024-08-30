@@ -6,6 +6,7 @@ use crate::{
         Arn, LogicalId,
     },
     iam::{
+        action::Action,
         property::{
             action, policy_document::PolicyDocument, principal::Principal, statement::Statement,
         },
@@ -26,9 +27,11 @@ pub struct Role {
 
 impl Role {
     pub fn assume_role(id: LogicalId, principal: Principal) -> Self {
-        let statement = Statement::allow()
-            .action(vec![Box::new(action::sts::AssumeRole)])
-            .principal(principal);
+        let actions: Vec<Box<dyn Action>> = vec![Box::new(action::sts::AssumeRole)];
+        let statement = Statement::allow_actions(actions)
+            .principal(principal)
+            .build()
+            .expect("valid statement");
         let policy_document = PolicyDocument::latest(vec![statement]);
 
         Self::new(id, policy_document)
@@ -58,9 +61,11 @@ mod tests {
     #[test]
     fn test_role1() {
         let role_id = LogicalId::try_from("role-id").unwrap();
-        let statement = Statement::allow()
-            .action(vec![Box::new(action::sts::AssumeRole)])
-            .principal(Principal::from(ServicePrincipal::Lambda));
+        let actions: Vec<Box<dyn Action>> = vec![Box::new(action::sts::AssumeRole)];
+        let statement = Statement::allow_actions(actions)
+            .principal(Principal::from(ServicePrincipal::Lambda))
+            .build()
+            .expect("");
         let assume_role_policy_document = PolicyDocument::latest(vec![statement]);
         let role = Role::new(role_id, assume_role_policy_document);
         let mut rhs = r#"{
