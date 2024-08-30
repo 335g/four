@@ -4,7 +4,7 @@ use crate::{
         function::{HaveAtt, RefInner, Referenced},
         LogicalId,
     },
-    iam::{path::Path, resource::policy::Policy, GroupArn, GroupName, ManagedPolicyArn},
+    iam::{path::Path, GroupArn, GroupName, GroupPolicy, ManagedPolicyArn},
     ManagedResource,
 };
 
@@ -15,7 +15,7 @@ pub struct Group {
     group_name: Option<WillBe<GroupName>>,
     managed_policy_arns: Option<Vec<WillBe<ManagedPolicyArn>>>,
     path: Option<Path>,
-    policies: Option<Vec<Policy>>,
+    policies: Option<Vec<GroupPolicy>>,
 }
 
 impl Referenced for Group {

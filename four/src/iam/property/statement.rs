@@ -1,82 +1,125 @@
 use crate::iam::property::{action::Action, effect::Effect, principal::Principal};
-use serde::Serialize;
+use serde::{ser::SerializeMap, Serialize};
 
-#[derive(Debug, Clone, Serialize)]
-#[serde(rename_all = "PascalCase")]
+#[derive(Debug, Clone)]
 pub struct Statement {
     effect: Effect,
-
-    #[serde(flatten)]
     action: ActionOr,
-
-    #[serde(flatten)]
-    principal: PrincipalOr,
+    principal: Option<PrincipalOr>,
+    resource: Option<String>,
 }
 
 impl Statement {
-    pub fn allow() -> StatementBuilder1 {
-        StatementBuilder1 {
+    pub fn allow_actions(actions: Vec<Box<dyn Action>>) -> StatementBuilder {
+        StatementBuilder {
             effect: Effect::Allow,
+            action: ActionOr::Action(actions),
+            principal: None,
+            resource: None,
         }
     }
 
-    pub fn deny() -> StatementBuilder1 {
-        StatementBuilder1 {
+    pub fn deny_actions(actions: Vec<Box<dyn Action>>) -> StatementBuilder {
+        StatementBuilder {
             effect: Effect::Deny,
+            action: ActionOr::Action(actions),
+            principal: None,
+            resource: None,
+        }
+    }
+
+    pub fn allow_no_actions(actions: Vec<Box<dyn Action>>) -> StatementBuilder {
+        StatementBuilder {
+            effect: Effect::Allow,
+            action: ActionOr::NotAction(actions),
+            principal: None,
+            resource: None,
+        }
+    }
+
+    pub fn deny_no_actions(actions: Vec<Box<dyn Action>>) -> StatementBuilder {
+        StatementBuilder {
+            effect: Effect::Deny,
+            action: ActionOr::NotAction(actions),
+            principal: None,
+            resource: None,
         }
     }
 }
 
-pub struct StatementBuilder1 {
-    effect: Effect,
+impl Serialize for Statement {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        let mut map = serializer.serialize_map(None)?;
+        map.serialize_entry("Effect", &self.effect)?;
+        match &self.action {
+            ActionOr::Action(action) => map.serialize_entry("Action", action)?,
+            ActionOr::NotAction(action) => map.serialize_entry("NotAction", action)?,
+        }
+        if let Some(principal) = self.principal.as_ref() {
+            match principal {
+                PrincipalOr::Principal(p) => map.serialize_entry("Principal", p)?,
+                PrincipalOr::NotPrincipal(p) => map.serialize_entry("NotPrincipal", p)?,
+            }
+        }
+        if let Some(resource) = self.resource.as_ref() {
+            map.serialize_entry("Resource", resource)?;
+        }
+
+        map.end()
+    }
 }
 
-impl StatementBuilder1 {
-    pub fn action(self, action: Vec<Box<dyn Action>>) -> StatementBuilder2 {
-        StatementBuilder2 {
-            effect: self.effect,
-            action: ActionOr::Action(action),
-        }
-    }
-
-    pub fn not_action(self, action: Vec<Box<dyn Action>>) -> StatementBuilder2 {
-        StatementBuilder2 {
-            effect: self.effect,
-            action: ActionOr::NotAction(action),
-        }
-    }
-}
-
-pub struct StatementBuilder2 {
+#[derive(Debug)]
+pub struct StatementBuilder {
     effect: Effect,
     action: ActionOr,
+    principal: Option<PrincipalOr>,
+    resource: Option<String>,
 }
 
-impl StatementBuilder2 {
-    pub fn principal(self, principal: Principal) -> Statement {
-        Statement {
+impl StatementBuilder {
+    pub fn build(self) -> Result<Statement, StatementBuildError> {
+        // TODO: ERROR
+
+        let statement = Statement {
             effect: self.effect,
             action: self.action,
-            principal: PrincipalOr::Principal(principal),
-        }
+            principal: self.principal,
+            resource: self.resource,
+        };
+
+        Ok(statement)
     }
 
-    pub fn no_principal(self, principal: Principal) -> Statement {
-        Statement {
-            effect: self.effect,
-            action: self.action,
-            principal: PrincipalOr::NotPrincipal(principal),
-        }
+    pub fn principal(mut self, principal: Principal) -> Self {
+        self.principal = Some(PrincipalOr::Principal(principal));
+        self
+    }
+
+    pub fn no_principal(mut self, principal: Principal) -> Self {
+        self.principal = Some(PrincipalOr::NotPrincipal(principal));
+        self
+    }
+
+    pub fn resource(mut self, resource: &str) -> Self {
+        self.resource = Some(resource.to_string());
+        self
     }
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, thiserror::Error)]
+pub enum StatementBuildError {}
+
+#[derive(Debug, Clone)]
 pub enum ActionOr {
     Action(Vec<Box<dyn Action>>),
     NotAction(Vec<Box<dyn Action>>),
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone)]
 pub enum PrincipalOr {
     Principal(Principal),
     NotPrincipal(Principal),

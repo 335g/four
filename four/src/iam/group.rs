@@ -1,7 +1,11 @@
 use std::sync::LazyLock;
 
+use derive_new::new;
 use nutype::nutype;
 use regex::Regex;
+use serde::Serialize;
+
+use crate::{convert::WillBe, iam::PolicyDocument};
 
 #[nutype(
     validate(not_empty, len_char_max = 128, regex = r#"[\w+=,.@-]+"#),
@@ -23,3 +27,15 @@ fn valid_groups(groups: &Vec<String>) -> bool {
     derive(Debug, Clone, Serialize)
 )]
 pub struct Groups(Vec<String>);
+
+#[derive(Debug, Clone, Serialize, new)]
+pub struct GroupPolicy {
+    policy_name: WillBe<GroupPolicyName>,
+    policy_document: PolicyDocument,
+}
+
+#[nutype(
+    validate(not_empty, len_char_max = 128, regex = r#"[\w+=,.@-]+"#),
+    derive(Debug, Clone, Serialize, TryFrom)
+)]
+pub struct GroupPolicyName(String);
