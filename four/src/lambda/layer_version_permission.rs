@@ -1,6 +1,8 @@
 use nutype::nutype;
 use serde::Serialize;
 
+use crate::AccountDetail;
+
 #[derive(Debug, Clone)]
 pub struct GetLayerVersionAction;
 
@@ -19,8 +21,20 @@ impl Serialize for GetLayerVersionAction {
 )]
 pub struct OrganizationId(String);
 
-#[nutype(
-    validate(regex = r#"\d{12}|\*|arn:(aws[a-zA-Z-]*):iam::\d{12}:root"#),
-    derive(Debug, Clone, Serialize)
-)]
-pub struct Principal(String);
+#[derive(Debug, Clone)]
+pub enum LayerVersionPrincipal {
+    Account(AccountDetail),
+    Any,
+}
+
+impl Serialize for LayerVersionPrincipal {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        match self {
+            LayerVersionPrincipal::Account(x) => x.serialize(serializer),
+            LayerVersionPrincipal::Any => "*".serialize(serializer),
+        }
+    }
+}

@@ -6,5 +6,7 @@ pub enum AccessKeyStatus {
     Active,
 }
 
+/// Secret access key for the specified [`AccessKey`].
+/// For example: wJalrXUtnFEMI/K7MDENG/bPxRfiCYzEXAMPLEKEY.
 #[derive(Debug, Clone, Serialize)]
-pub struct SecretAccessKey(String);
+pub enum SecretAccessKey {}

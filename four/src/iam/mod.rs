@@ -31,6 +31,7 @@ pub use property::{
     policy_document::PolicyDocument,
     principal::{Principal, ServicePrincipal},
     statement::{ActionOr, PrincipalOr, Statement, StatementBuilder1, StatementBuilder2},
+    AWSManagedPolicy, ManagedPolicyDescription, ManagedPolicyDescriptionError,
 };
 pub use role::RoleName;
 pub use saml_provider::{

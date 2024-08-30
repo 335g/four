@@ -6,4 +6,6 @@ pub mod principal;
 pub mod statement;
 pub mod version;
 
-pub use managed_policy::{ManagedPolicyDescription, ManagedPolicyDescriptionError};
+pub use managed_policy::{
+    AWSManagedPolicy, ManagedPolicyDescription, ManagedPolicyDescriptionError,
+};

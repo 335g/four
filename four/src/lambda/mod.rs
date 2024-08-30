@@ -12,25 +12,26 @@ mod url;
 mod version;
 
 pub use alias::{
-    AliasDescription, AliasDescriptionError, AliasName, AliasNameError, AliasRoutingConfiguration,
-    FunctionVersion, FunctionVersionError, VersionWeight,
+    version_weight, version_weights, AliasDescription, AliasDescriptionError, AliasName,
+    AliasNameError, AliasRoutingConfiguration, FunctionVersion, FunctionVersionError,
+    VersionWeight,
 };
-pub use arn::FunctionArn;
+pub use arn::{FunctionArn, LayerVersionArn, VersionArn};
 pub use event_invoke_config::{
-    MaximumEventAgeInSeconds, MaximumEventAgeInSecondsError, MaximumRetryAttempts,
-    MaximumRetryAttemptsError,
+    DestinationConfig, MaximumEventAgeInSeconds, MaximumEventAgeInSecondsError,
+    MaximumRetryAttempts, MaximumRetryAttemptsError, OnFailure, OnSuccess,
 };
 pub use function::{
     FunctionName, FunctionNameError, MemorySize, MemorySizeError, Timeout, TimeoutError,
 };
 pub use id::{LayerVersionPermissionId, UrlId};
 pub use layer_version::{
-    CompatibleArchitectures, CompatibleArchitecturesError, FunctionContent, LayerName,
-    LayerNameError, LayerVersionDescription, LayerVersionDescriptionError, LicenseInfo,
-    LicenseInfoError,
+    CompatibleArchitectures, CompatibleArchitecturesError, CompatibleRuntimes,
+    CompatibleRuntimesError, FunctionContent, LayerName, LayerNameError, LayerVersionDescription,
+    LayerVersionDescriptionError, LicenseInfo, LicenseInfoError,
 };
 pub use layer_version_permission::{
-    GetLayerVersionAction, OrganizationId, OrganizationIdError, Principal, PrincipalError,
+    GetLayerVersionAction, LayerVersionPrincipal, OrganizationId, OrganizationIdError,
 };
 pub use permission::{
     EventSourceToken, EventSourceTokenError, PermissionPrincipal, PrincipalOrgID,
@@ -52,15 +53,25 @@ pub use version::{
     VersionDescriptionError,
 };
 
+use crate::convert::WillMappable;
+
 #[derive(Debug, Clone, Serialize)]
 #[serde(rename_all = "PascalCase")]
 pub struct ProvisionedConcurrencyConfiguration {
-    provisioned_concurrency_executions: usize,
+    provisioned_concurrent_executions: usize,
+}
+
+impl ProvisionedConcurrencyConfiguration {
+    pub fn new(executions: usize) -> Self {
+        Self {
+            provisioned_concurrent_executions: executions,
+        }
+    }
 }
 
 #[derive(Debug, Clone)]
 pub enum Qualifier {
-    Version(u64),
+    Version(FunctionVersion),
     Alias(AliasName),
     Latest,
 }
@@ -77,3 +88,5 @@ impl Serialize for Qualifier {
         }
     }
 }
+
+impl WillMappable<FunctionVersion> for Qualifier {}

@@ -32,8 +32,12 @@ impl Serialize for Join {
     where
         S: serde::Serializer,
     {
+        let head: Box<dyn JoinElement> = Box::new("");
+        let tail: Box<dyn JoinElement> = Box::new(&self.0);
+        let value = vec![head, tail];
+
         let mut map = serializer.serialize_map(Some(2))?;
-        map.serialize_entry("Fn::Join", &self.0)?;
+        map.serialize_entry("Fn::Join", &value)?;
         map.end()
     }
 }

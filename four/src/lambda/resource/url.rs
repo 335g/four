@@ -7,6 +7,13 @@ use crate::{
     ManagedResource,
 };
 
+/// [AWS::Lambda::Url]
+///
+/// The AWS::Lambda::Url resource creates a function URL with the specified configuration parameters.
+/// A function URL is a dedicated HTTP(S) endpoint that you can use to invoke your function.
+///
+///
+/// [AWS::Lambda::Url]: https://docs.aws.amazon.com/ja_jp/AWSCloudFormation/latest/UserGuide/aws-resource-lambda-url.html
 #[derive(ManagedResource, Clone)]
 #[resource_type = "AWS::Lambda::Url"]
 pub struct Url {
