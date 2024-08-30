@@ -98,7 +98,7 @@ dependencies = [
 
 [[package]]
 name = "cargo-four"
-version = "0.0.12"
+version = "0.0.13"
 dependencies = [
  "clap",
  "tokio",
@@ -173,9 +173,9 @@ dependencies = [
 
 [[package]]
 name = "derive-new"
-version = "0.6.0"
+version = "0.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d150dea618e920167e5973d70ae6ece4385b7164e0d799fe7c122dd0a5d912ad"
+checksum = "2cdc8d50f426189eef89dac62fabfa0abb27d5cc008f25bf4156a0203325becc"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -215,13 +215,12 @@ dependencies = [
 
 [[package]]
 name = "four"
-version = "0.0.12"
+version = "0.0.13"
 dependencies = [
  "derive-new",
  "dyn-clone",
  "erased-serde",
  "four_derive",
- "lazy_static",
  "nutype",
  "regex",
  "serde",
@@ -232,7 +231,7 @@ dependencies = [
 
 [[package]]
 name = "four_derive"
-version = "0.0.12"
+version = "0.0.13"
 dependencies = [
  "convert_case",
  "proc-macro2",
@@ -296,12 +295,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "lazy_static"
-version = "1.5.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bbd2bcb4c963f2ddae06a2efc7e9f3591312473c50c6685e1f298068316e66fe"
-
-[[package]]
 name = "libc"
 version = "0.2.155"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -324,18 +317,18 @@ dependencies = [
 
 [[package]]
 name = "nutype"
-version = "0.4.3"
+version = "0.5.0-beta.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "362399c4581483ed2813c9b05dd6bcd903c60e61005c4b838c65ae755be69dd6"
+checksum = "4ab345a455af7be29f6defc36a9d6cb779256909534fe4b42c59b337f80220d0"
 dependencies = [
  "nutype_macros",
 ]
 
 [[package]]
 name = "nutype_macros"
-version = "0.4.3"
+version = "0.5.0-beta.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0625bcc0c714bdf12a451c4f6510b949abb095d98cc3cc8fe3812a8100ca6592"
+checksum = "56d6d74a5ea997392b97b19947ade622b9be334a77a432b4c081ea694b2bd126"
 dependencies = [
  "cfg-if",
  "kinded",

@@ -1,6 +1,6 @@
 [package]
 name = "four"
-version = "0.0.12"
+version = "0.0.13"
 authors = ["Yoshiki Kudo"]
 edition = "2021"
 license = "MIT"
@@ -25,9 +25,8 @@ regex = "1.10"
 serde = { version = "1", features = ["derive"] }
 thiserror = "1"
 url = { version = "2.5", optional = true, features = ["serde"] }
-nutype = { version = "0.4.3", features = ["regex", "serde"] }
-lazy_static = "1.5.0"
-derive-new = "0.6.0"
+nutype = { version = "0.5.0-beta.2", features = ["regex", "serde"] }
+derive-new = "0.7.0"
 
 [dev-dependencies]
 serde = { version = "1", features = ["derive"] }
