@@ -18,8 +18,8 @@ pub use alias::{
 };
 pub use arn::{FunctionArn, LayerVersionArn, VersionArn};
 pub use event_invoke_config::{
-    MaximumEventAgeInSeconds, MaximumEventAgeInSecondsError, MaximumRetryAttempts,
-    MaximumRetryAttemptsError,
+    DestinationConfig, MaximumEventAgeInSeconds, MaximumEventAgeInSecondsError,
+    MaximumRetryAttempts, MaximumRetryAttemptsError, OnFailure, OnSuccess,
 };
 pub use function::{
     FunctionName, FunctionNameError, MemorySize, MemorySizeError, Timeout, TimeoutError,
@@ -53,6 +53,8 @@ pub use version::{
     VersionDescriptionError,
 };
 
+use crate::convert::WillMappable;
+
 #[derive(Debug, Clone, Serialize)]
 #[serde(rename_all = "PascalCase")]
 pub struct ProvisionedConcurrencyConfiguration {
@@ -69,7 +71,7 @@ impl ProvisionedConcurrencyConfiguration {
 
 #[derive(Debug, Clone)]
 pub enum Qualifier {
-    Version(u64),
+    Version(FunctionVersion),
     Alias(AliasName),
     Latest,
 }
@@ -86,3 +88,5 @@ impl Serialize for Qualifier {
         }
     }
 }
+
+impl WillMappable<FunctionVersion> for Qualifier {}

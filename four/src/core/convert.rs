@@ -28,7 +28,7 @@ impl<T> WillBe<T> {
         }
     }
 
-    pub(crate) fn map<U>(self) -> WillBe<U>
+    pub fn map<U>(self) -> WillBe<U>
     where
         U: WillMappable<T>,
     {
