@@ -215,28 +215,12 @@ dependencies = [
 
 [[package]]
 name = "four"
-version = "0.0.12"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "84e06d0b40a707a4786a03dd7b0a0cbe49a5065054e0d08ad4d845c40a30de10"
-dependencies = [
- "dyn-clone",
- "erased-serde",
- "four_derive 0.0.12",
- "nutype",
- "regex",
- "serde",
- "thiserror",
- "url",
-]
-
-[[package]]
-name = "four"
 version = "0.0.13"
 dependencies = [
  "derive-new",
  "dyn-clone",
  "erased-serde",
- "four_derive 0.0.13",
+ "four_derive",
  "lazy_static",
  "nutype",
  "regex",
@@ -244,18 +228,6 @@ dependencies = [
  "serde_json",
  "thiserror",
  "url",
-]
-
-[[package]]
-name = "four_derive"
-version = "0.0.12"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d350c5f501014583368e798a1982f14e806f227b728f7c3350c865da08720af1"
-dependencies = [
- "convert_case",
- "proc-macro2",
- "quote",
- "syn",
 ]
 
 [[package]]
@@ -492,7 +464,7 @@ version = "0.0.0"
 dependencies = [
  "anyhow",
  "dotenvy",
- "four 0.0.12",
+ "four",
  "serde",
  "serde_json",
 ]
