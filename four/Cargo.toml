@@ -21,7 +21,7 @@ url = ["dep:url"]
 dyn-clone = "1.0.17"
 four_derive = { version = "0.0", path = "../four_derive" }
 erased-serde = "0.4"
-regex = "1.10"
+regex = "1.11"
 serde = { version = "1", features = ["derive"] }
 thiserror = "1"
 url = { version = "2.5", optional = true, features = ["serde"] }
