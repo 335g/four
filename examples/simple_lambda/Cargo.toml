@@ -5,7 +5,7 @@ license = "MIT"
 rust-version = "1.80"
 
 [dependencies]
-anyhow = "1.0.89"
+anyhow = "1.0.90"
 dotenvy = "0.15.7"
 four = { version = "0.0.13", features = ["iam", "lambda"] }
 serde = "1"
