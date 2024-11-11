@@ -7,6 +7,6 @@ four = { path = "four" }
 
 [workspace.dependencies]
 convert_case = "0.6"
-proc-macro2 = "1.0.88"
+proc-macro2 = "1.0.89"
 quote = "1.0.37"
 syn = "2.0.87"
