@@ -23,7 +23,7 @@ four_derive = { version = "0.0", path = "../four_derive" }
 erased-serde = "0.4"
 regex = "1.11"
 serde = { version = "1", features = ["derive"] }
-thiserror = "1"
+thiserror = "2"
 url = { version = "2.5", optional = true, features = ["serde"] }
 nutype = { version = "0.5.0", features = ["regex", "serde"] }
 derive-new = "0.7.0"
