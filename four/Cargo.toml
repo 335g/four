@@ -18,19 +18,19 @@ full = ["iam", "lambda"]
 url = ["dep:url"]
 
 [dependencies]
-dyn-clone = "1.0.17"
+dyn-clone = { workspace = true }
 four_derive = { version = "0.0", path = "../four_derive" }
-erased-serde = "0.4"
-regex = "1.11"
-serde = { version = "1", features = ["derive"] }
-thiserror = "2"
-url = { version = "2.5", optional = true, features = ["serde"] }
-nutype = { version = "0.5.1", features = ["regex", "serde"] }
-derive-new = "0.7.0"
+erased-serde = { workspace = true }
+regex = { workspace = true }
+serde = { workspace = true, features = ["derive"] }
+thiserror = { workspace = true }
+url = { workspace = true, features = ["serde"], optional = true }
+nutype = { workspace = true, features = ["regex", "serde"] }
+derive-new = { workspace = true }
 
 [dev-dependencies]
-serde = { version = "1", features = ["derive"] }
-serde_json = "1"
+serde = { workspace = true, features = ["derive"] }
+serde_json = { workspace = true }
 
 [package.metadata.docs.rs]
 all-features = true
