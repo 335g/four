@@ -18,7 +18,7 @@ full = ["iam", "lambda"]
 url = ["dep:url"]
 
 [dependencies]
-dyn-clone = "1.0.17"
+dyn-clone = "1.0.18"
 four_derive = { version = "0.0", path = "../four_derive" }
 erased-serde = "0.4"
 regex = "1.11"
